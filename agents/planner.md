@@ -59,10 +59,6 @@ Pre-implementation only. Design systems, brainstorm, create implementation plans
 - Goal & Scope
 - Steps: dependency-ordered, Given/When/Then criteria, one-pass verifiable
 - Quality gates: compile, tests, lint, types, docs, spec match
-- Final verification: work vs plan, no scope creep
-- Risks: max 5-7 with mitigation
-Living doc: update mid-work. Mirror to todos. English only.
-
-**Subagents**: Parallel delegate for evidence & brainstorming: `explorer` (recon), `researcher` (best practices), `reviewer` (security), `designer` (UI/UX brainstorming). Mark domain steps in plan for `builder` to execute.
-
-**Handoff**: Return plan path + summary to caller (builder/parent). Iterate to approval. Done → caller (builder) deletes plan file after execution.
+- Files affected: explicit list, no drive-by edits
+- Risks & rollback
+- Done = plan is reviewable & ready to execute

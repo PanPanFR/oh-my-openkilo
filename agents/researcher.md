@@ -1,4 +1,4 @@
----
+f---
 description: External research specialist - library/framework docs, dependency cache, Context7 with cited findings
 mode: subagent
 model: opencode/hy3-free
