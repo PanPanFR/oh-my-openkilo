@@ -137,6 +137,87 @@ The example config includes all MCPs that ship with this pack. **`agentmemory` i
 
 Enable by setting `"enabled": true` in `opencode.json` and filling in any required env var. See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for details. The `install.ps1` validator will warn you if you enable an MCP without setting its env var.
 
+### 📦 Installing MCP servers
+
+The MCPs in the table above fall into two categories: **npm-based** (most of them — `npx` downloads them on first use) and **remote** (just need a URL + API key). None of them require a separate install step before enabling in `opencode.json` — but several need a one-time setup after the first run.
+
+#### `agentmemory` (required, already enabled)
+
+Two parts — a global CLI and a local server.
+
+```bash
+npm i -g @agentmemory/server          # CLI
+agentmemory serve                     # start the local server (default: http://localhost:3111)
+```
+
+The MCP in `opencode.json` points to `http://localhost:3111` by default. If you change the port, update `mcp.agentmemory.env.AGENTMEMORY_SERVER_URL` to match.
+
+#### `context7` (remote, no install)
+
+Just set `enabled: true` and provide `CONTEXT7_API_KEY` (free at [context7.com](https://context7.com)). The MCP fetches docs from `https://mcp.context7.com/mcp` directly — no local install.
+
+#### `stitch` (remote, no install)
+
+Set `enabled: true` and provide `GOOGLE_API_KEY` (Google Cloud API key with Stitch access). The MCP connects to `https://stitch.googleapis.com/mcp`. **Without this, the `designer` agent becomes inert** — see the row above.
+
+#### `chrome-devtools` (npm, no setup)
+
+```jsonc
+"chrome-devtools": {
+  "type": "local",
+  "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
+  "enabled": true
+}
+```
+
+`npx` downloads it on first invocation. Requires an installed Chrome/Chromium browser.
+
+#### `playwright` (npm + one-time browser install)
+
+```jsonc
+"playwright": {
+  "type": "local",
+  "command": ["npx", "@playwright/mcp@latest"],
+  "enabled": true
+}
+```
+
+After enabling, run once in a shell:
+
+```bash
+npx playwright install chromium       # downloads ~150MB browser binary
+```
+
+This is a one-time setup per machine. Subsequent runs reuse the cached binary.
+
+#### `remotion` (npm, no setup)
+
+```jsonc
+"remotion": {
+  "type": "local",
+  "command": ["npx", "-y", "remotion-mcp"],
+  "enabled": true
+}
+```
+
+Downloads on first run. Requires Node.js and (for video rendering) FFmpeg on `PATH`.
+
+#### `supabase-mcp-server` (npm, needs access token)
+
+```bash
+# 1. Get a personal access token at https://supabase.com/dashboard/account/tokens
+# 2. Set the env var (PowerShell example)
+$env:SUPABASE_ACCESS_TOKEN = "sbp_..."
+
+# 3. Enable in opencode.json
+```
+
+The token grants the MCP read/write access to your Supabase projects — treat it like any other secret.
+
+---
+
+**TL;DR for most users:** you only need to install the two required dependencies (`graphify`, `@agentmemory/server`) and the agentmemory server. Everything else is one-line config flips. Start OpenCode, enable MCPs as you need them.
+
 ---
 
 ## Meet the agents

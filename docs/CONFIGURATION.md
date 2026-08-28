@@ -126,6 +126,149 @@ To enable:
 
 The `install.ps1` validator scans your config after install and warns if any enabled MCP has a missing env var. Re-run it after changing `opencode.json` to re-validate.
 
+## Installing MCP servers
+
+Most MCPs in this pack are `npx`-based — OpenCode downloads the package on first use. None of them require a separate install step before enabling in `opencode.json`, but several need a one-time setup after the first run.
+
+### `agentmemory` (required, already enabled)
+
+Two pieces: a global CLI/server, and an MCP entry that points to the local server.
+
+```bash
+# 1. Install the server CLI globally
+npm i -g @agentmemory/server
+
+# 2. Start the local server (default: http://localhost:3111)
+agentmemory serve
+```
+
+The `mcp.agentmemory` entry in `opencode.json` already points to `http://localhost:3111` via the `AGENTMEMORY_SERVER_URL` env var. If you change the port, update that env var to match.
+
+### `context7` (remote, no install)
+
+```jsonc
+{
+  "mcp": {
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": { "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}" },
+      "enabled": true
+    }
+  }
+}
+```
+
+Get a free API key at [context7.com](https://context7.com), set `CONTEXT7_API_KEY` in your shell or `.env`, then enable. No local install.
+
+### `stitch` (remote, no install)
+
+```jsonc
+{
+  "mcp": {
+    "stitch": {
+      "type": "remote",
+      "url": "https://stitch.googleapis.com/mcp",
+      "headers": { "X-Goog-Api-Key": "{env:GOOGLE_API_KEY}" },
+      "enabled": true
+    }
+  }
+}
+```
+
+Requires a Google Cloud API key with Stitch access. **Without this MCP enabled, the `designer` agent becomes inert** — `builder` and `planner` delegate UI work to it.
+
+### `chrome-devtools` (npm, no setup)
+
+```jsonc
+{
+  "mcp": {
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
+      "enabled": true
+    }
+  }
+}
+```
+
+`npx` downloads it on first invocation. Requires Chrome/Chromium installed on the system.
+
+### `playwright` (npm + one-time browser download)
+
+```jsonc
+{
+  "mcp": {
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "@playwright/mcp@latest"],
+      "enabled": true
+    }
+  }
+}
+```
+
+After enabling, download the Chromium browser once:
+
+```bash
+npx playwright install chromium       # ~150 MB
+```
+
+Caches per machine; subsequent runs reuse the binary.
+
+### `remotion` (npm, no setup)
+
+```jsonc
+{
+  "mcp": {
+    "remotion": {
+      "type": "local",
+      "command": ["npx", "-y", "remotion-mcp"],
+      "enabled": true
+    }
+  }
+}
+```
+
+Downloads on first run. Video rendering needs FFmpeg on `PATH`.
+
+### `supabase-mcp-server` (npm + personal access token)
+
+```powershell
+# 1. Get a personal access token: https://supabase.com/dashboard/account/tokens
+# 2. Set env var (PowerShell)
+$env:SUPABASE_ACCESS_TOKEN = "sbp_..."
+
+# 3. Enable in opencode.json
+```
+
+```jsonc
+{
+  "mcp": {
+    "supabase-mcp-server": {
+      "type": "local",
+      "command": ["npx", "-y", "@supabase/mcp-server-supabase@latest", "--access-token", "{env:SUPABASE_ACCESS_TOKEN}"],
+      "enabled": true
+    }
+  }
+}
+```
+
+Token grants the MCP read/write access to your Supabase projects — treat it like any other secret.
+
+### Troubleshooting MCP installs
+
+| Symptom | Likely cause | Fix |
+|---------|--------------|-----|
+| `command not found: npx` | Node.js not installed | Install Node.js 18+ from [nodejs.org](https://nodejs.org) |
+| `EACCES` when running `npx` | Permission issue on global npm dir | `npm config set prefix ~/.npm-global` and add to PATH, or use a Node version manager (nvm, fnm) |
+| MCP enabled but tools missing in OpenCode | OpenCode cached the disabled state | Restart OpenCode or run `/reload` after enabling |
+| `context7` returns auth errors | Missing or wrong `CONTEXT7_API_KEY` | Verify the env var is set in the **same shell** that started OpenCode |
+| `playwright` times out | Browser binary not downloaded | Run `npx playwright install chromium` once |
+| `agentmemory` MCP fails to connect | Server not running | Start with `agentmemory serve` in another terminal, or set up as a system service |
+
+Most MCP issues come from the env var not being visible to OpenCode's process. Set env vars in your shell profile (`.bashrc`, `.zshrc`, PowerShell `$PROFILE`) or use a `.env` file in the directory where you start OpenCode.
+
 ## Instructions
 
 Paths to always-on rule files, relative to the directory containing `opencode.json`. The maintainer's order (protocol rules first) is what the example uses. Reorder to taste, but put first-action protocols early — earlier entries get better model compliance.
