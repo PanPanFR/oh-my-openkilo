@@ -140,6 +140,22 @@ notepad $env:USERPROFILE\.config\opencode\agents\reviewer.md
 
 The `model` field sits in the YAML frontmatter at the top of each `agents/*.md` file. Restart OpenCode (or run `/reload`) after changing it. See [docs/AGENTS.md](docs/AGENTS.md#changing-the-model) for the full per-agent model table and recommendations.
 
+## Configuration: start from `opencode.example.json`
+
+[`examples/opencode.example.json`](examples/opencode.example.json) is a **ready-to-use** configuration file, not a skeleton. It already includes:
+
+- All 4 plugin loaders (`agentmemory-capture`, `caveman`, `ponytail`, `superpowers`).
+- All 7 always-on rules wired into `instructions` (agentmemory, graphify, skill-reminder, delegation, language, communication-style, workers).
+- All MCP server entries (7 of them, with `enabled: false` for everything except `agentmemory`).
+- One provider template (`9router`, with `{env:NINE_ROUTER_API_KEY}` placeholder).
+- A working `permission` block.
+
+**To use it:** open the file, replace `<YOUR_*>` placeholders and `{env:VAR}` references with your real values, then save as `~/.config/opencode/opencode.json`. The `install.ps1` script does this for you automatically if you don't have a config yet.
+
+**For credentials specifically:** the example uses `{env:VAR}` placeholders for every secret. Set the env var in your shell or `.env` file rather than pasting the literal key into the JSON; OpenCode resolves `{env:VAR}` at startup. This keeps the file safe to commit, share, and version.
+
+If you'd rather start blank, just edit `opencode.json` directly. If you want the full breakdown of every block, see [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
+
 ## Required dependencies
 
 The pack **requires** two external tools to deliver its core value. Without them, several rules and skills will load but their tools will be missing; the pack degrades to a much weaker version of itself. Install these immediately after the pack itself:

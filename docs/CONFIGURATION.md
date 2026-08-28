@@ -2,7 +2,9 @@
 
 `opencode.json` is the **runtime configuration file** for OpenCode. It lives at `~/.config/opencode/opencode.json` and is **never committed** to this repo (it contains credentials).
 
-This document describes each block of [`examples/opencode.example.json`](../examples/opencode.example.json) so you can fill it in correctly.
+[`examples/opencode.example.json`](../examples/opencode.example.json) is a **ready-to-use** configuration file, not a blank skeleton. It already includes the plugin loaders, the rules wiring, the MCP server entries, the provider template, and a working permission block. You don't need to write `opencode.json` from scratch; just copy the example, replace the `{env:VAR}` placeholders with your real env vars, and save it as `~/.config/opencode/opencode.json`.
+
+This document describes each block of the example file so you know what you're editing. If you want the full reference for the OpenCode config schema, see [opencode.ai/docs/config/](https://opencode.ai/docs/config/).
 
 ## Top-level fields
 
