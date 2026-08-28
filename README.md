@@ -173,7 +173,7 @@ The installer:
 ### After install
 
 1. **Edit `~/.config/opencode/opencode.json`** to set your model and provider keys. The example uses `{env:VAR}` placeholders.
-2. **Install required dependencies** (`graphify`, `agentmemory`). Without these the pack degrades severely. See [docs/INSTALL.md](docs/INSTALL.md#required-dependencies).
+2. **Install required dependencies** (`graphify`, `agentmemory`). Without these the pack degrades severely. See [docs/INSTALL.md](docs/INSTALL.md#after-install-required-dependencies).
 3. **Restart OpenCode** or run `/reload`.
 4. **Verify:** ask `list your agents and confirm which skills are loaded`. You should see 8 agents, 46 skills, 7 rules.
 
@@ -186,7 +186,7 @@ The installer:
 
 Every agent defaults to a **free model provided by OpenCode** (e.g. `opencode/nemotron-3-ultra-free`, `opencode/muse-spark-1.2-contributor-free`). You can use the pack **without configuring any provider API key**.
 
-Want a different model? Edit the `model:` line in the agent's markdown file (YAML frontmatter at the top), then restart OpenCode or run `/reload`. The full per-agent model table, mix-and-match recommendations, and edit workflow are in [docs/AGENTS.md](docs/AGENTS.md#changing-the-model).
+Want a different model? Edit the `model:` line in the agent's markdown file (YAML frontmatter at the top), then restart OpenCode or run `/reload`. The full per-agent model table, mix-and-match recommendations, and edit workflow are in [docs/AGENTS.md](docs/AGENTS.md#how-to-change-a-model).
 
 ---
 
@@ -209,7 +209,7 @@ npm i -g @agentmemory/server   # persistent cross-session memory (the `agentmemo
 | `remotion` | Walkthrough video generation | optional |
 | `supabase-mcp-server` | Supabase project ops | optional |
 
-Enable by setting `"enabled": true` in `opencode.json` and filling any required env var. Per-MCP install commands and credential handling are in [docs/CONFIGURATION.md](docs/CONFIGURATION.md#mcps).
+Enable by setting `"enabled": true` in `opencode.json` and filling any required env var. Per-MCP install commands and credential handling are in [docs/CONFIGURATION.md](docs/CONFIGURATION.md#mcp-servers).
 
 ---
 
@@ -245,73 +245,161 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 ### 01. `builder` — The Architect
 
-Default implementation agent. Triages: 1-line fix → do directly; feature with architecture → hand design to <code>planner</code>, supervise execution. Once a plan exists, fans out to <code>designer</code>, <code>tester</code>, <code>reviewer</code>, <code>documenter</code>.
-
-- **Role:** `Default entry. Triage + delegate + supervise.`
-- **Prompt:** [agents/builder.md](agents/builder.md)
-- **Default model:** `opencode/nemotron-3-ultra-free`
-- **Model guidance:** strong instruction-following matters more than raw speed. If you mix free + paid, this is the agent to upgrade first.
+<table>
+  <tr>
+    <td width="30%" align="center" valign="top">
+      <h3>🏗️</h3>
+      <br><sub><b><code>builder</code></b></sub>
+      <br><sub><i>The Architect</i></sub>
+    </td>
+    <td width="70%" valign="top">
+      Default implementation agent. Triages: 1-line fix → do directly; feature with architecture → hand design to <code>planner</code>, supervise execution. Once a plan exists, fans out to <code>designer</code>, <code>tester</code>, <code>reviewer</code>, <code>documenter</code>.
+    </td>
+  </tr>
+  <tr><td colspan="2"><b>Role:</b> <code>Default entry. Triage + delegate + supervise.</code></td></tr>
+  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/builder.md"><code>agents/builder.md</code></a></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/nemotron-3-ultra-free</code></td></tr>
+  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
+  <tr><td colspan="2"><b>Model guidance:</b> strong instruction-following matters more than raw speed. If you mix free + paid, this is the agent to upgrade first.</td></tr>
+</table>
 
 ### 02. `planner` — The Oracle
 
-Pre-implementation design partner. Spawns <code>explorer</code>, <code>researcher</code>, <code>reviewer</code>, <code>designer</code> in parallel to gather context, then writes a plan you confirm before any code is touched.
-
-- **Role:** `Pre-impl design, architecture planning, plan files.`
-- **Prompt:** [agents/planner.md](agents/planner.md)
-- **Default model:** `opencode/muse-spark-1.2-contributor-free`
-- **Model guidance:** a weak model here means a weak plan, which means wasted implementation time downstream.
+<table>
+  <tr>
+    <td width="30%" align="center" valign="top">
+      <h3>🔮</h3>
+      <br><sub><b><code>planner</code></b></sub>
+      <br><sub><i>The Oracle</i></sub>
+    </td>
+    <td width="70%" valign="top">
+      Pre-implementation design partner. Spawns <code>explorer</code>, <code>researcher</code>, <code>reviewer</code>, <code>designer</code> in parallel to gather context, then writes a plan you confirm before any code is touched.
+    </td>
+  </tr>
+  <tr><td colspan="2"><b>Role:</b> <code>Pre-impl design, architecture planning, plan files.</code></td></tr>
+  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/planner.md"><code>agents/planner.md</code></a></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.2-contributor-free</code></td></tr>
+  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
+  <tr><td colspan="2"><b>Model guidance:</b> a weak model here means a weak plan, which means wasted implementation time downstream.</td></tr>
+</table>
 
 ### 03. `designer` — The Frontend Specialist
 
-UI/UX, React/Next.js, design systems, accessibility, performance. Stitch-integrated for AI mockups before code. Falls back to text-only feedback if the <code>stitch</code> MCP is disabled.
-
-- **Role:** `UI/UX + frontend implementation + a11y.`
-- **Prompt:** [agents/designer.md](agents/designer.md)
-- **Default model:** `opencode/muse-spark-1.2-contributor-free`
-- **Requires:** `stitch` MCP enabled for mockup generation. Without it, `designer` becomes inert for visual work.
+<table>
+  <tr>
+    <td width="30%" align="center" valign="top">
+      <h3>🎨</h3>
+      <br><sub><b><code>designer</code></b></sub>
+      <br><sub><i>The Frontend Specialist</i></sub>
+    </td>
+    <td width="70%" valign="top">
+      UI/UX, React/Next.js, design systems, accessibility, performance. Stitch-integrated for AI mockups before code. Falls back to text-only feedback if the <code>stitch</code> MCP is disabled.
+    </td>
+  </tr>
+  <tr><td colspan="2"><b>Role:</b> <code>UI/UX + frontend implementation + a11y.</code></td></tr>
+  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/designer.md"><code>agents/designer.md</code></a></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.2-contributor-free</code></td></tr>
+  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
+  <tr><td colspan="2"><b>Requires:</b> <code>stitch</code> MCP enabled for mockup generation. Without it, <code>designer</code> becomes inert for visual work.</td></tr>
+</table>
 
 ### 04. `tester` — The Quality Gate
 
-Writes test suites, runs them, iterates failures in isolation. Reports compact results. Never mixes "write the feature" with "test the feature".
-
-- **Role:** `TDD, test suites, flake hunting.`
-- **Prompt:** [agents/tester.md](agents/tester.md)
-- **Default model:** `opencode/mimo-v2.5-free`
-- **Model guidance:** fast, code-focused model. Speed matters more than deep reasoning.
+<table>
+  <tr>
+    <td width="30%" align="center" valign="top">
+      <h3>🧪</h3>
+      <br><sub><b><code>tester</code></b></sub>
+      <br><sub><i>The Quality Gate</i></sub>
+    </td>
+    <td width="70%" valign="top">
+      Writes test suites, runs them, iterates failures in isolation. Reports compact results. Never mixes "write the feature" with "test the feature".
+    </td>
+  </tr>
+  <tr><td colspan="2"><b>Role:</b> <code>TDD, test suites, flake hunting.</code></td></tr>
+  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/tester.md"><code>agents/tester.md</code></a></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/mimo-v2.5-free</code></td></tr>
+  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
+  <tr><td colspan="2"><b>Model guidance:</b> fast, code-focused model. Speed matters more than deep reasoning.</td></tr>
+</table>
 
 ### 05. `reviewer` — The Diff Detective
 
-Read-only code + security review. Compares a diff against repo standards and the originating spec. Catches race conditions, missing error handling, security smells, off-by-one. Never edits.
-
-- **Role:** `Diff review, security gate before merge.`
-- **Prompt:** [agents/reviewer.md](agents/reviewer.md)
-- **Default model:** `opencode/nemotron-3-ultra-free`
-- **Use when:** finished a chunk of work, about to touch auth/data, want a sanity check before merging.
+<table>
+  <tr>
+    <td width="30%" align="center" valign="top">
+      <h3>🛡️</h3>
+      <br><sub><b><code>reviewer</code></b></sub>
+      <br><sub><i>The Diff Detective</i></sub>
+    </td>
+    <td width="70%" valign="top">
+      Read-only code + security review. Compares a diff against repo standards and the originating spec. Catches race conditions, missing error handling, security smells, off-by-one. Never edits.
+    </td>
+  </tr>
+  <tr><td colspan="2"><b>Role:</b> <code>Diff review, security gate before merge.</code></td></tr>
+  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/reviewer.md"><code>agents/reviewer.md</code></a></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/nemotron-3-ultra-free</code></td></tr>
+  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
+  <tr><td colspan="2"><b>Use when:</b> finished a chunk of work, about to touch auth/data, want a sanity check before merging.</td></tr>
+</table>
 
 ### 06. `documenter` — The Technical Writer
 
-Creates and improves documentation in <code>docs/</code>, verified against what the code actually does. Will not write docs that lie about behavior.
-
-- **Role:** `READMEs, runbooks, API docs, onboarding.`
-- **Prompt:** [agents/documenter.md](agents/documenter.md)
-- **Default model:** `opencode/muse-spark-1.2-contributor-free`
+<table>
+  <tr>
+    <td width="30%" align="center" valign="top">
+      <h3>📚</h3>
+      <br><sub><b><code>documenter</code></b></sub>
+      <br><sub><i>The Technical Writer</i></sub>
+    </td>
+    <td width="70%" valign="top">
+      Creates and improves documentation in <code>docs/</code>, verified against what the code actually does. Will not write docs that lie about behavior.
+    </td>
+  </tr>
+  <tr><td colspan="2"><b>Role:</b> <code>READMEs, runbooks, API docs, onboarding.</code></td></tr>
+  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/documenter.md"><code>agents/documenter.md</code></a></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.2-contributor-free</code></td></tr>
+  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
+</table>
 
 ### 07. `researcher` — The Investigator
 
-External research with cited findings. Uses <code>context7</code> for fresh library docs (avoids stale training data), and <code>webfetch</code>/<code>websearch</code> for everything else. Returns links and quotes, not opinions.
-
-- **Role:** `Library / API research, current best practices.`
-- **Prompt:** [agents/researcher.md](agents/researcher.md)
-- **Default model:** `opencode/hy3-free`
+<table>
+  <tr>
+    <td width="30%" align="center" valign="top">
+      <h3>🔍</h3>
+      <br><sub><b><code>researcher</code></b></sub>
+      <br><sub><i>The Investigator</i></sub>
+    </td>
+    <td width="70%" valign="top">
+      External research with cited findings. Uses <code>context7</code> for fresh library docs (avoids stale training data), and <code>webfetch</code>/<code>websearch</code> for everything else. Returns links and quotes, not opinions.
+    </td>
+  </tr>
+  <tr><td colspan="2"><b>Role:</b> <code>Library / API research, current best practices.</code></td></tr>
+  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/researcher.md"><code>agents/researcher.md</code></a></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/hy3-free</code></td></tr>
+  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
+</table>
 
 ### 08. `explorer` — The Scout
 
-Fast, broad, shallow codebase reconnaissance. Where is X defined, what calls Y, map this directory. Use when you need orientation, not depth.
-
-- **Role:** `Codebase mapping, pattern finding, file location.`
-- **Prompt:** [agents/explorer.md](agents/explorer.md)
-- **Default model:** `opencode/mimo-v2.5-free`
-- **Use when:** first time in a repo, you need to find something fast, you want a lay of the land.
+<table>
+  <tr>
+    <td width="30%" align="center" valign="top">
+      <h3>🗺️</h3>
+      <br><sub><b><code>explorer</code></b></sub>
+      <br><sub><i>The Scout</i></sub>
+    </td>
+    <td width="70%" valign="top">
+      Fast, broad, shallow codebase reconnaissance. Where is X defined, what calls Y, map this directory. Use when you need orientation, not depth.
+    </td>
+  </tr>
+  <tr><td colspan="2"><b>Role:</b> <code>Codebase mapping, pattern finding, file location.</code></td></tr>
+  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/explorer.md"><code>agents/explorer.md</code></a></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/mimo-v2.5-free</code></td></tr>
+  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
+  <tr><td colspan="2"><b>Use when:</b> first time in a repo, you need to find something fast, you want a lay of the land.</td></tr>
+</table>
 
 > [!NOTE]
 > **Token-economy variant:** the `agents/` folder also contains `cavecrew-investigator`, `cavecrew-builder`, `cavecrew-reviewer` — internal caveman-compressed siblings of `explorer`/`builder`/`reviewer` that return ~60% fewer tokens. The runtime pulls them in when context is tight. Decision guide: [skills/cavecrew/SKILL.md](skills/cavecrew/SKILL.md).
@@ -391,7 +479,7 @@ curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scri
 
 Both pull latest, then for each pack file: `added` if new, `unchanged` if identical, `updated` (with `.local-<timestamp>` backup) if it differs. Restart OpenCode or run `/reload` after.
 
-> **Full update mechanics, flags, and recovery if `git pull` fails:** [docs/COMMANDS.md](docs/COMMANDS.md#-update-pack)
+> **Full update mechanics, flags, and recovery if `git pull` fails:** [docs/COMMANDS.md](docs/COMMANDS.md#update-pack-in-detail)
 
 ---
 
@@ -431,7 +519,7 @@ Use this as a map: start with install, then jump to agents/skills/rules based on
 | `agentmemory` | optional (falls back to in-session memory only if missing) |
 
 > [!NOTE]
-> The maintainer develops and tests on Windows only. `install.sh` is structurally similar to `install.ps1` but has **not been exercised on a real macOS or Linux machine**. The safest path on Unix is manual copy-paste. Full instructions: [docs/INSTALL.md](docs/INSTALL.md#manual-copy-paste-fallback).
+> The maintainer develops and tests on Windows only. `install.sh` is structurally similar to `install.ps1` but has **not been exercised on a real macOS or Linux machine**. The safest path on Unix is manual copy-paste. Full instructions: [docs/INSTALL.md](docs/INSTALL.md#manual-install-full-control).
 
 ---
 
