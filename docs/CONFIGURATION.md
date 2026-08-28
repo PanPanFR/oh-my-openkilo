@@ -20,6 +20,14 @@ This document describes each block of [`examples/opencode.example.json`](../exam
 | `instructions`      | string[] | Paths to always-on rule files, relative to the config dir.                             |
 | `lsp`               | boolean  | Enable Language Server Protocol. Recommended `true`.                                    |
 
+## Per-agent model selection
+
+The `model` and `small_model` fields above are **fallback defaults** for OpenCode's built-in agents. The agents in this pack (`builder`, `planner`, `designer`, etc.) have their own `model:` field in their frontmatter, which **overrides** the top-level default for that agent.
+
+The pack ships with all 8 named agents set to a **free model** from OpenCode (e.g. `opencode/nemotron-3-ultra-free`). You can use the pack with no provider configuration — but you can also override per agent by editing the frontmatter in `agents/<name>.md`.
+
+See [docs/AGENTS.md](AGENTS.md#changing-the-model) for the default model table and how to switch.
+
 ## Permissions
 
 The example ships with all permissions set to `allow`. This is the maintainer's preference (max automation). For a stricter setup, change to `deny` and explicitly allow only what you want:
@@ -101,22 +109,22 @@ To enable:
 
 1. Set `"enabled": true` for the MCP.
 2. Provide any required env var via `{env:VAR}` in the config, or set the env var in your shell.
-3. For `local` MCPs with absolute paths (e.g. `perplexity`), update the `command` to your actual install path.
+3. For `local` MCPs that reference installed CLIs (e.g. `playwright` needs `npx playwright install chromium` first run), follow the package's own setup.
 4. Restart OpenCode or run `/reload`.
 
 ### Per-MCP credential table
 
 | MCP                    | Required env / file                                | Free? | Used by                                |
 |------------------------|----------------------------------------------------|-------|----------------------------------------|
-| `agentmemory`          | none (local server)                                | yes   | `agentmemory` rule, `recall`/`remember` |
+| `agentmemory`          | Plus server + `AGENTMEMORY_SERVER_URL`             | yes (Plus tier) | `agentmemory` rule, `recall`/`remember` |
 | `chrome-devtools`      | none (uses installed Chrome)                       | yes   | `chrome-devtools` skill                |
 | `playwright`           | `npx playwright install chromium` (first run)      | yes   | `playwright-cli` skill                 |
 | `stitch`               | `GOOGLE_API_KEY`                                   | tier-based | `designer` agent, `stitch` skill    |
 | `context7`             | `CONTEXT7_API_KEY` (free at context7.com)          | yes   | `researcher`, doc lookup               |
 | `remotion`             | none (uses local node)                             | yes   | `remotion` skill                       |
-| `tinypuppet`           | `pip install tinypuppet`                           | yes   | cheap screenshot/DOM peek              |
-| `perplexity`           | self-hosted proxy required                         | n/a   | `researcher` web search                |
 | `supabase-mcp-server`  | `SUPABASE_ACCESS_TOKEN`                            | tier-based | Supabase ops                       |
+
+The `install.ps1` validator scans your config after install and warns if any enabled MCP has a missing env var. Re-run it after changing `opencode.json` to re-validate.
 
 ## Instructions
 

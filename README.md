@@ -88,13 +88,28 @@ The installer:
 
 ---
 
+## Default models are free
+
+Every agent and subagent in this pack defaults to a **free model provided by OpenCode** (e.g. `opencode/nemotron-3-ultra-free`, `opencode/muse-spark-1.2-contributor-free`, `opencode/mimo-v2.5-free`, `opencode/hy3-free`). You can use the pack **without configuring any provider API key** — just install and start.
+
+Want a different model? Edit the agent's `model:` line in its markdown file:
+
+```bash
+# example: switch reviewer from free to your preferred model
+notepad $env:USERPROFILE\.config\opencode\agents\reviewer.md
+# change: model: opencode/nemotron-3-ultra-free
+# to:     model: anthropic/claude-sonnet-4-5  (or any other model from your provider list)
+```
+
+The `model` field sits in the YAML frontmatter at the top of each `agents/*.md` file. Restart OpenCode (or run `/reload`) after changing it. See [docs/AGENTS.md](docs/AGENTS.md#changing-the-model) for the full per-agent model table and recommendations.
+
 ## Performance Tiers
 
-The pack ships in three linear layers. Start at Core, climb when you need the capability.
+The pack ships in two linear layers. **Core is always installed** and works out of the box. **Plus** adds the two external tools that make the pack truly "smart". **MCPs are listed in the example config** but disabled by default (except `agentmemory` which Plus needs); enable them one at a time as you need the capability.
 
 ### Core (always installed)
 
-The pack itself — agents, skills, rules, commands, plugins, `AGENTS.md`. Without anything else, OpenCode already uses caveman-style terse replies, ponytail-style minimal code, and the full skill library.
+The pack itself — agents, skills, rules, commands, plugins, `AGENTS.md`, plus the `mcp` entries in `examples/opencode.example.json` (most disabled by default). Without anything else, OpenCode already uses caveman-style terse replies, ponytail-style minimal code, and the full skill library.
 
 ### Plus — recommended for "smart" performance
 
@@ -112,22 +127,21 @@ Then start the agentmemory server (see its README) and make sure `mcp.agentmemor
 - **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos. The rule loads but its tools are missing.
 - **No `agentmemory`** → no cross-session memory. Every session starts from zero. The rule degrades to nothing useful.
 
-### Max — full power
+### MCPs (enabled per-need, not auto-on)
 
-Plus tier **plus** optional MCP servers. None are required to make the pack work, but each one unlocks a specific capability. Skip only if you know you don't need it.
+The example config includes all MCPs that ship with this pack, **disabled by default except `agentmemory`** (which Plus needs). Enable one when you actually need its capability.
 
-| MCP                    | What it unlocks                                        | Required             | Risk if skipped |
-|------------------------|--------------------------------------------------------|----------------------|-----------------|
+| MCP                    | What it unlocks                                        | Required             | Risk if disabled |
+|------------------------|--------------------------------------------------------|----------------------|------------------|
+| `agentmemory`          | Persistent cross-session memory (Plus dependency)      | Plus server + `AGENTMEMORY_SERVER_URL` | No memory — every session starts from zero |
 | `context7`             | Up-to-date library docs (replaces stale training data) | `CONTEXT7_API_KEY` (free) | Docs lookup falls back to model knowledge (often outdated) |
 | `stitch`               | AI-generated UI mockups, used by `designer` agent      | `GOOGLE_API_KEY`     | **`designer` becomes inert** — `builder` and `planner` delegate UI work to `designer`, so all UI tasks degrade |
 | `chrome-devtools`      | Live browser debug (DOM, network, console, perf)       | none                 | No live browser inspection |
 | `playwright`           | Stateful persistent browser loop, E2E test gen         | `npx playwright install chromium` (first run) | E2E generation disabled |
 | `remotion`             | Walkthrough video generation                           | none                 | No video capability |
-| `tinypuppet`           | Cheap screenshot/DOM peek (token-efficient)            | `pip install tinypuppet` | Browser debug cost goes up |
-| `perplexity`           | Web search via self-hosted proxy                       | self-hosted proxy    | No external research |
 | `supabase-mcp-server`  | Supabase project ops                                   | `SUPABASE_ACCESS_TOKEN` | No Supabase integration |
 
-Enable by setting `"enabled": true` in `opencode.json` and filling in any required env var. See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for details.
+Enable by setting `"enabled": true` in `opencode.json` and filling in any required env var. See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for details. The `install.ps1` validator will warn you if you enable an MCP without setting its env var.
 
 ---
 
@@ -150,7 +164,7 @@ Enable by setting `"enabled": true` in `opencode.json` and filling in any requir
 | 04 | `tester` | Test suites — write, run, iterate failures in isolation, report compact results. | |
 | 05 | `reviewer` | Code + security review of diffs vs repo standards and spec. Read-only. | |
 | 06 | `documenter` | Creates and improves documentation in `docs/`, verified against code. | |
-| 07 | `researcher` | External research with cited findings. Uses `context7` + `perplexity`. | |
+| 07 | `researcher` | External research with cited findings. Uses `context7` for libraries; web research via `webfetch`/`websearch`. | |
 | 08 | `explorer` | Fast codebase scouting — broad, shallow, quick. | |
 | 09 | `cavecrew-investigator` | Compressed code locator. `file:line` table output, 60% fewer tokens. | |
 | 10 | `cavecrew-builder` | 1-2 file surgical edit. Refuses if scope > 2 files. | |
@@ -251,6 +265,10 @@ See [docs/COMMANDS.md](docs/COMMANDS.md) for the full mechanics.
 ## 🙏 Credits
 
 oh-my-openkilo is the OpenCode adaptation of **[oh-my-kilo](https://github.com/PanPanFR/oh-my-kilo)** — a lean, curated multi-agent configuration pack for Kilo Code by the same maintainer. The "prompts in files, models in config, behavior in rules" philosophy and the agent/skill/rule layering come from that project.
+
+The pack structure and the "config-only" sharing approach are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)** by [alvinunreal](https://github.com/alvinunreal) — a lean, curated multi-agent suite for OpenCode. oh-my-openkilo adapts the philosophy (specialized agents + delegation hierarchy + skills + rules + installer) into a pure config pack, no runtime, no build step.
+
+The **agentic workflow patterns** — primary agent triage, subagent delegation, skill-based protocol enforcement, graphify-first codebase navigation, and caveman/ponytail communication style — were developed in **[Kilo Code](https://github.com/Kilo-Org/kilocode)** (also by this maintainer, see `oh-my-kilo`). OpenCode inherits these patterns naturally, and the agents in this pack are the same mental model applied to a different runtime.
 
 ## 🔒 Security
 

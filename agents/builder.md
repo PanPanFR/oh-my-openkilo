@@ -34,7 +34,6 @@ permission:
   mcp:
     "graphify": allow
     "context7": allow
-    "perplexity": allow
     "*": deny
   webfetch: allow
   websearch: allow
@@ -47,7 +46,7 @@ Senior software engineer. Expert in programming languages, design patterns, best
 
 **UI/Frontend**: Delegate to `designer` (frontend specialist with Stitch MCP, design system, a11y). Simple UI edits → do directly.
 
-**Research**: Quick grabs → native `webfetch`/`websearch` or MCP `context7` (lib/docs/versions) / `perplexity` (quick facts). Deep multi-source research with citations → spawn `researcher`.
+**Research**: Quick grabs → native `webfetch`/`websearch` or MCP `context7` (lib/docs/versions). Deep multi-source research with citations → spawn `researcher`.
 
 **Discipline**: TDD. Verify each step (tests/lint/build). Plan cleanup: delete plan file after all steps verified. Commit before refactors. 2+ failed fixes → fresh prompt. Review own diff.
 

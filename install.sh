@@ -92,3 +92,35 @@ echo "Next steps:"
 echo "  1. Edit $CONFIG_DIR/opencode.json (model, provider keys, MCP credentials)."
 echo "  2. (Optional) npm i -g graphify && npm i -g @agentmemory/server"
 echo "  3. Restart OpenCode or run /reload."
+
+# Validate env vars for enabled MCPs (only if config exists and dry-run is off)
+if [ -f "$CONFIG_DIR/opencode.json" ] && [ "$DRY_RUN" -eq 0 ]; then
+    if command -v jq >/dev/null 2>&1; then
+        # Find enabled MCPs and their {env:VAR} references
+        enabled_mcps=$(jq -r '.mcp | to_entries[] | select(.value.enabled == true) | .key' "$CONFIG_DIR/opencode.json" 2>/dev/null)
+        missing=""
+        for mcp_name in $enabled_mcps; do
+            env_refs=$(jq -r --arg k "$mcp_name" '
+                (.mcp[$k].headers // {}) as $h |
+                (.mcp[$k].env // {}) as $e |
+                ($h | to_entries[]? | .value | tostring) ,
+                ($e | to_entries[]? | .value | tostring)
+            ' "$CONFIG_DIR/opencode.json" 2>/dev/null | grep -oE '\{env:[A-Z_][A-Z0-9_]*\}' | sed 's/{env://; s/}//')
+            for var in $env_refs; do
+                if [ -z "${!var:-}" ]; then
+                    missing="$missing $mcp_name:$var"
+                fi
+            done
+        done
+        if [ -n "$missing" ]; then
+            echo ""
+            echo "WARNING: enabled MCPs reference missing env vars:" >&2
+            for m in $missing; do
+                mcp_part="${m%%:*}"
+                var_part="${m##*:}"
+                echo "    - $mcp_part needs env var: $var_part" >&2
+            done
+            echo "    Set these in your shell or .env before running OpenCode." >&2
+        fi
+    fi
+fi

@@ -5,7 +5,7 @@ description: Use when automating browser interactions, E2E tests, web scraping, 
 
 # Browser Automation with playwright-cli
 
-Token-efficient CLI for Playwright. Use when automation load is high (many page reads, big snapshots) and MCP tool schemas eat too much context. For small ad-hoc inspects, prefer `chrome-devtools` MCP; for cheap file-based peeks, `tinypuppet` MCP.
+Token-efficient CLI for Playwright. Use when automation load is high (many page reads, big snapshots) and MCP tool schemas eat too much context. For small ad-hoc inspects, prefer `chrome-devtools` MCP.
 
 **Invoke via bash tool.** Example: `playwright-cli open https://example.com`. Opencode runs these directly; the model never sees a heavy MCP tool schema for the browser.
 
@@ -193,7 +193,7 @@ playwright-cli --% goto "https://example.com/?a=1&b=2"
 |------|-----|
 | Many page reads, big snapshots, low context budget | `playwright-cli` via bash (this skill) |
 | Quick live inspect / debug / Lighthouse / perf trace | `chrome-devtools` MCP |
-| Cheap file-based screenshot/DOM peek | `tinypuppet` MCP |
+| Cheap file-based screenshot/DOM peek | `chrome-devtools` MCP |
 | Stateful persistent MCP loop, self-healing tests | `playwright` MCP (`@playwright/mcp`) |
 
 ## Reference docs (load on demand)

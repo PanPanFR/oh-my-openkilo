@@ -9,7 +9,7 @@ alwaysApply: true
 - Drop filler words, keep substance
 - Use fragments, not full sentences
 - Code, commands, errors: keep byte-exact
-- **Browser MCP choice matches this style:** `playwright-cli` skill (via bash) to do (high-volume, token-efficient), `chrome-devtools` to see, `tinypuppet` to peek cheap. Default to `tinypuppet` for screenshots (file path, not base64) when fidelity allows.
+- **Browser MCP choice matches this style:** `playwright-cli` skill (via bash) to do (high-volume, token-efficient), `chrome-devtools` to see. Default to `chrome-devtools` for screenshots when fidelity allows.
 - **ACTIVE EVERY RESPONSE. No revert after many turns. No filler drift. Still active if unsure.**
 - Off only: "stop caveman" / "normal mode"
 

@@ -17,7 +17,7 @@ Before implementing: identify task type -> load matching skill via `skill` tool 
 | Page speed, Core Web Vitals | `web-perf` |
 | Browser automation/E2E (high-volume, token-efficient: click, login, form, snapshot, mock, video, trace, generate Playwright tests) | `playwright-cli` skill (invoke via bash tool) |
 | Browser debug/inspect (console, network, perf, live state) | `chrome-devtools` MCP |
-| Browser peek, context-economy (file-based screenshot/DOM) | `tinypuppet` MCP |
+| Browser peek, context-economy (file-based screenshot/DOM) | `chrome-devtools` MCP |
 | Stateful persistent browser MCP loop, self-healing tests, exploratory | `playwright` MCP (`@playwright/mcp`) |
 | Git commits, conventional commits | `git-commit` |
 | PWA, service workers | `pwa-development` |
@@ -33,6 +33,6 @@ Before implementing: identify task type -> load matching skill via `skill` tool 
 | Writing/verifying skills | `writing-skills` |
 | Verification before claiming complete | `verification-before-completion` |
 
-Browser MCP/skill choice matches this style: `playwright-cli` skill (via bash) for high-volume token-efficient automation, `chrome-devtools` MCP to see/live-debug, `tinypuppet` MCP to peek cheap, `playwright` MCP for stateful persistent loops.
+Browser MCP/skill choice matches this style: `playwright-cli` skill (via bash) for high-volume token-efficient automation, `chrome-devtools` MCP to see/live-debug, `playwright` MCP for stateful persistent loops.
 
 Skill loading happens BEFORE any code is written or command is run.

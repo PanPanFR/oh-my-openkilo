@@ -141,6 +141,52 @@ if (-not (Test-Path $TargetConfig) -and (Test-Path $SrcExample)) {
     Write-Host "    To pick up the example block, manually merge from examples/opencode.example.json"
 }
 
+# --- Validate enabled MCPs have their env vars -------------------------------
+if ((Test-Path $TargetConfig) -and -not $WhatIfPreference) {
+    try {
+        $configJson = Get-Content -Path $TargetConfig -Raw | ConvertFrom-Json
+    } catch {
+        Write-Host "[!] Could not parse $TargetConfig as JSON -- skipping env validation" -ForegroundColor Yellow
+        $configJson = $null
+    }
+    if ($configJson -and $configJson.mcp) {
+        $missing = @()
+        foreach ($mcpName in ($configJson.mcp.PSObject.Properties | Where-Object { $_.Value.enabled -eq $true }).Name) {
+            $mcp = $configJson.mcp.$mcpName
+            # remote: check headers
+            if ($mcp.headers) {
+                foreach ($h in $mcp.headers.PSObject.Properties) {
+                    $val = [string]$h.Value
+                    if ($val -match '\{env:([A-Z_][A-Z0-9_]*)\}') {
+                        $varName = $matches[1]
+                        if (-not (Test-Path "env:$varName")) {
+                            $missing += "$mcpName.headers.$($h.Name) -> env var `$env:$varName not set"
+                        }
+                    }
+                }
+            }
+            # local: check command for env-block
+            if ($mcp.env) {
+                foreach ($e in $mcp.env.PSObject.Properties) {
+                    $val = [string]$e.Value
+                    if ($val -match '\{env:([A-Z_][A-Z0-9_]*)\}') {
+                        $varName = $matches[1]
+                        if (-not (Test-Path "env:$varName")) {
+                            $missing += "$mcpName.env.$($e.Name) -> env var `$env:$varName not set"
+                        }
+                    }
+                }
+            }
+        }
+        if ($missing.Count -gt 0) {
+            Write-Host ""
+            Write-Host "[!] WARNING: enabled MCPs reference missing env vars:" -ForegroundColor Yellow
+            foreach ($m in $missing) { Write-Host "    - $m" -ForegroundColor Yellow }
+            Write-Host "    Set these in your shell or .env before running OpenCode, or disable the MCP." -ForegroundColor Yellow
+        }
+    }
+}
+
 # --- Summary -----------------------------------------------------------------
 Write-Host ""
 Write-Host "Done." -ForegroundColor Green

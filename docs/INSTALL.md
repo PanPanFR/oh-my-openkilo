@@ -53,7 +53,7 @@ git clone https://github.com/PanPanFR/oh-my-openkilo.git ~/.config/opencode/oh-m
 
 ## After install: pick your tier
 
-oh-my-openkilo ships with two distinct add-on layers. **Core is always installed** by `install.ps1`. The other two are opt-in.
+oh-my-openkilo ships with two layers. **Core is always installed** by `install.ps1`. Plus is opt-in for the highest-leverage features.
 
 ### Core (always installed)
 
@@ -61,12 +61,13 @@ oh-my-openkilo ships with two distinct add-on layers. **Core is always installed
 - Plugins: `agentmemory-capture`, `caveman`, `ponytail`, `superpowers`
 - `AGENTS.md` global rules
 - `examples/opencode.example.json` (seeded if you had no `opencode.json`)
+- All MCP entries in the example config (most `enabled: false` by default — only `agentmemory` is on, because Plus needs it)
 
 This is the baseline. Without anything else, OpenCode already uses caveman-style terse replies, ponytail-style minimal code, and the entire skill library.
 
 ### Plus (recommended for "smart" performance)
 
-Install these two external tools to unlock the highest-leverage features:
+Two external tools unlock the highest-leverage features:
 
 ```bash
 # Knowledge graph -- the `graphify` rule and skill depend on this
@@ -76,29 +77,28 @@ npm i -g graphify
 npm i -g @agentmemory/server
 ```
 
-Then make sure your `opencode.json` has the `agentmemory` MCP block (the example already does). Start the agentmemory server once with `agentmemory serve` (or whatever the package's start command is — see its README).
+Then make sure your `opencode.json` has the `agentmemory` MCP block (the example already has it). Start the agentmemory server once with `agentmemory serve` (or whatever the package's start command is — see its README).
 
 **Risk if you skip Plus:**
 
 - **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos. The `graphify` rule will load but its tools will be missing.
 - **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `agentmemory` rule will degrade to nothing useful.
 
-### Max (recommended for full power)
+### MCPs (enable per-need, not auto-on)
 
-The Plus tier **plus** optional MCP servers. None of these are required to make the pack work, but each one unlocks a specific capability. Skip only if you know you don't need that capability.
+The example config lists all MCPs that ship with this pack, **disabled by default except `agentmemory`**. Enable one when you need it.
 
-| MCP                    | Capability                                          | Required env / key                      | Risk if skipped |
-|------------------------|-----------------------------------------------------|-----------------------------------------|-----------------|
+| MCP                    | Capability                                          | Required env / key                      | Risk if disabled |
+|------------------------|-----------------------------------------------------|-----------------------------------------|------------------|
+| `agentmemory`          | Persistent cross-session memory (Plus dependency)   | Plus server + `AGENTMEMORY_SERVER_URL`  | No memory — every session starts from zero |
 | `context7`             | Up-to-date library docs (replaces training data)    | `CONTEXT7_API_KEY` (free at context7.com) | Documentation lookup falls back to model knowledge (often outdated) |
 | `stitch`               | AI-generated UI mockups, used by `designer` agent   | `GOOGLE_API_KEY`                        | **`designer` agent becomes inert** — `builder` and `planner` delegate UI work to `designer` |
 | `chrome-devtools`      | Live browser debug (DOM, network, console, perf)    | none (uses installed Chrome)            | No live browser inspection; static fetch only |
 | `playwright`           | Stateful persistent browser loop, E2E test gen      | `npx playwright install chromium` first | E2E test generation disabled; `playwright-cli` skill degrades |
 | `remotion`             | Walkthrough video generation                        | none                                    | No video walkthrough capability |
-| `tinypuppet`           | Cheap screenshot/DOM peek (token-efficient)         | `pip install tinypuppet`                | Browser debug cost goes up; lose token-economy option |
-| `perplexity`           | Web search via your own proxy                       | self-hosted proxy required              | No external research; `researcher` agent degrades |
 | `supabase-mcp-server`  | Supabase project ops (read schema, run migrations)  | `SUPABASE_ACCESS_TOKEN`                 | No Supabase integration; manual dashboard work |
 
-To enable any of these, edit `opencode.json` to set `enabled: true` and fill in the required env vars. The example file lists all of them with `enabled: false` by default except the always-on ones (`agentmemory`, `chrome-devtools`, `playwright`, `stitch`, `context7`).
+To enable any of these, edit `opencode.json` to set `enabled: true` and fill in the required env vars. The `install.ps1` validator scans your config and warns if any enabled MCP has a missing env var.
 
 ## Verify the install
 

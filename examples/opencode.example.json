@@ -51,7 +51,7 @@
     "chrome-devtools": {
       "type": "local",
       "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
-      "enabled": true
+      "enabled": false
     },
     "context7": {
       "type": "remote",
@@ -59,17 +59,12 @@
       "headers": {
         "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
       },
-      "enabled": true
-    },
-    "perplexity": {
-      "type": "local",
-      "command": ["python", "C:/path/to/perplexity-mcpserver-proxy/main.py"],
       "enabled": false
     },
     "playwright": {
       "type": "local",
       "command": ["npx", "@playwright/mcp@latest"],
-      "enabled": true
+      "enabled": false
     },
     "remotion": {
       "type": "local",
@@ -82,7 +77,7 @@
       "headers": {
         "X-Goog-Api-Key": "{env:GOOGLE_API_KEY}"
       },
-      "enabled": true
+      "enabled": false
     },
     "supabase-mcp-server": {
       "type": "local",
@@ -93,11 +88,6 @@
         "--access-token",
         "{env:SUPABASE_ACCESS_TOKEN}"
       ],
-      "enabled": false
-    },
-    "tinypuppet": {
-      "type": "local",
-      "command": ["python", "-m", "tinypuppet.mcp_server"],
       "enabled": false
     }
   },

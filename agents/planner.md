@@ -34,7 +34,6 @@ permission:
   mcp:
     "graphify": allow
     "context7": allow
-    "perplexity": allow
     "*": deny
   webfetch: allow
   websearch: allow
@@ -52,7 +51,7 @@ Pre-implementation only. Design systems, brainstorm, create implementation plans
 
 **Scope**: Planning, architecture, brainstorming, requirements analysis, trade-off evaluation. Zero code changes. Zero file modifications outside `.opencode/plans/`.
 
-**Analysis**: Evaluate alternatives (cost/benefit/traps). Evidence from codebase (graphify query/path/explain). Research: quick grabs via native `webfetch`/`websearch` or MCP `context7` (lib/docs) / `perplexity` (facts). Deep research with citations → spawn `researcher`. Prefer simplifying refactors.
+**Analysis**: Evaluate alternatives (cost/benefit/traps). Evidence from codebase (graphify query/path/explain). Research: quick grabs via native `webfetch`/`websearch` or MCP `context7` (lib/docs). Deep research with citations → spawn `researcher`. Prefer simplifying refactors.
 
 **Artifacts**: Check `docs/` for PRD/TDD/api-spec/ui-ux/ADR. Missing → ask user to create (do NOT create yourself). Existing → read first.
 
