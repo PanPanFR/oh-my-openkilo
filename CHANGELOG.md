@@ -5,6 +5,12 @@ All notable changes to oh-my-openkilo are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **`update.ps1` and `update.sh`** at the repo root. Terminal-side equivalent of the in-session `/update-pack` slash command: `git pull --ff-only origin main`, then per-file sync with `added / updated (with backup) / unchanged` summary. Same backup convention (`<file>.local-<timestamp>`) as the command. Use this for CI/CD, scheduled syncs, or when you just prefer terminal-based workflows.
+- **README "Updating the pack" section rewritten** to show both options side by side: in-session `/update-pack` and one-liner PowerShell (`irm ... | iex`) + bash (`curl ... | bash`) scripts.
+
 ## [0.3.0] - 2026-08-28
 
 ### Added
