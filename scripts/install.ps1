@@ -22,15 +22,15 @@
     Override the target config dir. Default: $env:USERPROFILE\.config\opencode
 
 .EXAMPLE
-    .\install.ps1 -WhatIf
+    .\scripts\install.ps1 -WhatIf
     Show what would happen without changing anything.
 
 .EXAMPLE
-    .\install.ps1
+    .\scripts\install.ps1
     Standard install with backup.
 
 .EXAMPLE
-    .\install.ps1 -SkipBackup
+    .\scripts\install.ps1 -SkipBackup
     Install without backup (destructive, you were warned).
 #>
 [CmdletBinding(SupportsShouldProcess = $true)]
@@ -46,7 +46,8 @@ $ErrorActionPreference = 'Stop'
 if (-not $ConfigDir) {
     $ConfigDir = Join-Path $env:USERPROFILE '.config\opencode'
 }
-$RepoRoot = $PSScriptRoot
+# Script lives in scripts/; the actual pack contents are one level up.
+$RepoRoot = Split-Path -Path $PSScriptRoot -Parent
 $PackName = 'oh-my-openkilo'
 
 # Source paths (this repo)
@@ -60,7 +61,7 @@ $SrcExample  = Join-Path $RepoRoot 'examples\opencode.example.json'
 
 # Sanity checks
 if (-not (Test-Path $SrcAgents)) {
-    throw "Source 'agents' not found at $SrcAgents. Are you running install.ps1 from the repo root?"
+    throw "Source 'agents' not found at $SrcAgents. Are you running install.ps1 from the scripts/ folder of the repo?"
 }
 
 # --- Dry-run banner ----------------------------------------------------------

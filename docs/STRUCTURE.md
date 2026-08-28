@@ -10,8 +10,11 @@ oh-my-openkilo/
 ├── AGENTS.md                          # the AGENTS.md that ships with the pack
 ├── .gitignore                         # excludes opencode.json, node_modules, state files
 │
-├── install.ps1                        # Windows installer
-├── install.sh                         # Unix installer
+├── scripts/                           # installer + updater entry points
+│   ├── install.ps1                    # Windows installer
+│   ├── install.sh                     # Unix installer
+│   ├── update.ps1                     # Windows updater (terminal-side /update-pack)
+│   └── update.sh                      # Unix updater (terminal-side /update-pack)
 │
 ├── agents/                            # 11 agent prompts (mirror of ~/.config/opencode/agents/)
 │   ├── builder.md
@@ -67,7 +70,7 @@ oh-my-openkilo/
 └── docs/
     ├── INSTALL.md                     # this install guide
     ├── STRUCTURE.md                   # this file
-    ├── AGENTS.md                      # 11 agents in detail
+    ├── AGENTS.md                      # 8 agents in detail (plus 3 internal `cavecrew-*` token-economy variants)
     ├── SKILLS.md                      # 46 skills table
     ├── RULES.md                       # 7 rules in detail
     ├── COMMANDS.md                    # command reference
@@ -97,7 +100,8 @@ Edits flow: edit in `~/.config/opencode/`, test in a real session, then copy to 
 - `LICENSE`, `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md`: repo governance
 - `docs/`: repo-only documentation, not loaded by OpenCode
 - `examples/opencode.example.json`: hand-maintained, never derived from the runtime config (to guarantee no leaks)
-- `install.ps1`, `install.sh`: installer scripts
+- `scripts/install.ps1`, `scripts/install.sh`: installer scripts (resolves repo root from the script's parent dir)
+- `scripts/update.ps1`, `scripts/update.sh`: terminal-side equivalent of `/update-pack` (git pull + per-file sync with backup)
 - `.gitignore`: repo-only
 
 ## What gets mirrored but not edited directly
@@ -108,4 +112,4 @@ Once an agent/skill/rule/command is published in the repo, the corresponding fil
 2. `git commit` and `git push`.
 3. Run `/update-pack` in OpenCode to pull the new version locally.
 
-This applies to **all 11 agents, 46 skills, 7 rules, 9 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); the install script and `/update-pack` will not touch local files.
+This applies to **all 8 agents (plus 3 internal `cavecrew-*`), 46 skills, 7 rules, 9 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); the install script and `/update-pack` will not touch local files.

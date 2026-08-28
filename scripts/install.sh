@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# install.sh -- oh-my-openkilo Unix installer
+# install.sh -- oh-my-openkilo Unix installer (lives in scripts/)
 # Usage:
-#   ./install.sh           # standard install with backup
-#   ./install.sh --dry-run # preview
-#   ./install.sh --no-backup --no-plugins
+#   ./scripts/install.sh           # standard install with backup
+#   ./scripts/install.sh --dry-run # preview
+#   ./scripts/install.sh --no-backup --no-plugins
 
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Script lives in scripts/; the actual pack contents are one level up.
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONFIG_DIR="${OPENCODE_CONFIG_DIR:-$HOME/.config/opencode}"
 DRY_RUN=0
 SKIP_BACKUP=0
@@ -36,7 +37,7 @@ run() {
 }
 
 if [ ! -d "$REPO_ROOT/agents" ]; then
-    echo "ERROR: agents/ not found in $REPO_ROOT. Run from the repo root." >&2
+    echo "ERROR: agents/ not found in $REPO_ROOT. Run scripts/install.sh from the scripts/ folder of the repo." >&2
     exit 1
 fi
 

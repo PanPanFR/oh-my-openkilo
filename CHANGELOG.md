@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **De-emphasize the `cavecrew-*` agents in user-facing docs.** The 3 `cavecrew-*` agents in `agents/` are an internal token-economy variant of the `caveman` family, not a separate feature for users to invoke. The public agent count drops from 11 to 8. `README.md` "Meet the agents" loses the 3 `cavecrew-*` rows from the table and the 3 sub-sections; the folder mention is collapsed to a single italic note pointing at the `cavecrew` skill. `docs/AGENTS.md` loses the 3 sub-sections, the dedicated `## The cavecrew-* family` block, and the related quick-reference rows. `AGENTS.md` (root) drops the "Compressed lane" row from the Kilo Code flow table. `rules/delegation.md` keeps the cavecrew rows (operational, not user-facing). Folder structure and runtime behavior are unchanged.
+- **CONTRIBUTING.md** skill count fixed: 44 → 46, rules count fixed: 6 → 7.
+- **Scripts moved to `scripts/`.** `install.ps1`, `install.sh`, `update.ps1`, `update.sh` now live in `scripts/`. `install.*` resolve repo root from the script's parent dir, so they must be run from `scripts/`. Raw GitHub URLs all updated to `main/scripts/...`. **Existing users with a local clone:** `git pull` will show the old root-level files as deleted and the new `scripts/` files as added; safe to commit the move. The `/update-pack` command and the mirror flow are unaffected (they sync `agents/`, `skills/`, etc., not the scripts themselves).
+
 ### Added
-- **`update.ps1` and `update.sh`** at the repo root. Terminal-side equivalent of the in-session `/update-pack` slash command: `git pull --ff-only origin main`, then per-file sync with `added / updated (with backup) / unchanged` summary. Same backup convention (`<file>.local-<timestamp>`) as the command. Use this for CI/CD, scheduled syncs, or when you just prefer terminal-based workflows.
+- **`update.ps1` and `update.sh`** in `scripts/`. Terminal-side equivalent of the in-session `/update-pack` slash command: `git pull --ff-only origin main`, then per-file sync with `added / updated (with backup) / unchanged` summary. Same backup convention (`<file>.local-<timestamp>`) as the command. Use this for CI/CD, scheduled syncs, or when you just prefer terminal-based workflows.
 - **README "Updating the pack" section rewritten** to show both options side by side: in-session `/update-pack` and one-liner PowerShell (`irm ... | iex`) + bash (`curl ... | bash`) scripts.
 
 ## [0.3.0] - 2026-08-28

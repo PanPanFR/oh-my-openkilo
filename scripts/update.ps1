@@ -27,11 +27,11 @@
     Override the pack repo dir. Default: $env:USERPROFILE\.config\opencode\oh-my-openkilo
 
 .EXAMPLE
-    .\update.ps1 -WhatIf
+    .\scripts\update.ps1 -WhatIf
     Show what would happen without changing anything.
 
 .EXAMPLE
-    irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/update.ps1 | iex
+    irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/update.ps1 | iex
     One-liner update from anywhere (after a fresh `git clone` of the repo).
 #>
 [CmdletBinding(SupportsShouldProcess = $true)]

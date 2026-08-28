@@ -126,7 +126,7 @@ To enable:
 | `remotion`             | none (uses local node)                             | yes   | `remotion` skill                       |
 | `supabase-mcp-server`  | `SUPABASE_ACCESS_TOKEN`                            | tier-based | Supabase ops                       |
 
-The `install.ps1` validator scans your config after install and warns if any enabled MCP has a missing env var. Re-run it after changing `opencode.json` to re-validate.
+The `scripts/install.ps1` validator scans your config after install and warns if any enabled MCP has a missing env var. Re-run it after changing `opencode.json` to re-validate.
 
 ## Installing MCP servers
 

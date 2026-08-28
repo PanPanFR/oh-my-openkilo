@@ -2,12 +2,35 @@
 
 A curated **OpenCode** configuration pack: specialized agents, skills, rules, and plugins that make OpenCode smarter and more autonomous out of the box.
 
-**OpenCode Agent Suite** · 11 agents · 46 skills · 7 rules · 9 commands
+**OpenCode Agent Suite** · 8 agents · 46 skills · 7 rules · 9 commands
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Agents](https://img.shields.io/badge/agents-11-orange)](#-meet-the-agents)
+[![Agents](https://img.shields.io/badge/agents-8-orange)](#-meet-the-agents)
 [![Skills](https://img.shields.io/badge/skills-46-green)](#-skills)
 [![Zero credentials](https://img.shields.io/badge/credentials-zero-brightgreen)](SECURITY.md)
+
+---
+
+## TL;DR
+
+```powershell
+# Windows: one-liner install
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.ps1 | iex
+```
+
+```bash
+# macOS / Linux
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.sh | bash
+```
+
+Then install the two required tools and restart OpenCode:
+
+```bash
+npm i -g graphify @agentmemory/server
+agentmemory serve
+```
+
+OpenCode now has 8 specialized agents, 46 curated skills, 7 always-on rules, and `/update-pack` to keep everything fresh. Zero credentials needed to start; the pack ships with free OpenCode models.
 
 ---
 
@@ -19,10 +42,10 @@ The agentic workflow patterns in this pack (primary-agent triage, subagent deleg
 
 Instead of building your AI coding workflow from scratch, you get a curated, opinionated setup that works immediately:
 
-- **11 specialized agents**: 2 primary (`builder`, `planner`) + 9 subagents (`designer`, `tester`, `reviewer`, `documenter`, `researcher`, `explorer`, `cavecrew-*`) with a delegation hierarchy already designed
+- **8 specialized agents**: 2 primary (`builder`, `planner`) + 6 subagents (`designer`, `tester`, `reviewer`, `documenter`, `researcher`, `explorer`) with a delegation hierarchy already designed
 - **46 skills**: battle-tested playbooks (TDD, systematic debugging, code review, writing-plans, web-perf) curated from popular community packs
 - **7 global rules**: always-on guardrails: English-only files, mandatory memory search, mandatory skill check, knowledge-graph-first navigation, parallel delegation, caveman/ponytail style, Cloudflare Workers doc-first
-- **4 plugins**: `agentmemory-capture`, `caveman`, `ponytail`, `superpowers`
+- **2 bundled plugins + 2 npm plugins**: bundled = `agentmemory-capture` (auto-save observations to memory) and `caveman` (terse-mode tracker); npm = `@dietrichgebert/ponytail` (minimal code style) and `superpowers` (skill loader)
 - **1 update command**: `/update-pack` to pull latest and sync with per-file backup
 
 The idea is simple: **prompts in files, models in config, behavior in rules.** Edit an agent by editing its file; switch models via `opencode.json`; add your own agents, skills, or rules without touching anything else.
@@ -72,7 +95,7 @@ If you only want the lightest "VSCode experience", the official [OpenCode extens
 
 | Component | Count | What it does |
 |-----------|-------|--------------|
-| Agents    | 11    | 2 primary + 9 subagents with delegation hierarchy. `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
+| Agents    | 8     | 2 primary + 6 subagents with delegation hierarchy. `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
 | Skills    | 46    | Curated playbooks across 10 categories: core, planning, audits, communication, workflow/git, UI/perf, platform, browser, stitch, caveman, meta |
 | Rules     | 7     | Always-on session guardrails, loaded via the `instructions` config (protocol rules first) |
 | Plugins   | 4     | `agentmemory-capture` (auto-save observations), `caveman` (terse mode tracker), `ponytail` (minimal code style), `superpowers` (skill loader) |
@@ -85,25 +108,25 @@ If you only want the lightest "VSCode experience", the official [OpenCode extens
 ### Windows (recommended)
 
 ```powershell
-# One-liner
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/install.ps1 | iex
+# One-liner (downloads scripts/install.ps1 from main branch)
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.ps1 | iex
 
-# Or preview first
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/install.ps1 -OutFile install.ps1
-.\install.ps1 -WhatIf
-.\install.ps1
+# Or preview first (after `git clone`)
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.ps1 -OutFile scripts/install.ps1
+.\scripts\install.ps1 -WhatIf
+.\scripts\install.ps1
 ```
 
 ### macOS / Linux
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.sh | bash
 
-# Or preview first
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/install.sh -o install.sh
-chmod +x install.sh
-./install.sh --dry-run
-./install.sh
+# Or preview first (after `git clone`)
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.sh -o scripts/install.sh
+chmod +x scripts/install.sh
+./scripts/install.sh --dry-run
+./scripts/install.sh
 ```
 
 The installer:
@@ -121,7 +144,7 @@ The installer:
 1. **Edit `~/.config/opencode/opencode.json`** to set your model and provider keys. The example has `{env:VAR}` placeholders; set the env vars in your shell, or in a `.env` file (gitignored).
 2. **Install required dependencies** (`graphify`, `agentmemory`). See [Required dependencies](#-required-dependencies) below. Without these the pack degrades severely.
 3. **Restart OpenCode** or run `/reload`.
-4. **Verify:** in a session, ask `list your agents and confirm which skills are loaded`. You should see all 11 agents, 46 skills, and 7 rules.
+4. **Verify:** in a session, ask `list your agents and confirm which skills are loaded`. You should see all 8 agents, 46 skills, and 7 rules.
 
 ---
 
@@ -341,30 +364,111 @@ What does this pack actually *do*? Here are five real prompts, and what happens 
 
 ## Meet the agents
 
-11 curated agents. **Each one is a markdown file in `agents/`** that enriches a native agent with specialist protocols. Edit the prompt by editing the file. Model, variant, and permissions are configured via `opencode.json`.
+8 curated agents. **Each one is a markdown file in `agents/`** that enriches a native agent with specialist protocols. Edit the prompt by editing the file. Model, variant, and permissions are configured via `opencode.json`.
 
-### Primary agents
+The pack divides the team into **2 primary agents** (you talk to them directly) and **6 subagents** (the primaries fan out work to them in parallel). Two of OpenCode's built-in agents (`build` and `plan`) are disabled to avoid duplication; this pack's `builder` and `planner` replace them.
 
-| # | Agent | Role |
-|---|-------|------|
-| 01 | **`builder`** — The Architect | Default implementation agent. Triage → simple (do directly) or complex (delegate to `planner`). Subagent fan-out for specialized work. |
-| 02 | **`planner`** — The Oracle | Pre-implementation design, brainstorming, architecture planning, writes plans. |
+### At a glance
 
-### Subagents
+| # | Agent | Mode | Role | Tools |
+|---|-------|------|------|-------|
+| 01 | **`builder`** | primary | Default implementation agent. Triage → simple (do directly) or complex (delegate to `planner`). Fans out to specialists. | full |
+| 02 | **`planner`** | primary | Pre-implementation design, architecture planning, writes plans. Delegates recon + research in parallel. | full |
+| 03 | `designer` | subagent | UI/UX, React/Next.js, design system, accessibility. Stitch-integrated for AI mockups. | full + stitch |
+| 04 | `tester` | subagent | Test suites: write, run, iterate failures in isolation, report compact results. | read, write, bash |
+| 05 | `reviewer` | subagent | Code + security review of diffs vs repo standards and spec. Read-only. | read-only |
+| 06 | `documenter` | subagent | Creates and improves documentation in `docs/`, verified against code. | read, write |
+| 07 | `researcher` | subagent | External research with cited findings. Uses `context7` for libraries; web via `webfetch`/`websearch`. | read, web |
+| 08 | `explorer` | subagent | Fast codebase scouting: mapping, pattern finding, file location. | read-only |
 
-| # | Agent | Role | Notes |
-|---|-------|------|-------|
-| 03 | `designer` | UI/UX, React/Next.js, design system, accessibility. Stitch-integrated for AI mockups. | **Requires `stitch` MCP** |
-| 04 | `tester` | Test suites — write, run, iterate failures in isolation, report compact results. | |
-| 05 | `reviewer` | Code + security review of diffs vs repo standards and spec. Read-only. | |
-| 06 | `documenter` | Creates and improves documentation in `docs/`, verified against code. | |
-| 07 | `researcher` | External research with cited findings. Uses `context7` for libraries; web research via `webfetch`/`websearch`. | |
-| 08 | `explorer` | Fast codebase scouting — broad, shallow, quick. | |
-| 09 | `cavecrew-investigator` | Compressed code locator. `file:line` table output, 60% fewer tokens. | |
-| 10 | `cavecrew-builder` | 1-2 file surgical edit. Refuses if scope > 2 files. | |
-| 11 | `cavecrew-reviewer` | Diff review, one line per finding, severity-tagged. | |
+### Primary agents in detail
 
-> 📖 Full agent guide: [docs/AGENTS.md](docs/AGENTS.md)
+#### 01. `builder` — The Architect
+
+The default implementation agent. You talk to this one for ordinary coding tasks. Triages the request: if it's a 1-line bug fix, do it directly; if it's a feature with architecture implications, hand the design phase to `planner` and supervise execution. Once a plan exists, `builder` fans out to specialists: `designer` for UI, `tester` for tests, `reviewer` for security, `documenter` for docs.
+
+- **Default model:** `opencode/nemotron-3-ultra-free`
+- **Use when:** any coding task, especially anything that touches more than one file
+- **When to delegate instead:** pure architecture questions (use `planner`), pure research (use `researcher`), pure code reading (use `explorer`)
+
+#### 02. `planner` — The Oracle
+
+The pre-implementation design partner. You talk to this one before non-trivial work. Spawns `explorer`, `researcher`, `reviewer`, and `designer` in parallel to gather context, then writes a plan you confirm before any code is touched. The "think before you ship" agent.
+
+- **Default model:** `opencode/muse-spark-1.2-contributor-free`
+- **Use when:** new feature, big refactor, architecture decision, or anything where you'd otherwise waste an hour coding the wrong thing
+- **When to delegate instead:** trivial fixes (use `builder`)
+
+### Subagents in detail
+
+#### 03. `designer` — The Frontend Specialist
+
+UI/UX, React/Next.js, design systems, accessibility, performance. Stitch-integrated for AI-generated UI mockups before code. Falls back to text-only design feedback if the `stitch` MCP is disabled.
+
+- **Default model:** `opencode/muse-spark-1.2-contributor-free`
+- **Use when:** new screen, design exploration, brand consistency check, frontend perf audit
+- **Requires:** `stitch` MCP enabled in `opencode.json` for mockup generation
+
+#### 04. `tester` — The Quality Gate
+
+Writes test suites, runs them, iterates failures in isolation. Reports compact results: which tests pass, which fail, which are flaky, what's the next action. Never mixes "write the feature" with "test the feature".
+
+- **Default model:** `opencode/mimo-v2.5-free`
+- **Use when:** you just wrote code that needs coverage, or a CI test is failing locally
+
+#### 05. `reviewer` — The Diff Detective
+
+Read-only code + security review. Compares a diff against the repo's standards and the originating spec. Catches things you missed: race conditions, missing error handling, security smells, off-by-one. Never edits.
+
+- **Default model:** `opencode/nemotron-3-ultra-free`
+- **Use when:** you finished a chunk of work and want a sanity check before merging, or you're about to touch auth/data and want a second pair of eyes
+
+#### 06. `documenter` — The Technical Writer
+
+Creates and improves documentation in `docs/`, verified against the actual code (not vibes). Useful for READMEs, runbooks, onboarding guides, API docs. Will not write docs that lie about what the code does.
+
+- **Default model:** `opencode/muse-spark-1.2-contributor-free`
+- **Use when:** you shipped a new module and the README is lying, or you need a how-to for a tricky setup
+
+#### 07. `researcher` — The Investigator
+
+External research with cited findings. Uses `context7` for fresh library docs (avoids stale training data), and `webfetch`/`websearch` for everything else. Returns links and quotes, not opinions.
+
+- **Default model:** `opencode/hy3-free`
+- **Use when:** "what's the current way to do X in framework Y", "is this library still maintained", "what does the new API look like"
+
+#### 08. `explorer` — The Scout
+
+Fast, broad, shallow codebase reconnaissance. Where is X defined, what calls Y, map this directory. Use this when you need orientation, not depth.
+
+- **Default model:** `opencode/mimo-v2.5-free`
+- **Use when:** first time in a repo, you need to find something fast, you want a lay of the land
+
+> **Token-economy variant:** the `agents/` folder also contains `cavecrew-investigator`, `cavecrew-builder`, `cavecrew-reviewer` — internal caveman-compressed siblings of `explorer`/`builder`/`reviewer` that return ~60% fewer tokens. You don't call them directly; they're an optimization the runtime pulls in when context is tight. The decision guide lives in the [`cavecrew` skill](skills/cavecrew/SKILL.md) if you want to read about it.
+
+### How to invoke
+
+In a normal OpenCode session:
+
+- **Let `builder` pick** the right subagent automatically (most common). Just describe the task.
+- **Or be explicit:** "Ask `tester` to write tests for the auth module" / "Have `designer` generate a mockup for the dashboard" / "Use `explorer` to map this directory".
+
+Subagents are also dispatched by `builder` and `planner` via the `task` tool, in parallel when the subtasks are independent.
+
+### How to override the model
+
+Every agent's `.md` file has a `model:` line in its YAML frontmatter. To switch a single agent to a paid model:
+
+```powershell
+# example: switch reviewer from free to Claude Sonnet
+notepad $env:USERPROFILE\.config\opencode\agents\reviewer.md
+# change: model: opencode/nemotron-3-ultra-free
+# to:     model: anthropic/claude-sonnet-4-5
+```
+
+Save, then run `/reload` (or restart OpenCode). Mix-and-match: keep cheap models for commit messages and summaries, pay for high-stakes agents (architecture review, complex debugging).
+
+> 📖 Full agent guide with all frontmatter fields, permission maps, and edit workflows: [docs/AGENTS.md](docs/AGENTS.md)
 
 ## Skills
 
@@ -372,18 +476,11 @@ What does this pack actually *do*? Here are five real prompts, and what happens 
 
 | Category | Count | Examples |
 |----------|-------|----------|
-| core | 8 | `clean-code`, `systematic-debugging`, `test-driven-development`, `verification-before-completion` |
-| planning | 5 | `codebase-design`, `plans`, `grilling`, `handoff`, `resolving-merge-conflicts` |
-| audits | 3 | `ponytail`, `ponytail-review`, `ponytail-audit`, `ponytail-debt` |
-| communication | 4 | `caveman`, `graphify`, `ponytail` |
-| workflow & git | 8 | `recall`, `remember`, `recap`, `lesson`, `forget`, `commit-context`, `commit-history`, `session-history` |
-| UI & perf | 4 | `ui-design`, `vercel-react`, `web-perf`, `pwa-development` |
-| platform | 1 | `cloudflare` |
-| browser & testing | 2 | `playwright-cli`, `chrome-devtools` |
-| stitch / design | 1 | `stitch` (unified, 16 sub-skills) |
-| caveman family | 6 | `caveman`, `caveman-help`, `caveman-commit`, `caveman-compress`, `caveman-review`, `caveman-stats` |
-| meta | 3 | `using-superpowers`, `subagent-driven-development`, `dispatching-parallel-agents` |
-| cavecrew | 1 | `cavecrew` (decision guide for the 3 cavecrew subagents) |
+| core | 18 | `clean-code`, `cloudflare`, `code-review`, `codebase-design`, `documentation`, `git-commit`, `grilling`, `plans`, `ponytail-review`, `pwa-development`, `resolving-merge-conflicts`, `systematic-debugging`, `test-driven-development`, `ui-design`, `vercel-react`, `verification-before-completion`, `web-perf`, `writing-skills` |
+| agentmemory | 6 | `agentmemory-agents`, `agentmemory-architecture`, `agentmemory-config`, `agentmemory-hooks`, `agentmemory-mcp-tools`, `agentmemory-rest-api` |
+| caveman + cavecrew | 7 | `caveman`, `caveman-help`, `caveman-commit`, `caveman-compress`, `caveman-review`, `caveman-stats`, `cavecrew` |
+| workflow & memory | 12 | `commit-context`, `commit-history`, `forget`, `handoff`, `handoff-compact`, `lesson`, `memory-discipline`, `recall`, `recap`, `remember`, `session-history`, `write-agentmemory-skill` |
+| browser & stitch | 3 | `playwright-cli`, `graphify`, `stitch` |
 
 > 📖 Full skill table: [docs/SKILLS.md](docs/SKILLS.md)
 
@@ -439,13 +536,13 @@ Same logic, but driven by a script you can run from PowerShell or bash. Useful f
 **Windows (PowerShell):**
 
 ```powershell
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/update.ps1 | iex
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/update.ps1 | iex
 ```
 
 **macOS / Linux (bash):**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/update.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/update.sh | bash
 ```
 
 Both scripts:
@@ -477,7 +574,7 @@ See [docs/COMMANDS.md](docs/COMMANDS.md#-update-pack) for the full `/update-pack
 |-----|----------------|
 | [docs/INSTALL.md](docs/INSTALL.md) | Step-by-step install, uninstall, troubleshooting |
 | [docs/STRUCTURE.md](docs/STRUCTURE.md) | What's in the repo (every folder and file explained) |
-| [docs/AGENTS.md](docs/AGENTS.md) | The 11 agents (when to use each, how to edit) |
+| [docs/AGENTS.md](docs/AGENTS.md) | The 8 agents (when to use each, how to edit) |
 | [docs/SKILLS.md](docs/SKILLS.md) | All 46 skills grouped by category |
 | [docs/RULES.md](docs/RULES.md) | The 7 global rules in detail |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, `/update-pack` mechanics |

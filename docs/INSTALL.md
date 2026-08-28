@@ -3,10 +3,10 @@
 ## Quick start (Windows, recommended)
 
 ```powershell
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.ps1 | iex
 ```
 
-This downloads `install.ps1`, runs it in-memory. It will:
+This downloads `scripts/install.ps1`, runs it in-memory. It will:
 
 1. Verify `~/.config/opencode` exists (create if missing).
 2. Back up your existing config to `~/.config/opencode.backup-<timestamp>`.
@@ -19,7 +19,7 @@ After it finishes, edit `~/.config/opencode/opencode.json` to set your model and
 ## Quick start (macOS / Linux)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.sh | bash
 ```
 
 > ⚠️ **Heads up:** the maintainer develops and tests on Windows only. `install.sh` is structurally similar to `install.ps1` but has **not been tested on macOS or Linux**. If it fails, the safest fallback is **manual copy-paste**; see [macOS / Linux support](../README.md#-macos--linux-support) in the README. Please [open an issue](https://github.com/PanPanFR/oh-my-openkilo/issues) if you hit a Unix-specific bug so it can be fixed.
@@ -31,17 +31,17 @@ curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/instal
 git clone https://github.com/PanPanFR/oh-my-openkilo.git "$env:USERPROFILE\.config\opencode\oh-my-openkilo"
 
 # 2. Preview what install would do
-& "$env:USERPROFILE\.config\opencode\oh-my-openkilo\install.ps1" -WhatIf
+& "$env:USERPROFILE\.config\opencode\oh-my-openkilo\scripts\install.ps1" -WhatIf
 
 # 3. Apply
-& "$env:USERPROFILE\.config\opencode\oh-my-openkilo\install.ps1"
+& "$env:USERPROFILE\.config\opencode\oh-my-openkilo\scripts\install.ps1"
 ```
 
 ```bash
 # macOS / Linux
 git clone https://github.com/PanPanFR/oh-my-openkilo.git ~/.config/opencode/oh-my-openkilo
-~/.config/opencode/oh-my-openkilo/install.sh --dry-run
-~/.config/opencode/oh-my-openkilo/install.sh
+~/.config/opencode/oh-my-openkilo/scripts/install.sh --dry-run
+~/.config/opencode/oh-my-openkilo/scripts/install.sh
 ```
 
 ## Install flags
@@ -98,7 +98,7 @@ Start OpenCode in any directory and ask:
 list your agents and confirm which skills are loaded
 ```
 
-You should see 11 agents, 46 skills, and 7 rules. If something is missing, the most common cause is the `skills.paths` not pointing to your skills folder, but oh-my-openkilo's structure matches the default discovery path, so this should be automatic. If you have a custom `opencode.json` with non-default paths, see [CONFIGURATION.md](CONFIGURATION.md).
+You should see 8 agents (plus 3 internal `cavecrew-*`), 46 skills, and 7 rules. If something is missing, the most common cause is the `skills.paths` not pointing to your skills folder, but oh-my-openkilo's structure matches the default discovery path, so this should be automatic. If you have a custom `opencode.json` with non-default paths, see [CONFIGURATION.md](CONFIGURATION.md).
 
 ## Uninstall
 
@@ -139,7 +139,7 @@ This pulls the latest commit from GitHub, then syncs each file with per-file dif
 ### "Permission denied" during install on macOS/Linux
 
 ```bash
-chmod +x ~/.config/opencode/oh-my-openkilo/install.sh
+chmod +x ~/.config/opencode/oh-my-openkilo/scripts/install.sh
 ```
 
 ### Skills not loading

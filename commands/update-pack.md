@@ -17,7 +17,7 @@ The pack is cloned to `$env:USERPROFILE\.config\opencode\oh-my-openkilo` (or `~/
 - Windows: `$env:USERPROFILE\.config\opencode\oh-my-openkilo`
 - Unix: `~/.config/opencode/oh-my-openkilo`
 - Target config dir: same parent, without `/oh-my-openkilo` suffix
-- If the repo folder does not exist, instruct the user to run the install script first: `irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/install.ps1 | iex` (Windows) or `curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/install.sh | bash` (Unix).
+- If the repo folder does not exist, instruct the user to run the install script first: `irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.ps1 | iex` (Windows) or `curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.sh | bash` (Unix).
 
 ### Step 1: Check upstream (always)
 

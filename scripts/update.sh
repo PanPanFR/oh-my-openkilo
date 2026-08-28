@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# update.sh -- oh-my-openkilo Unix updater
+# update.sh -- oh-my-openkilo Unix updater (lives in scripts/)
 # Same logic as the in-session /update-pack slash command, runnable from
 # the shell without an OpenCode session.
 #
 # Usage:
-#   ./update.sh                  # git pull + per-file sync with backup
-#   ./update.sh --dry-run        # preview
-#   ./update.sh --no-git-pull    # skip git pull, only re-sync files
-#   ./update.sh --config-dir=... # override target config dir
-#   ./update.sh --repo-dir=...   # override pack repo dir
+#   ./scripts/update.sh                  # git pull + per-file sync with backup
+#   ./scripts/update.sh --dry-run        # preview
+#   ./scripts/update.sh --no-git-pull    # skip git pull, only re-sync files
+#   ./scripts/update.sh --config-dir=... # override target config dir
+#   ./scripts/update.sh --repo-dir=...   # override pack repo dir
 #
 # One-liner (macOS/Linux):
-#   curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/update.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/update.sh | bash
 
 set -euo pipefail
 
