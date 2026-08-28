@@ -22,6 +22,8 @@ After it finishes, edit `~/.config/opencode/opencode.json` to set your model and
 curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/install.sh | bash
 ```
 
+> ⚠️ **Heads up:** the maintainer develops and tests on Windows only. `install.sh` is structurally similar to `install.ps1` but has **not been tested on macOS or Linux**. If it fails, the safest fallback is **manual copy-paste** — see [macOS / Linux support](../README.md#-macos--linux-support) in the README. Please [open an issue](https://github.com/PanPanFR/oh-my-openkilo/issues) if you hit a Unix-specific bug so it can be fixed.
+
 ## Manual install (full control)
 
 ```powershell

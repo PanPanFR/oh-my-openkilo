@@ -13,7 +13,7 @@ A curated **OpenCode** configuration pack — specialized agents, skills, rules,
 
 ## What is oh-my-openkilo?
 
-A **configuration pack** for [OpenCode](https://opencode.ai) — plain files plus an installer that copies them into `~/.config/opencode`. No plugin runtime, no build step. Works on Windows, macOS, and Linux.
+A **configuration pack** for [OpenCode](https://opencode.ai) — plain files plus an installer that copies them into `~/.config/opencode`. No plugin runtime, no build step. Designed for Windows; macOS and Linux are supported via the Unix installer but **have not been tested by the maintainer** — see [macOS / Linux support](#-macos--linux-support) below.
 
 Instead of building your AI coding workflow from scratch, you get a curated, opinionated setup that works immediately:
 
@@ -256,11 +256,39 @@ See [docs/COMMANDS.md](docs/COMMANDS.md) for the full mechanics.
 |-----------------|--------|
 | OpenCode (CLI) | ✅ Tested |
 | Windows | ✅ Tested |
-| macOS | ⚠️ Untested (should work — `install.sh` is provided) |
-| Linux | ⚠️ Untested (should work — `install.sh` is provided) |
+| macOS | ⚠️ Untested by maintainer — see below |
+| Linux | ⚠️ Untested by maintainer — see below |
 | `graphify` | Optional — degrades to plain search if missing |
 | `agentmemory` | Optional — falls back to in-session memory only if missing |
 | MCP servers | Optional — see Performance Tiers |
+
+### 🍎 macOS / Linux support
+
+**Honest disclosure:** the maintainer develops and tests this pack on Windows only. `install.sh` is provided in the repo and is structurally similar to `install.ps1`, but it has **not been exercised on a real macOS or Linux machine** by the maintainer. There may be path quoting bugs, `bash` version assumptions, or `jq`/`python` availability issues that surface only on Unix.
+
+**If you're on macOS or Linux, the safest path is manual copy-paste.** It is guaranteed to work because there is no installer logic to fail — just file copies. From a shell:
+
+```bash
+# 1. Clone the repo anywhere
+git clone https://github.com/PanPanFR/oh-my-openkilo.git ~/oh-my-openkilo
+
+# 2. Copy each folder into ~/.config/opencode
+mkdir -p ~/.config/opencode
+cp -r ~/oh-my-openkilo/agents    ~/.config/opencode/
+cp -r ~/oh-my-openkilo/skills    ~/.config/opencode/
+cp -r ~/oh-my-openkilo/rules     ~/.config/opencode/
+cp -r ~/oh-my-openkilo/commands  ~/.config/opencode/
+cp -r ~/oh-my-openkilo/plugins   ~/.config/opencode/
+cp    ~/oh-my-openkilo/AGENTS.md ~/.config/opencode/
+
+# 3. (Optional) seed opencode.json if you don't have one yet
+cp ~/oh-my-openkilo/examples/opencode.example.json ~/.config/opencode/opencode.json
+# then edit it to fill in your model and provider keys
+
+# 4. Restart OpenCode
+```
+
+If you try `install.sh` and hit an issue, please [open an issue](https://github.com/PanPanFR/oh-my-openkilo/issues) with the exact error and your `bash --version` / `uname -a`. PRs that fix Unix-specific bugs are welcome.
 
 ## 🙏 Credits
 
