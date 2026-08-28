@@ -13,12 +13,12 @@ oh-my-openkilo ships 11 agents. Two are primary (default delegation targets), ni
 
 | Agent                    | When to use                                                                                  | Permission scope     |
 |--------------------------|----------------------------------------------------------------------------------------------|----------------------|
-| `designer`               | UI/UX, React/Next.js, design system, accessibility. **Requires `stitch` MCP** — without it, falls back to text-only design feedback. | read + design tokens |
+| `designer`               | UI/UX, React/Next.js, design system, accessibility. **Requires `stitch` MCP** (without it, falls back to text-only design feedback). | read + design tokens |
 | `tester`                 | Write and run test suites. Iterate failures in isolation. Reports compact results.            | read + bash          |
 | `reviewer`               | Code + security review. Read-only diff review vs repo standards and spec.                    | read only            |
 | `documenter`             | Create and improve documentation in `docs/`. Verified against code.                         | read + write         |
 | `researcher`             | External research with cited findings. Uses `context7` for libraries; web research falls back to `webfetch`. | read + webfetch      |
-| `explorer`               | Codebase recon — file location, pattern finding, structure mapping. Fast, broad, shallow.    | read only            |
+| `explorer`               | Codebase recon (file location, pattern finding, structure mapping). Fast, broad, shallow.    | read only            |
 | `cavecrew-investigator`  | Compressed code locator. Where is X defined? Output as `file:line` table, ~60% fewer tokens. | read only            |
 | `cavecrew-builder`       | 1-2 file surgical edit. Returns caveman-style receipt. Refuses if scope > 2 files.            | read + edit          |
 | `cavecrew-reviewer`      | Diff review, one line per finding, severity-tagged.                                          | read only            |
@@ -27,8 +27,8 @@ oh-my-openkilo ships 11 agents. Two are primary (default delegation targets), ni
 
 The pack disables two of OpenCode's built-in agents to avoid duplication:
 
-- `build` — replaced by `builder`
-- `plan` — replaced by `planner`
+- `build` is replaced by `builder`
+- `plan` is replaced by `planner`
 
 If you want to re-enable them, edit your `opencode.json` and remove the corresponding `disable: true` entries.
 
@@ -81,12 +81,12 @@ Every agent ships with a `model:` field in its frontmatter. The pack defaults to
 | `documenter`      | `opencode/muse-spark-1.2-contributor-free`   |
 | `researcher`      | `opencode/hy3-free`                          |
 | `explorer`        | `opencode/mimo-v2.5-free`                    |
-| `cavecrew-*`      | (inherits default — no explicit `model:`)    |
+| `cavecrew-*`      | (inherits default; no explicit `model:`)    |
 
 To use a different model:
 
 1. Open the agent's `.md` file in `~/.config/opencode/agents/`.
-2. Edit the `model:` line. Use the format `<provider>/<model>` — e.g. `anthropic/claude-sonnet-4-5`, `openai/gpt-5`, or any other model available in your OpenCode provider list.
+2. Edit the `model:` line. Use the format `<provider>/<model>` (e.g. `anthropic/claude-sonnet-4-5`, `openai/gpt-5`, or any other model available in your OpenCode provider list).
 3. Save the file and run `/reload` (or restart OpenCode).
 
 Free models are good for everyday work but slower and less capable than paid ones. If you have provider credentials configured in `opencode.json`, you can mix free for cheap tasks (commit messages, file summaries) with paid for high-stakes ones (architecture review, complex debugging).

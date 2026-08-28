@@ -1,6 +1,6 @@
 # Skills
 
-46 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process — just focused instructions.
+46 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
 
 ## Categories
 
@@ -31,7 +31,7 @@
 
 | Skill                | When it loads                                                        |
 |----------------------|----------------------------------------------------------------------|
-| `ponytail`           | Any coding task — write, add, refactor, fix, review, design, choose deps |
+| `ponytail`           | Any coding task: write, add, refactor, fix, review, design, choose deps |
 | `ponytail-review`    | Review for over-engineering on a diff                                 |
 | `ponytail-audit`     | Whole-repo audit for over-engineering                                 |
 
@@ -41,7 +41,7 @@
 |----------------|------------------------------------------------------------------------------------------------|
 | `caveman`      | User says "caveman mode" or asks for terse output                                               |
 | `graphify`     | Codebase questions, architecture exploration, file relationship queries                        |
-| `ponytail`     | (also a communication philosophy — see above)                                                   |
+| `ponytail`     | (also a communication philosophy; see above)                                                   |
 | `ponytail-debt`| User asks about ponytail deferrals or "what did we mark to do later"                            |
 
 ### Workflow & git (4)
@@ -70,7 +70,7 @@
 
 | Skill        | When it loads                                                |
 |--------------|--------------------------------------------------------------|
-| `cloudflare` | Any Cloudflare task — Workers, DO, Wrangler, KV, D1, R2, AI  |
+| `cloudflare` | Any Cloudflare task: Workers, DO, Wrangler, KV, D1, R2, AI  |
 
 ### Browser & testing (2)
 
@@ -83,7 +83,7 @@
 
 | Skill     | When it loads                                                                |
 |-----------|------------------------------------------------------------------------------|
-| `stitch`  | Any Stitch design system task — generation, edit, conversion, iteration loop |
+| `stitch`  | Any Stitch design system task: generation, edit, conversion, iteration loop |
 
 ### Caveman family (6)
 
@@ -120,14 +120,14 @@ Skills with `references/` use progressive disclosure: `SKILL.md` is short and de
 
 ## Total count
 
-The numbers above add to **46** skills. If the count in the repo differs, run `ls skills/` to verify — the source of truth is the filesystem, not this document.
+The numbers above add to **46** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
 
 ## Editing a skill
 
 Each skill is a folder under `skills/<skill-name>/`. The required file is `SKILL.md` (the prompt body). Optional:
 
-- `README.md` — user-facing description
-- `references/` — progressive-disclosure deep dives
-- `scripts/`, `examples/`, `assets/` — skill-specific resources
+- `README.md`: user-facing description
+- `references/`: progressive-disclosure deep dives
+- `scripts/`, `examples/`, `assets/`: skill-specific resources
 
 After editing, copy to `~/.config/opencode/skills/` and restart OpenCode.

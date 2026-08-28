@@ -24,7 +24,7 @@ This document describes each block of [`examples/opencode.example.json`](../exam
 
 The `model` and `small_model` fields above are **fallback defaults** for OpenCode's built-in agents. The agents in this pack (`builder`, `planner`, `designer`, etc.) have their own `model:` field in their frontmatter, which **overrides** the top-level default for that agent.
 
-The pack ships with all 8 named agents set to a **free model** from OpenCode (e.g. `opencode/nemotron-3-ultra-free`). You can use the pack with no provider configuration — but you can also override per agent by editing the frontmatter in `agents/<name>.md`.
+The pack ships with all 8 named agents set to a **free model** from OpenCode (e.g. `opencode/nemotron-3-ultra-free`). You can use the pack with no provider configuration, but you can also override per agent by editing the frontmatter in `agents/<name>.md`.
 
 See [docs/AGENTS.md](AGENTS.md#changing-the-model) for the default model table and how to switch.
 
@@ -79,9 +79,9 @@ The example lists the four plugins oh-my-openkilo needs. Remove any you don't wa
 
 External LLM providers. Each provider has:
 
-- `npm` — the npm package to use as the SDK adapter
-- `options` — provider-specific config (API key, base URL, headers)
-- `models` — model definitions (context length, output length, modalities)
+- `npm`: the npm package to use as the SDK adapter
+- `options`: provider-specific config (API key, base URL, headers)
+- `models`: model definitions (context length, output length, modalities)
 
 The example has one provider placeholder (`9router`). Add your own providers here, e.g. `opencode`, `anthropic`, `openai`, `google`, or any OpenAI-compatible endpoint.
 
@@ -100,8 +100,8 @@ The `{env:VAR}` placeholder is resolved by OpenCode from the shell environment. 
 
 Each MCP server is one of two types:
 
-- `"type": "local"` — runs a command on your machine via `npx` or `python`
-- `"type": "remote"` — connects to a remote URL
+- `"type": "local"`: runs a command on your machine via `npx` or `python`
+- `"type": "remote"`: connects to a remote URL
 
 The example lists nine MCPs covering knowledge graph, browser automation, design, video, and external research. Each is `enabled: false` by default except the always-on ones (`agentmemory`, `chrome-devtools`, `playwright`, `stitch`, `context7`).
 
@@ -128,7 +128,7 @@ The `install.ps1` validator scans your config after install and warns if any ena
 
 ## Installing MCP servers
 
-Most MCPs in this pack are `npx`-based — OpenCode downloads the package on first use. None of them require a separate install step before enabling in `opencode.json`, but several need a one-time setup after the first run.
+Most MCPs in this pack are `npx`-based; OpenCode downloads the package on first use. None of them require a separate install step before enabling in `opencode.json`, but several need a one-time setup after the first run.
 
 ### `agentmemory` (required, already enabled)
 
@@ -176,7 +176,7 @@ Get a free API key at [context7.com](https://context7.com), set `CONTEXT7_API_KE
 }
 ```
 
-Requires a Google Cloud API key with Stitch access. **Without this MCP enabled, the `designer` agent becomes inert** — `builder` and `planner` delegate UI work to it.
+Requires a Google Cloud API key with Stitch access. **Without this MCP enabled, the `designer` agent becomes inert**; `builder` and `planner` delegate UI work to it.
 
 ### `chrome-devtools` (npm, no setup)
 
@@ -254,7 +254,7 @@ $env:SUPABASE_ACCESS_TOKEN = "sbp_..."
 }
 ```
 
-Token grants the MCP read/write access to your Supabase projects — treat it like any other secret.
+Token grants the MCP read/write access to your Supabase projects. Treat it like any other secret.
 
 ### Troubleshooting MCP installs
 
@@ -271,7 +271,7 @@ Most MCP issues come from the env var not being visible to OpenCode's process. S
 
 ## Instructions
 
-Paths to always-on rule files, relative to the directory containing `opencode.json`. The maintainer's order (protocol rules first) is what the example uses. Reorder to taste, but put first-action protocols early — earlier entries get better model compliance.
+Paths to always-on rule files, relative to the directory containing `opencode.json`. The maintainer's order (protocol rules first) is what the example uses. Reorder to taste, but put first-action protocols early; earlier entries get better model compliance.
 
 ## LSP
 

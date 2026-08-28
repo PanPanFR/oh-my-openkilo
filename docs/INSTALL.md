@@ -22,7 +22,7 @@ After it finishes, edit `~/.config/opencode/opencode.json` to set your model and
 curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/install.sh | bash
 ```
 
-> ⚠️ **Heads up:** the maintainer develops and tests on Windows only. `install.sh` is structurally similar to `install.ps1` but has **not been tested on macOS or Linux**. If it fails, the safest fallback is **manual copy-paste** — see [macOS / Linux support](../README.md#-macos--linux-support) in the README. Please [open an issue](https://github.com/PanPanFR/oh-my-openkilo/issues) if you hit a Unix-specific bug so it can be fixed.
+> ⚠️ **Heads up:** the maintainer develops and tests on Windows only. `install.sh` is structurally similar to `install.ps1` but has **not been tested on macOS or Linux**. If it fails, the safest fallback is **manual copy-paste**; see [macOS / Linux support](../README.md#-macos--linux-support) in the README. Please [open an issue](https://github.com/PanPanFR/oh-my-openkilo/issues) if you hit a Unix-specific bug so it can be fixed.
 
 ## Manual install (full control)
 
@@ -55,7 +55,7 @@ git clone https://github.com/PanPanFR/oh-my-openkilo.git ~/.config/opencode/oh-m
 
 ## After install: required dependencies
 
-The pack **requires** two external tools to deliver its core value. Without them, the `agentmemory` and `graphify` rules load but their tools are missing — the pack degrades to a much weaker version of itself. Install these **immediately after** the pack itself:
+The pack **requires** two external tools to deliver its core value. Without them, the `agentmemory` and `graphify` rules load but their tools are missing; the pack degrades to a much weaker version of itself. Install these **immediately after** the pack itself:
 
 ```bash
 # Knowledge graph -- the `graphify` rule and skill depend on this
@@ -65,24 +65,24 @@ npm i -g graphify
 npm i -g @agentmemory/server
 ```
 
-Then start the agentmemory server (see its README) and make sure `mcp.agentmemory` is enabled in `opencode.json` (the example already has it). Start the server once with `agentmemory serve` (or whatever the package's start command is — see its README).
+Then start the agentmemory server (see its README) and make sure `mcp.agentmemory` is enabled in `opencode.json` (the example already has it). Start the server once with `agentmemory serve` (or whatever the package's start command is; see its README).
 
 **What you lose without each:**
 
 - **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos. The `graphify` rule and skill both rely on this binary.
 - **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `agentmemory` rule and the `recall`/`remember`/`recap` commands all depend on this.
 
-The pack's `instructions` array registers `rules/agentmemory.md` and `rules/graphify.md` as always-on, so the rules fire every session — but they degrade to no-ops if the dependencies are missing.
+The pack's `instructions` array registers `rules/agentmemory.md` and `rules/graphify.md` as always-on, so the rules fire every session; but they degrade to no-ops if the dependencies are missing.
 
 ### MCPs (enable per-need, not auto-on)
 
-The example config lists all MCPs that ship with this pack. **`agentmemory` is enabled by default** (required dependency). All other MCPs are `enabled: false` — turn one on when you need it.
+The example config lists all MCPs that ship with this pack. **`agentmemory` is enabled by default** (required dependency). All other MCPs are `enabled: false`; turn one on when you need it.
 
 | MCP                    | Capability                                          | Required env / key                      | Risk if disabled |
 |------------------------|-----------------------------------------------------|-----------------------------------------|------------------|
-| `agentmemory`          | Persistent cross-session memory (**required**)      | `AGENTMEMORY_SERVER_URL` (Plus server)  | No memory — every session starts from zero |
+| `agentmemory`          | Persistent cross-session memory (**required**)      | `AGENTMEMORY_SERVER_URL` (Plus server)  | No memory. Every session starts from zero. |
 | `context7`             | Up-to-date library docs (replaces training data)    | `CONTEXT7_API_KEY` (free at context7.com) | Documentation lookup falls back to model knowledge (often outdated) |
-| `stitch`               | AI-generated UI mockups, used by `designer` agent   | `GOOGLE_API_KEY`                        | **`designer` agent becomes inert** — `builder` and `planner` delegate UI work to `designer` |
+| `stitch`               | AI-generated UI mockups, used by `designer` agent   | `GOOGLE_API_KEY`                        | **`designer` agent becomes inert**: `builder` and `planner` delegate UI work to `designer` |
 | `chrome-devtools`      | Live browser debug (DOM, network, console, perf)    | none (uses installed Chrome)            | No live browser inspection; static fetch only |
 | `playwright`           | Stateful persistent browser loop, E2E test gen      | `npx playwright install chromium` first | E2E test generation disabled; `playwright-cli` skill degrades |
 | `remotion`             | Walkthrough video generation                        | none                                    | No video walkthrough capability |
@@ -98,7 +98,7 @@ Start OpenCode in any directory and ask:
 list your agents and confirm which skills are loaded
 ```
 
-You should see 11 agents, 46 skills, and 7 rules. If something is missing, the most common cause is the `skills.paths` not pointing to your skills folder — but oh-my-openkilo's structure matches the default discovery path, so this should be automatic. If you have a custom `opencode.json` with non-default paths, see [CONFIGURATION.md](CONFIGURATION.md).
+You should see 11 agents, 46 skills, and 7 rules. If something is missing, the most common cause is the `skills.paths` not pointing to your skills folder, but oh-my-openkilo's structure matches the default discovery path, so this should be automatic. If you have a custom `opencode.json` with non-default paths, see [CONFIGURATION.md](CONFIGURATION.md).
 
 ## Uninstall
 
@@ -160,8 +160,8 @@ Restart OpenCode after changing this.
 
 Plugin errors usually show in OpenCode startup logs. Common causes:
 
-- Missing `node_modules` in `plugins/caveman/` — run `cd ~/.config/opencode/plugins/caveman && npm install`
-- Plugin path in `opencode.json` is wrong — should be `./plugins/caveman/plugin.js` and `./plugins/agentmemory-capture.ts` (relative to the dir containing `opencode.json`)
+- Missing `node_modules` in `plugins/caveman/`. Run `cd ~/.config/opencode/plugins/caveman && npm install`
+- Plugin path in `opencode.json` is wrong. Should be `./plugins/caveman/plugin.js` and `./plugins/agentmemory-capture.ts` (relative to the dir containing `opencode.json`)
 
 ### "credential not set" errors
 

@@ -94,11 +94,11 @@ Edits flow: edit in `~/.config/opencode/`, test in a real session, then copy to 
 
 ## What does not get mirrored (lives only in the repo)
 
-- `LICENSE`, `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md` — repo governance
-- `docs/` — repo-only documentation, not loaded by OpenCode
-- `examples/opencode.example.json` — hand-maintained, never derived from the runtime config (to guarantee no leaks)
-- `install.ps1`, `install.sh` — installer scripts
-- `.gitignore` — repo-only
+- `LICENSE`, `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md`: repo governance
+- `docs/`: repo-only documentation, not loaded by OpenCode
+- `examples/opencode.example.json`: hand-maintained, never derived from the runtime config (to guarantee no leaks)
+- `install.ps1`, `install.sh`: installer scripts
+- `.gitignore`: repo-only
 
 ## What gets mirrored but not edited directly
 
@@ -108,4 +108,4 @@ Once an agent/skill/rule/command is published in the repo, the corresponding fil
 2. `git commit` and `git push`.
 3. Run `/update-pack` in OpenCode to pull the new version locally.
 
-This applies to **all 11 agents, 46 skills, 7 rules, 9 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`) — the install script and `/update-pack` will not touch local files.
+This applies to **all 11 agents, 46 skills, 7 rules, 9 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); the install script and `/update-pack` will not touch local files.

@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `examples/opencode.example.json` (portable, credentials redacted)
 - `install.ps1` (Windows installer with `-WhatIf` and backup)
 - `install.sh` (Unix installer)
-- `docs/` — INSTALL, STRUCTURE, AGENTS, SKILLS, RULES, COMMANDS, CONFIGURATION
+- `docs/`: INSTALL, STRUCTURE, AGENTS, SKILLS, RULES, COMMANDS, CONFIGURATION
 
 ### Security
 - Zero credentials committed. See [SECURITY.md](SECURITY.md).

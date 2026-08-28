@@ -1,6 +1,6 @@
 # oh-my-openkilo
 
-A curated **OpenCode** configuration pack — specialized agents, skills, rules, and plugins that make OpenCode smarter and more autonomous out of the box.
+A curated **OpenCode** configuration pack: specialized agents, skills, rules, and plugins that make OpenCode smarter and more autonomous out of the box.
 
 **OpenCode Agent Suite** · 11 agents · 46 skills · 7 rules · 9 commands
 
@@ -13,52 +13,58 @@ A curated **OpenCode** configuration pack — specialized agents, skills, rules,
 
 ## What is oh-my-openkilo?
 
-A **configuration pack** for [OpenCode](https://opencode.ai) — plain files plus an installer that copies them into `~/.config/opencode`. No plugin runtime, no build step. Designed for Windows; macOS and Linux are supported via the Unix installer but **have not been tested by the maintainer** — see [macOS / Linux support](#-macos--linux-support) below.
+A **configuration pack** for [OpenCode](https://opencode.ai): plain files plus an installer that copies them into `~/.config/opencode`. No plugin runtime, no build step. Designed for Windows; macOS and Linux are supported via the Unix installer but **have not been tested by the maintainer**. See [macOS / Linux support](#-macos--linux-support) below.
 
-The agentic workflow patterns in this pack — primary-agent triage, subagent delegation, skills as protocols, graphify-first navigation, and the caveman/ponytail communication style — are inherited from [Kilo Code](https://github.com/Kilo-Org/kilocode), the same maintainer's multi-agent extension for VS Code. This pack is the OpenCode adaptation of that workflow: same mental model, different runtime.
+The agentic workflow patterns in this pack (primary-agent triage, subagent delegation, skills as protocols, graphify-first navigation, and the caveman/ponytail communication style) are inherited from [Kilo Code](https://github.com/Kilo-Org/kilocode), the same maintainer's multi-agent extension for VS Code. This pack is the OpenCode adaptation of that workflow: same mental model, different runtime.
 
 Instead of building your AI coding workflow from scratch, you get a curated, opinionated setup that works immediately:
 
-- **11 specialized agents** — 2 primary (`builder`, `planner`) + 9 subagents (`designer`, `tester`, `reviewer`, `documenter`, `researcher`, `explorer`, `cavecrew-*`) with a delegation hierarchy already designed
-- **46 skills** — battle-tested playbooks (TDD, systematic debugging, code review, writing-plans, web-perf) curated from popular community packs
-- **7 global rules** — always-on guardrails: English-only files, mandatory memory search, mandatory skill check, knowledge-graph-first navigation, parallel delegation, caveman/ponytail style, Cloudflare Workers doc-first
-- **4 plugins** — `agentmemory-capture`, `caveman`, `ponytail`, `superpowers`
-- **1 update command** — `/update-pack` to pull latest and sync with per-file backup
+- **11 specialized agents**: 2 primary (`builder`, `planner`) + 9 subagents (`designer`, `tester`, `reviewer`, `documenter`, `researcher`, `explorer`, `cavecrew-*`) with a delegation hierarchy already designed
+- **46 skills**: battle-tested playbooks (TDD, systematic debugging, code review, writing-plans, web-perf) curated from popular community packs
+- **7 global rules**: always-on guardrails: English-only files, mandatory memory search, mandatory skill check, knowledge-graph-first navigation, parallel delegation, caveman/ponytail style, Cloudflare Workers doc-first
+- **4 plugins**: `agentmemory-capture`, `caveman`, `ponytail`, `superpowers`
+- **1 update command**: `/update-pack` to pull latest and sync with per-file backup
 
 The idea is simple: **prompts in files, models in config, behavior in rules.** Edit an agent by editing its file; switch models via `opencode.json`; add your own agents, skills, or rules without touching anything else.
 
 ## Why it's lightweight
 
-oh-my-openkilo is **markedly lighter** than other multi-agent OpenCode packs (e.g. [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)) because it ships **only configuration**, not a runtime. The repo is 569 files / 2.6 MB; a comparable plugin-based pack is 507 files / 58.5 MB — roughly **23× larger** because the other approach bundles a TypeScript build pipeline, a compiled `dist/`, and a `node_modules` tree.
+oh-my-openkilo is **markedly lighter** than other multi-agent OpenCode packs (e.g. [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)) because it ships **only configuration**, not a runtime. The repo is 569 files / 2.6 MB; a comparable plugin-based pack is 507 files / 58.5 MB, roughly **23× larger** because the other approach bundles a TypeScript build pipeline, a compiled `dist/`, and a `node_modules` tree.
 
 What "configuration only" means in practice:
 
 | Aspect                | oh-my-openkilo (config pack)                          | Typical plugin pack                              |
 |-----------------------|--------------------------------------------------------|---------------------------------------------------|
 | **What you install**  | Markdown files, shell scripts                         | TypeScript source, build output, npm deps        |
-| **Build step**        | None — files are the artifact                         | `bun install && bun run build`                    |
+| **Build step**        | None. Files are the artifact.                        | `bun install && bun run build`                    |
 | **Install time**      | Seconds (file copy + optional `npm i -g`)             | Minutes (download deps, compile TS)               |
 | **Update mechanism**  | `git pull` + per-file copy + backup                   | `git pull` + `bun install` + `bun run build`      |
-| **Runtime overhead**  | Zero — OpenCode reads the markdown directly           | Plugin loader runs on every OpenCode startup      |
+| **Runtime overhead**  | Zero. OpenCode reads the markdown directly.          | Plugin loader runs on every OpenCode startup      |
 | **Failure surface**   | File copy, PowerShell/bash                            | Bun, npm, TypeScript compiler, build cache        |
 | **What can break**    | A misformed frontmatter, a typo in a path             | A version mismatch, a build error, a missing dep  |
 | **Uninstall**         | Delete the copied folders                            | Disable the plugin, remove the npm package, hope  |
 
-The pack **curates** a small set of well-known tools (`graphify`, `agentmemory`, `caveman`, `ponytail`, `superpowers`) rather than building a new runtime. If you already have those tools, oh-my-openkilo adds nothing to your machine — it just points OpenCode at better prompts.
+The pack **curates** a small set of well-known tools (`graphify`, `agentmemory`, `caveman`, `ponytail`, `superpowers`) rather than building a new runtime. If you already have those tools, oh-my-openkilo adds nothing to your machine; it just points OpenCode at better prompts.
 
 The downside: oh-my-openkilo can't add features that need runtime support (background orchestration, AST-aware tools, live model presets). For those, a plugin pack is the right tool. For "smarter prompts out of the box", config is enough.
 
 ## Want a friendlier UI? Try OpenChamber
 
-oh-my-openkilo is a **terminal-first** pack — agents live in your shell, you steer via plain text. If you'd rather watch the agent work in a visual workspace (file tree, diff viewer, parallel session manager, mobile/PWA access), pair this pack with **[OpenChamber](https://openchamber.dev/)** ([github.com/openchamber/openchamber](https://github.com/openchamber/openchamber)) — an open-source GUI that runs on top of the OpenCode SDK.
+oh-my-openkilo is a **terminal-first** pack, with agents living in your shell and you steering via plain text. If you'd rather watch the agent work in a visual workspace (file tree, diff viewer, parallel session manager, mobile/PWA access), pair this pack with **OpenChamber**, an open-source GUI that runs on top of the OpenCode SDK.
 
-OpenChamber is **not affiliated with this pack or with the OpenCode team** (it's a third-party project), but it speaks the same OpenCode config files that oh-my-openkilo populates, so the two compose naturally: install oh-my-openkilo for the agents/skills/rules, then point OpenChamber at the same `~/.config/opencode` directory and you get a visual control room on top of it.
+**Note:** OpenChamber is a **third-party project**, not affiliated with this pack or with the OpenCode team. It speaks the same OpenCode config files that oh-my-openkilo populates, so the two compose naturally: install oh-my-openkilo for the agents/skills/rules, then point OpenChamber at the same `~/.config/opencode` directory and you get a visual control room on top of it.
 
-If you only want a "lighter VSCode experience", the official [OpenCode extension for VS Code](https://opencode.ai/docs/ide/) (terminal split, keybinds, file reference shortcuts) is enough. OpenChamber is the heavier option when you want desktop, browser, and mobile all in sync.
+**OpenChamber is available in three places, all maintained by the same third-party team:**
+
+- **VS Code extension:** install from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=FedaykinDev.openchamber) (publisher: `FedaykinDev`). This is the easiest path if you already live in VS Code.
+- **Desktop app, browser, and mobile:** [openchamber.dev](https://openchamber.dev/). Cross-platform UI with extra features.
+- **Source code:** [github.com/openchamber/openchamber](https://github.com/openchamber/openchamber). MIT licensed, build it yourself if you want.
+
+If you only want the lightest "VSCode experience", the official [OpenCode extension for VS Code](https://opencode.ai/docs/ide/) (terminal split, keybinds, file reference shortcuts) is enough; that's maintained by the OpenCode team itself. OpenChamber is the third-party option that gives you the full visual control room.
 
 ## Who is it for?
 
-- **OpenCode users** who want a ready-to-use setup — install and start, no prompt engineering required
+- **OpenCode users** who want a ready-to-use setup: install and start, no prompt engineering required
 - **Power users** who want structured delegation, consistent session behavior, and a knowledge graph for large codebases
 - **Tinkerers** who want a solid baseline to fork and customize
 
@@ -66,7 +72,7 @@ If you only want a "lighter VSCode experience", the official [OpenCode extension
 
 | Component | Count | What it does |
 |-----------|-------|--------------|
-| Agents    | 11    | 2 primary + 9 subagents with delegation hierarchy — `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
+| Agents    | 11    | 2 primary + 9 subagents with delegation hierarchy. `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
 | Skills    | 46    | Curated playbooks across 10 categories: core, planning, audits, communication, workflow/git, UI/perf, platform, browser, stitch, caveman, meta |
 | Rules     | 7     | Always-on session guardrails, loaded via the `instructions` config (protocol rules first) |
 | Plugins   | 4     | `agentmemory-capture` (auto-save observations), `caveman` (terse mode tracker), `ponytail` (minimal code style), `superpowers` (skill loader) |
@@ -112,8 +118,8 @@ The installer:
 
 ### After install
 
-1. **Edit `~/.config/opencode/opencode.json`** to set your model and provider keys. The example has `{env:VAR}` placeholders — set the env vars in your shell, or in a `.env` file (gitignored).
-2. **Install required dependencies** (`graphify`, `agentmemory`) — see [Required dependencies](#-required-dependencies) below. Without these the pack degrades severely.
+1. **Edit `~/.config/opencode/opencode.json`** to set your model and provider keys. The example has `{env:VAR}` placeholders; set the env vars in your shell, or in a `.env` file (gitignored).
+2. **Install required dependencies** (`graphify`, `agentmemory`). See [Required dependencies](#-required-dependencies) below. Without these the pack degrades severely.
 3. **Restart OpenCode** or run `/reload`.
 4. **Verify:** in a session, ask `list your agents and confirm which skills are loaded`. You should see all 11 agents, 46 skills, and 7 rules.
 
@@ -121,7 +127,7 @@ The installer:
 
 ## Default models are free
 
-Every agent and subagent in this pack defaults to a **free model provided by OpenCode** (e.g. `opencode/nemotron-3-ultra-free`, `opencode/muse-spark-1.2-contributor-free`, `opencode/mimo-v2.5-free`, `opencode/hy3-free`). You can use the pack **without configuring any provider API key** — just install and start.
+Every agent and subagent in this pack defaults to a **free model provided by OpenCode** (e.g. `opencode/nemotron-3-ultra-free`, `opencode/muse-spark-1.2-contributor-free`, `opencode/mimo-v2.5-free`, `opencode/hy3-free`). You can use the pack **without configuring any provider API key**; just install and start.
 
 Want a different model? Edit the agent's `model:` line in its markdown file:
 
@@ -136,7 +142,7 @@ The `model` field sits in the YAML frontmatter at the top of each `agents/*.md` 
 
 ## Required dependencies
 
-The pack **requires** two external tools to deliver its core value. Without them, several rules and skills will load but their tools will be missing — the pack degrades to a much weaker version of itself. Install these immediately after the pack itself:
+The pack **requires** two external tools to deliver its core value. Without them, several rules and skills will load but their tools will be missing; the pack degrades to a much weaker version of itself. Install these immediately after the pack itself:
 
 ```bash
 npm i -g graphify              # knowledge graph (the `graphify` rule + skill depend on this)
@@ -150,17 +156,17 @@ Then start the agentmemory server (see its README) and make sure `mcp.agentmemor
 - **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos. The `graphify` rule and skill both rely on this binary.
 - **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `agentmemory` rule and the `recall`/`remember`/`recap` commands all depend on this.
 
-The pack's `instructions` array registers `rules/agentmemory.md` and `rules/graphify.md` as always-on, so the rules fire every session — but they degrade to no-ops if the dependencies are missing. Install them.
+The pack's `instructions` array registers `rules/agentmemory.md` and `rules/graphify.md` as always-on, so the rules fire every session; but they degrade to no-ops if the dependencies are missing. Install them.
 
 ## MCPs (enabled per-need, not auto-on)
 
-The example config includes all MCPs that ship with this pack. **`agentmemory` is enabled by default** (because of the required-dependency rule above). All other MCPs are `enabled: false` — turn one on when you actually need its capability.
+The example config includes all MCPs that ship with this pack. **`agentmemory` is enabled by default** (because of the required-dependency rule above). All other MCPs are `enabled: false`; turn one on when you actually need its capability.
 
 | MCP                    | What it unlocks                                        | Required             | Risk if disabled |
 |------------------------|--------------------------------------------------------|----------------------|------------------|
-| `agentmemory`          | Persistent cross-session memory (**required dependency**) | `AGENTMEMORY_SERVER_URL` (Plus server) | No memory — every session starts from zero |
+| `agentmemory`          | Persistent cross-session memory (**required dependency**) | `AGENTMEMORY_SERVER_URL` (Plus server) | No memory. Every session starts from zero. |
 | `context7`             | Up-to-date library docs (replaces stale training data) | `CONTEXT7_API_KEY` (free) | Docs lookup falls back to model knowledge (often outdated) |
-| `stitch`               | AI-generated UI mockups, used by `designer` agent      | `GOOGLE_API_KEY`     | **`designer` becomes inert** — `builder` and `planner` delegate UI work to `designer`, so all UI tasks degrade |
+| `stitch`               | AI-generated UI mockups, used by `designer` agent      | `GOOGLE_API_KEY`     | **`designer` becomes inert**: `builder` and `planner` delegate UI work to `designer`, so all UI tasks degrade |
 | `chrome-devtools`      | Live browser debug (DOM, network, console, perf)       | none                 | No live browser inspection |
 | `playwright`           | Stateful persistent browser loop, E2E test gen         | `npx playwright install chromium` (first run) | E2E generation disabled |
 | `remotion`             | Walkthrough video generation                           | none                 | No video capability |
@@ -170,11 +176,11 @@ Enable by setting `"enabled": true` in `opencode.json` and filling in any requir
 
 ### 📦 Installing MCP servers
 
-The MCPs in the table above fall into two categories: **npm-based** (most of them — `npx` downloads them on first use) and **remote** (just need a URL + API key). None of them require a separate install step before enabling in `opencode.json` — but several need a one-time setup after the first run.
+The MCPs in the table above fall into two categories: **npm-based** (most of them, where `npx` downloads them on first use) and **remote** (just need a URL + API key). None of them require a separate install step before enabling in `opencode.json`; but several need a one-time setup after the first run.
 
 #### `agentmemory` (required, already enabled)
 
-Two parts — a global CLI and a local server.
+Two parts: a global CLI and a local server.
 
 ```bash
 npm i -g @agentmemory/server          # CLI
@@ -185,11 +191,11 @@ The MCP in `opencode.json` points to `http://localhost:3111` by default. If you 
 
 #### `context7` (remote, no install)
 
-Just set `enabled: true` and provide `CONTEXT7_API_KEY` (free at [context7.com](https://context7.com)). The MCP fetches docs from `https://mcp.context7.com/mcp` directly — no local install.
+Just set `enabled: true` and provide `CONTEXT7_API_KEY` (free at [context7.com](https://context7.com)). The MCP fetches docs from `https://mcp.context7.com/mcp` directly. No local install.
 
 #### `stitch` (remote, no install)
 
-Set `enabled: true` and provide `GOOGLE_API_KEY` (Google Cloud API key with Stitch access). The MCP connects to `https://stitch.googleapis.com/mcp`. **Without this, the `designer` agent becomes inert** — see the row above.
+Set `enabled: true` and provide `GOOGLE_API_KEY` (Google Cloud API key with Stitch access). The MCP connects to `https://stitch.googleapis.com/mcp`. **Without this, the `designer` agent becomes inert**; see the row above.
 
 #### `chrome-devtools` (npm, no setup)
 
@@ -243,7 +249,7 @@ $env:SUPABASE_ACCESS_TOKEN = "sbp_..."
 # 3. Enable in opencode.json
 ```
 
-The token grants the MCP read/write access to your Supabase projects — treat it like any other secret.
+The token grants the MCP read/write access to your Supabase projects. Treat it like any other secret.
 
 ---
 
@@ -253,19 +259,19 @@ The token grants the MCP read/write access to your Supabase projects — treat i
 
 ## 🎯 Example workflows
 
-What does this pack actually *do*? Here are five real prompts — and what happens **without** oh-my-openkilo versus **with** it, so the difference is concrete.
+What does this pack actually *do*? Here are five real prompts, and what happens **without** oh-my-openkilo versus **with** it, so the difference is concrete.
 
 ### 1. Repository audit
 
 > "Audit this repository's architecture and identify the biggest problems."
 
-**Without oh-my-openkilo:** One agent reads files manually, greps around, and gives a surface-level opinion — architecture, performance, and code quality all mushed into one pass with no structure or evidence per claim.
+**Without oh-my-openkilo:** One agent reads files manually, greps around, and gives a surface-level opinion: architecture, performance, and code quality all mushed into one pass with no structure or evidence per claim.
 
 **With oh-my-openkilo:**
 - **Agent:** `builder` → delegates `explorer` (recon) + `reviewer` (quality/security) in parallel
 - **Skills:** `clean-code`, `code-review`, `ponytail-review`
 - **Rules:** graphify-first navigation (queries the knowledge graph before grep), parallel delegation
-- **Result:** structured report — architecture + code quality + over-engineering flags — backed by subagent findings, not one agent's opinion.
+- **Result:** structured report (architecture + code quality + over-engineering flags), backed by subagent findings, not one agent's opinion.
 
 ### 2. Debugging a flaky test
 
@@ -283,7 +289,7 @@ What does this pack actually *do*? Here are five real prompts — and what happe
 
 > "Add a new feature: [description]."
 
-**Without oh-my-openkilo:** The agent starts coding immediately — no plan, no tests, no review. The feature works (maybe), but the architecture drifts, nothing is verified, and a security issue slips through because no one looked.
+**Without oh-my-openkilo:** The agent starts coding immediately. No plan, no tests, no review. The feature works (maybe), but the architecture drifts, nothing is verified, and a security issue slips through because no one looked.
 
 **With oh-my-openkilo:**
 - **Agent:** `builder` → spawns `planner` for design, `tester` for tests, `reviewer` for security analysis when auth/data is involved
@@ -295,7 +301,7 @@ What does this pack actually *do*? Here are five real prompts — and what happe
 
 > "Review this application's architecture and suggest improvements."
 
-**Without oh-my-openkilo:** A loose opinion piece — "maybe extract this, perhaps that service is too big" — with no verification against the actual code, no trade-offs discussed, and a refactor suggestion that breaks three other things.
+**Without oh-my-openkilo:** A loose opinion piece ("maybe extract this, perhaps that service is too big") with no verification against the actual code, no trade-offs discussed, and a refactor suggestion that breaks three other things.
 
 **With oh-my-openkilo:**
 - **Agent:** `planner` → delegates `explorer` (recon) + `researcher` (best practices for the stack) in parallel
@@ -307,13 +313,13 @@ What does this pack actually *do*? Here are five real prompts — and what happe
 
 > "Explore this codebase and map the relationships between the major components."
 
-**Without oh-my-openkilo:** Manual `grep` + reading file after file — slow, you miss the cross-file structure, and you give up on large repos.
+**Without oh-my-openkilo:** Manual `grep` + reading file after file. Slow, you miss the cross-file structure, and you give up on large repos.
 
 **With oh-my-openkilo:**
 - **Agent:** `builder` (or any agent)
 - **Skills:** `graphify` (knowledge graph for the codebase)
 - **Rules:** graphify-first navigation (init graph with `graphify update .` if missing)
-- **Result:** structural map of the codebase — `graphify query`, `graphify path`, `graphify explain` — before touching any code. Even a million-line repo is navigable.
+- **Result:** structural map of the codebase (`graphify query`, `graphify path`, `graphify explain`) before touching any code. Even a million-line repo is navigable.
 
 ---
 
@@ -346,7 +352,7 @@ What does this pack actually *do*? Here are five real prompts — and what happe
 
 ## Skills
 
-46 skills grouped into 10 categories. Skills are prompt-based playbooks injected into an agent's context when a task matches. They run no process — just focused instructions.
+46 skills grouped into 10 categories. Skills are prompt-based playbooks injected into an agent's context when a task matches. They run no process; just focused instructions.
 
 | Category | Count | Examples |
 |----------|-------|----------|
@@ -367,7 +373,7 @@ What does this pack actually *do*? Here are five real prompts — and what happe
 
 ## Rules
 
-Seven global rules loaded via `opencode.json` `instructions`. Order matters — protocol rules first.
+Seven global rules loaded via `opencode.json` `instructions`. Order matters; protocol rules first.
 
 | Rule | Mandate |
 |------|---------|
@@ -404,7 +410,7 @@ In an OpenCode session, type:
 /update-pack
 ```
 
-This pulls the latest commit from GitHub, then syncs each file with per-file diff and backup of any local changes you made. Files you customized get backed up as `<file>.local-<timestamp>` before being overwritten — your changes are never silently lost.
+This pulls the latest commit from GitHub, then syncs each file with per-file diff and backup of any local changes you made. Files you customized get backed up as `<file>.local-<timestamp>` before being overwritten; your changes are never silently lost.
 
 See [docs/COMMANDS.md](docs/COMMANDS.md) for the full mechanics.
 
@@ -415,8 +421,8 @@ See [docs/COMMANDS.md](docs/COMMANDS.md) for the full mechanics.
 | Doc | What it covers |
 |-----|----------------|
 | [docs/INSTALL.md](docs/INSTALL.md) | Step-by-step install, uninstall, troubleshooting |
-| [docs/STRUCTURE.md](docs/STRUCTURE.md) | What's in the repo — every folder and file explained |
-| [docs/AGENTS.md](docs/AGENTS.md) | The 11 agents — when to use each, how to edit |
+| [docs/STRUCTURE.md](docs/STRUCTURE.md) | What's in the repo (every folder and file explained) |
+| [docs/AGENTS.md](docs/AGENTS.md) | The 11 agents (when to use each, how to edit) |
 | [docs/SKILLS.md](docs/SKILLS.md) | All 46 skills grouped by category |
 | [docs/RULES.md](docs/RULES.md) | The 7 global rules in detail |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, `/update-pack` mechanics |
@@ -428,17 +434,17 @@ See [docs/COMMANDS.md](docs/COMMANDS.md) for the full mechanics.
 |-----------------|--------|
 | OpenCode (CLI) | ✅ Tested |
 | Windows | ✅ Tested |
-| macOS | ⚠️ Untested by maintainer — see below |
-| Linux | ⚠️ Untested by maintainer — see below |
-| `graphify` | Optional — degrades to plain search if missing |
-| `agentmemory` | Optional — falls back to in-session memory only if missing |
-| MCP servers | Optional — see [Required dependencies](#-required-dependencies) and [MCPs](#-mcps-enabled-per-need-not-auto-on) |
+| macOS | ⚠️ Untested by maintainer. See below. |
+| Linux | ⚠️ Untested by maintainer. See below. |
+| `graphify` | Optional (degrades to plain search if missing) |
+| `agentmemory` | Optional (falls back to in-session memory only if missing) |
+| MCP servers | Optional. See [Required dependencies](#-required-dependencies) and [MCPs](#-mcps-enabled-per-need-not-auto-on). |
 
 ### 🍎 macOS / Linux support
 
 **Honest disclosure:** the maintainer develops and tests this pack on Windows only. `install.sh` is provided in the repo and is structurally similar to `install.ps1`, but it has **not been exercised on a real macOS or Linux machine** by the maintainer. There may be path quoting bugs, `bash` version assumptions, or `jq`/`python` availability issues that surface only on Unix.
 
-**If you're on macOS or Linux, the safest path is manual copy-paste.** It is guaranteed to work because there is no installer logic to fail — just file copies. From a shell:
+**If you're on macOS or Linux, the safest path is manual copy-paste.** It is guaranteed to work because there is no installer logic to fail, just file copies. From a shell:
 
 ```bash
 # 1. Clone the repo anywhere
@@ -464,22 +470,22 @@ If you try `install.sh` and hit an issue, please [open an issue](https://github.
 
 ## 🙏 Credits
 
-oh-my-openkilo is the OpenCode adaptation of **[oh-my-kilo](https://github.com/PanPanFR/oh-my-kilo)** — a lean, curated multi-agent configuration pack for Kilo Code by the same maintainer. The "prompts in files, models in config, behavior in rules" philosophy and the agent/skill/rule layering come from that project.
+oh-my-openkilo is the OpenCode adaptation of **[oh-my-kilo](https://github.com/PanPanFR/oh-my-kilo)**, a lean, curated multi-agent configuration pack for Kilo Code by the same maintainer. The "prompts in files, models in config, behavior in rules" philosophy and the agent/skill/rule layering come from that project.
 
-The pack structure and the "config-only" sharing approach are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)** by [alvinunreal](https://github.com/alvinunreal) — a lean, curated multi-agent suite for OpenCode. oh-my-openkilo adapts the philosophy (specialized agents + delegation hierarchy + skills + rules + installer) into a pure config pack, no runtime, no build step.
+The pack structure and the "config-only" sharing approach are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)** by [alvinunreal](https://github.com/alvinunreal), a lean, curated multi-agent suite for OpenCode. oh-my-openkilo adapts the philosophy (specialized agents + delegation hierarchy + skills + rules + installer) into a pure config pack, no runtime, no build step.
 
-The **agentic workflow patterns** — primary agent triage, subagent delegation, skill-based protocol enforcement, graphify-first codebase navigation, and caveman/ponytail communication style — were developed in **[Kilo Code](https://github.com/Kilo-Org/kilocode)** (also by this maintainer, see `oh-my-kilo`). OpenCode inherits these patterns naturally, and the agents in this pack are the same mental model applied to a different runtime.
+The **agentic workflow patterns** (primary agent triage, subagent delegation, skill-based protocol enforcement, graphify-first codebase navigation, and caveman/ponytail communication style) were developed in **[Kilo Code](https://github.com/Kilo-Org/kilocode)** (also by this maintainer, see `oh-my-kilo`). OpenCode inherits these patterns naturally, and the agents in this pack are the same mental model applied to a different runtime.
 
-For users who want a visual control room on top of the OpenCode runtime (desktop app, browser, mobile, code editor integration), **[OpenChamber](https://openchamber.dev/)** ([github.com/openchamber/openchamber](https://github.com/openchamber/openchamber)) is an excellent companion. OpenChamber is an independent third-party project — not affiliated with this pack or the OpenCode team — and it reads the same `~/.config/opencode` directory that oh-my-openkilo populates. See the "Want a friendlier UI?" section above for how the two compose.
+For users who want a visual control room on top of the OpenCode runtime (desktop app, browser, mobile, VS Code extension, or all four), **[OpenChamber](https://openchamber.dev/)** ([VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=FedaykinDev.openchamber), [github.com/openchamber/openchamber](https://github.com/openchamber/openchamber)) is an excellent companion. OpenChamber is an independent third-party project (publisher: `FedaykinDev` on the VS Code Marketplace), not affiliated with this pack or the OpenCode team, and it reads the same `~/.config/opencode` directory that oh-my-openkilo populates. See the "Want a friendlier UI?" section above for how the two compose.
 
 ## 🔒 Security
 
-The pack ships **zero credentials** — only `{env:VAR}` placeholders and an opinionated permission default that you should review. See [SECURITY.md](SECURITY.md).
+The pack ships **zero credentials**, only `{env:VAR}` placeholders and an opinionated permission default that you should review. See [SECURITY.md](SECURITY.md).
 
 ## Contributing
 
-Found a bug, an install issue, or have an agent/skill suggestion? Open an issue or PR — see [CONTRIBUTING.md](CONTRIBUTING.md).
+Found a bug, an install issue, or have an agent/skill suggestion? Open an issue or PR. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).

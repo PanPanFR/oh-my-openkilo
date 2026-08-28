@@ -13,7 +13,7 @@ Slash commands. Type the name (with leading `/`) at the start of an OpenCode pro
 | `/caveman-help`      | Quick-reference card for all caveman modes, skills, and commands                     |
 | `/caveman-commit`    | Generate a compressed commit message (subject ≤ 50 chars, body only if needed)       |
 | `/caveman-compress <file>` | Compress a natural-language memory file (CLAUDE.md, todos, prefs) into caveman format |
-| `/caveman-review`    | Compressed code review comments — one line per finding                              |
+| `/caveman-review`    | Compressed code review comments (one line per finding)                              |
 | `/caveman-stats`     | Show real token usage and estimated savings for the current session                  |
 
 ## `/update-pack` in detail
@@ -24,7 +24,7 @@ This is the only command that touches your filesystem outside the OpenCode sessi
 
 1. Locate the pack repo at `~/.config/opencode/oh-my-openkilo/`.
 2. `git fetch origin` to see if upstream has new commits.
-3. `git pull --ff-only origin main`. If fast-forward fails, abort (you've diverged — see [TROUBLESHOOTING](#troubleshooting)).
+3. `git pull --ff-only origin main`. If fast-forward fails, abort (you've diverged; see [TROUBLESHOOTING](#troubleshooting)).
 4. For each file under `agents/`, `skills/`, `rules/`, `commands/`, `plugins/`, and `AGENTS.md`:
    - Not in target → copy. Count as `added`.
    - Identical to target → skip. Count as `unchanged`.
@@ -34,8 +34,8 @@ This is the only command that touches your filesystem outside the OpenCode sessi
 
 **Never touched by `/update-pack`:**
 
-- `~/.config/opencode/opencode.json` — your config, your responsibility
-- `~/.config/opencode/.opencode/`, `node_modules/`, lock files — runtime state
+- `~/.config/opencode/opencode.json`: your config, your responsibility
+- `~/.config/opencode/.opencode/`, `node_modules/`, lock files: runtime state
 - Files in the target that don't exist in the repo (your local additions)
 
 ## Troubleshooting `/update-pack`
