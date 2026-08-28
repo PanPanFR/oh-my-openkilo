@@ -251,6 +251,72 @@ The token grants the MCP read/write access to your Supabase projects — treat i
 
 ---
 
+## 🎯 Example workflows
+
+What does this pack actually *do*? Here are five real prompts — and what happens **without** oh-my-openkilo versus **with** it, so the difference is concrete.
+
+### 1. Repository audit
+
+> "Audit this repository's architecture and identify the biggest problems."
+
+**Without oh-my-openkilo:** One agent reads files manually, greps around, and gives a surface-level opinion — architecture, performance, and code quality all mushed into one pass with no structure or evidence per claim.
+
+**With oh-my-openkilo:**
+- **Agent:** `builder` → delegates `explorer` (recon) + `reviewer` (quality/security) in parallel
+- **Skills:** `clean-code`, `code-review`, `ponytail-review`
+- **Rules:** graphify-first navigation (queries the knowledge graph before grep), parallel delegation
+- **Result:** structured report — architecture + code quality + over-engineering flags — backed by subagent findings, not one agent's opinion.
+
+### 2. Debugging a flaky test
+
+> "This test passes locally but fails in CI. Find the root cause and fix it."
+
+**Without oh-my-openkilo:** The agent guesses, pokes at the test, runs it a few times, and ships a "fix" that papers over the symptom. No memory of similar past bugs. Same bug recurs in two weeks.
+
+**With oh-my-openkilo:**
+- **Agent:** `builder`
+- **Skills:** `systematic-debugging` (reproduce → isolate → bisect; no guessing)
+- **Rules:** agentmemory recall first (`has this bug been seen before?`), skill check before implementing, verification-before-completion
+- **Result:** root-cause analysis with evidence (which commit/line/env variable flipped behavior), fix only after diagnosis, regression test added, save to agentmemory so the next session finds it.
+
+### 3. New feature implementation
+
+> "Add a new feature: [description]."
+
+**Without oh-my-openkilo:** The agent starts coding immediately — no plan, no tests, no review. The feature works (maybe), but the architecture drifts, nothing is verified, and a security issue slips through because no one looked.
+
+**With oh-my-openkilo:**
+- **Agent:** `builder` → spawns `planner` for design, `tester` for tests, `reviewer` for security analysis when auth/data is involved
+- **Skills:** `plans` (write structured plan first), `test-driven-development` (tests before implementation), `verification-before-completion` (evidence before "done")
+- **Rules:** plan-file protocol for complex tasks, TDD before implementation, verify before claiming done
+- **Result:** structured plan you confirm first, tests written first, evidence-backed completion, security review on the auth path.
+
+### 4. Architecture review
+
+> "Review this application's architecture and suggest improvements."
+
+**Without oh-my-openkilo:** A loose opinion piece — "maybe extract this, perhaps that service is too big" — with no verification against the actual code, no trade-offs discussed, and a refactor suggestion that breaks three other things.
+
+**With oh-my-openkilo:**
+- **Agent:** `planner` → delegates `explorer` (recon) + `researcher` (best practices for the stack) in parallel
+- **Skills:** `codebase-design` (deep-module vocabulary, finding deepening opportunities), `plans` (write up findings)
+- **Rules:** graphify-first (query the graph for actual coupling, not vibes), plan-file protocol, user confirmation loop before any implementation
+- **Result:** structured review with evidence from the codebase (specific files, specific call sites), explicit trade-offs, a plan you confirm before anything is refactored.
+
+### 5. Knowledge graph exploration
+
+> "Explore this codebase and map the relationships between the major components."
+
+**Without oh-my-openkilo:** Manual `grep` + reading file after file — slow, you miss the cross-file structure, and you give up on large repos.
+
+**With oh-my-openkilo:**
+- **Agent:** `builder` (or any agent)
+- **Skills:** `graphify` (knowledge graph for the codebase)
+- **Rules:** graphify-first navigation (init graph with `graphify update .` if missing)
+- **Result:** structural map of the codebase — `graphify query`, `graphify path`, `graphify explain` — before touching any code. Even a million-line repo is navigable.
+
+---
+
 ## Meet the agents
 
 11 curated agents. **Each one is a markdown file in `agents/`** that enriches a native agent with specialist protocols. Edit the prompt by editing the file. Model, variant, and permissions are configured via `opencode.json`.
