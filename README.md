@@ -15,6 +15,8 @@ A curated **OpenCode** configuration pack — specialized agents, skills, rules,
 
 A **configuration pack** for [OpenCode](https://opencode.ai) — plain files plus an installer that copies them into `~/.config/opencode`. No plugin runtime, no build step. Designed for Windows; macOS and Linux are supported via the Unix installer but **have not been tested by the maintainer** — see [macOS / Linux support](#-macos--linux-support) below.
 
+The agentic workflow patterns in this pack — primary-agent triage, subagent delegation, skills as protocols, graphify-first navigation, and the caveman/ponytail communication style — are inherited from [Kilo Code](https://github.com/Kilo-Org/kilocode), the same maintainer's multi-agent extension for VS Code. This pack is the OpenCode adaptation of that workflow: same mental model, different runtime.
+
 Instead of building your AI coding workflow from scratch, you get a curated, opinionated setup that works immediately:
 
 - **11 specialized agents** — 2 primary (`builder`, `planner`) + 9 subagents (`designer`, `tester`, `reviewer`, `documenter`, `researcher`, `explorer`, `cavecrew-*`) with a delegation hierarchy already designed
