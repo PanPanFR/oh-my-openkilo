@@ -48,6 +48,14 @@ The pack **curates** a small set of well-known tools (`graphify`, `agentmemory`,
 
 The downside: oh-my-openkilo can't add features that need runtime support (background orchestration, AST-aware tools, live model presets). For those, a plugin pack is the right tool. For "smarter prompts out of the box", config is enough.
 
+## Want a friendlier UI? Try OpenChamber
+
+oh-my-openkilo is a **terminal-first** pack — agents live in your shell, you steer via plain text. If you'd rather watch the agent work in a visual workspace (file tree, diff viewer, parallel session manager, mobile/PWA access), pair this pack with **[OpenChamber](https://openchamber.dev/)** ([github.com/openchamber/openchamber](https://github.com/openchamber/openchamber)) — an open-source GUI that runs on top of the OpenCode SDK.
+
+OpenChamber is **not affiliated with this pack or with the OpenCode team** (it's a third-party project), but it speaks the same OpenCode config files that oh-my-openkilo populates, so the two compose naturally: install oh-my-openkilo for the agents/skills/rules, then point OpenChamber at the same `~/.config/opencode` directory and you get a visual control room on top of it.
+
+If you only want a "lighter VSCode experience", the official [OpenCode extension for VS Code](https://opencode.ai/docs/ide/) (terminal split, keybinds, file reference shortcuts) is enough. OpenChamber is the heavier option when you want desktop, browser, and mobile all in sync.
+
 ## Who is it for?
 
 - **OpenCode users** who want a ready-to-use setup — install and start, no prompt engineering required
@@ -395,6 +403,8 @@ oh-my-openkilo is the OpenCode adaptation of **[oh-my-kilo](https://github.com/P
 The pack structure and the "config-only" sharing approach are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)** by [alvinunreal](https://github.com/alvinunreal) — a lean, curated multi-agent suite for OpenCode. oh-my-openkilo adapts the philosophy (specialized agents + delegation hierarchy + skills + rules + installer) into a pure config pack, no runtime, no build step.
 
 The **agentic workflow patterns** — primary agent triage, subagent delegation, skill-based protocol enforcement, graphify-first codebase navigation, and caveman/ponytail communication style — were developed in **[Kilo Code](https://github.com/Kilo-Org/kilocode)** (also by this maintainer, see `oh-my-kilo`). OpenCode inherits these patterns naturally, and the agents in this pack are the same mental model applied to a different runtime.
+
+For users who want a visual control room on top of the OpenCode runtime (desktop app, browser, mobile, code editor integration), **[OpenChamber](https://openchamber.dev/)** ([github.com/openchamber/openchamber](https://github.com/openchamber/openchamber)) is an excellent companion. OpenChamber is an independent third-party project — not affiliated with this pack or the OpenCode team — and it reads the same `~/.config/opencode` directory that oh-my-openkilo populates. See the "Want a friendlier UI?" section above for how the two compose.
 
 ## 🔒 Security
 
