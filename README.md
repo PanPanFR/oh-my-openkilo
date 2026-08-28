@@ -420,7 +420,11 @@ Seven global rules loaded via `opencode.json` `instructions`. Order matters; pro
 
 ## Updating the pack
 
-In an OpenCode session, type:
+Two ways, same end result. Pick whichever fits the moment.
+
+### Option 1: from inside an OpenCode session
+
+In any OpenCode session, type:
 
 ```
 /update-pack
@@ -428,7 +432,42 @@ In an OpenCode session, type:
 
 This pulls the latest commit from GitHub, then syncs each file with per-file diff and backup of any local changes you made. Files you customized get backed up as `<file>.local-<timestamp>` before being overwritten; your changes are never silently lost.
 
-See [docs/COMMANDS.md](docs/COMMANDS.md) for the full mechanics.
+### Option 2: from the terminal (no OpenCode session required)
+
+Same logic, but driven by a script you can run from PowerShell or bash. Useful for CI/CD, scheduled syncs, or when you just prefer terminal-based workflows.
+
+**Windows (PowerShell):**
+
+```powershell
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/update.ps1 | iex
+```
+
+**macOS / Linux (bash):**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/update.sh | bash
+```
+
+Both scripts:
+
+1. Run `git pull --ff-only origin main` in `~/.config/opencode/oh-my-openkilo/` (aborts if your local repo has diverged, with instructions to recover).
+2. For each pack folder (`agents/`, `skills/`, `rules/`, `commands/`, `plugins/`) and `AGENTS.md`:
+   - **Not in target** → copy it. Counted as `added`.
+   - **Identical to target** → skip. Counted as `unchanged`.
+   - **Differs** → back up to `<file>.local-<timestamp>`, then overwrite. Counted as `updated`.
+3. Print a summary (`added / updated (with backup list) / unchanged`).
+4. Remind you to restart OpenCode or run `/reload` to pick up the changes.
+
+Flags:
+
+| PowerShell          | Bash              | Effect                                  |
+|---------------------|-------------------|-----------------------------------------|
+| `-WhatIf`           | `--dry-run`       | Print actions, change nothing           |
+| `-SkipGitPull`      | `--no-git-pull`   | Skip the `git pull` step                |
+| `-ConfigDir <path>` | `--config-dir=…`  | Override target config dir              |
+| `-RepoDir <path>`   | `--repo-dir=…`    | Override pack repo dir                  |
+
+See [docs/COMMANDS.md](docs/COMMANDS.md#-update-pack) for the full `/update-pack` mechanics and recovery steps if `git pull` fails.
 
 ---
 

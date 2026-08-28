@@ -18,7 +18,7 @@ Slash commands. Type the name (with leading `/`) at the start of an OpenCode pro
 
 ## `/update-pack` in detail
 
-This is the only command that touches your filesystem outside the OpenCode session.
+This is the slash command in OpenCode sessions. For an equivalent that runs from the terminal (no OpenCode session required), see `update.ps1` / `update.sh` in the repo root; the README "Updating the pack" section shows one-liners for both PowerShell and bash. Both paths share the same logic, summarized below.
 
 **Flow:**
 
