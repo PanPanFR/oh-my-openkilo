@@ -1,0 +1,34 @@
+# never commit user runtime config or secrets
+opencode.json
+.env
+.env.*
+!.env.example
+
+# runtime dependencies
+node_modules/
+package.json
+package-lock.json
+bun.lockb
+
+# state / cache
+.caveman-active
+.caveman-opencode-ownership.json
+skills-lock.json
+tui.json
+.opencode/
+
+# plan artifacts
+.ideas/
+.plan/
+plan/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+*.tmp
+
+# git
+.git/
+.github/
