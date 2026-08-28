@@ -25,6 +25,27 @@ Instead of building your AI coding workflow from scratch, you get a curated, opi
 
 The idea is simple: **prompts in files, models in config, behavior in rules.** Edit an agent by editing its file; switch models via `opencode.json`; add your own agents, skills, or rules without touching anything else.
 
+## Why it's lightweight
+
+oh-my-openkilo is **markedly lighter** than other multi-agent OpenCode packs (e.g. [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)) because it ships **only configuration**, not a runtime. The repo is 569 files / 2.6 MB; a comparable plugin-based pack is 507 files / 58.5 MB — roughly **23× larger** because the other approach bundles a TypeScript build pipeline, a compiled `dist/`, and a `node_modules` tree.
+
+What "configuration only" means in practice:
+
+| Aspect                | oh-my-openkilo (config pack)                          | Typical plugin pack                              |
+|-----------------------|--------------------------------------------------------|---------------------------------------------------|
+| **What you install**  | Markdown files, shell scripts                         | TypeScript source, build output, npm deps        |
+| **Build step**        | None — files are the artifact                         | `bun install && bun run build`                    |
+| **Install time**      | Seconds (file copy + optional `npm i -g`)             | Minutes (download deps, compile TS)               |
+| **Update mechanism**  | `git pull` + per-file copy + backup                   | `git pull` + `bun install` + `bun run build`      |
+| **Runtime overhead**  | Zero — OpenCode reads the markdown directly           | Plugin loader runs on every OpenCode startup      |
+| **Failure surface**   | File copy, PowerShell/bash                            | Bun, npm, TypeScript compiler, build cache        |
+| **What can break**    | A misformed frontmatter, a typo in a path             | A version mismatch, a build error, a missing dep  |
+| **Uninstall**         | Delete the copied folders                            | Disable the plugin, remove the npm package, hope  |
+
+The pack **curates** a small set of well-known tools (`graphify`, `agentmemory`, `caveman`, `ponytail`, `superpowers`) rather than building a new runtime. If you already have those tools, oh-my-openkilo adds nothing to your machine — it just points OpenCode at better prompts.
+
+The downside: oh-my-openkilo can't add features that need runtime support (background orchestration, AST-aware tools, live model presets). For those, a plugin pack is the right tool. For "smarter prompts out of the box", config is enough.
+
 ## Who is it for?
 
 - **OpenCode users** who want a ready-to-use setup — install and start, no prompt engineering required
