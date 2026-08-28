@@ -82,7 +82,7 @@ The installer:
 ### After install
 
 1. **Edit `~/.config/opencode/opencode.json`** to set your model and provider keys. The example has `{env:VAR}` placeholders — set the env vars in your shell, or in a `.env` file (gitignored).
-2. **(Optional) install Plus-tier tools** for full performance — see [Performance Tiers](#-performance-tiers) below.
+2. **Install required dependencies** (`graphify`, `agentmemory`) — see [Required dependencies](#-required-dependencies) below. Without these the pack degrades severely.
 3. **Restart OpenCode** or run `/reload`.
 4. **Verify:** in a session, ask `list your agents and confirm which skills are loaded`. You should see all 11 agents, 46 skills, and 7 rules.
 
@@ -103,17 +103,9 @@ notepad $env:USERPROFILE\.config\opencode\agents\reviewer.md
 
 The `model` field sits in the YAML frontmatter at the top of each `agents/*.md` file. Restart OpenCode (or run `/reload`) after changing it. See [docs/AGENTS.md](docs/AGENTS.md#changing-the-model) for the full per-agent model table and recommendations.
 
-## Performance Tiers
+## Required dependencies
 
-The pack ships in two linear layers. **Core is always installed** and works out of the box. **Plus** adds the two external tools that make the pack truly "smart". **MCPs are listed in the example config** but disabled by default (except `agentmemory` which Plus needs); enable them one at a time as you need the capability.
-
-### Core (always installed)
-
-The pack itself — agents, skills, rules, commands, plugins, `AGENTS.md`, plus the `mcp` entries in `examples/opencode.example.json` (most disabled by default). Without anything else, OpenCode already uses caveman-style terse replies, ponytail-style minimal code, and the full skill library.
-
-### Plus — recommended for "smart" performance
-
-Two external tools unlock the highest-leverage features:
+The pack **requires** two external tools to deliver its core value. Without them, several rules and skills will load but their tools will be missing — the pack degrades to a much weaker version of itself. Install these immediately after the pack itself:
 
 ```bash
 npm i -g graphify              # knowledge graph (the `graphify` rule + skill depend on this)
@@ -122,18 +114,20 @@ npm i -g @agentmemory/server   # persistent cross-session memory (the `agentmemo
 
 Then start the agentmemory server (see its README) and make sure `mcp.agentmemory` is enabled in `opencode.json` (the example already has it).
 
-**Risk if you skip Plus:**
+**What you lose without each:**
 
-- **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos. The rule loads but its tools are missing.
-- **No `agentmemory`** → no cross-session memory. Every session starts from zero. The rule degrades to nothing useful.
+- **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos. The `graphify` rule and skill both rely on this binary.
+- **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `agentmemory` rule and the `recall`/`remember`/`recap` commands all depend on this.
 
-### MCPs (enabled per-need, not auto-on)
+The pack's `instructions` array registers `rules/agentmemory.md` and `rules/graphify.md` as always-on, so the rules fire every session — but they degrade to no-ops if the dependencies are missing. Install them.
 
-The example config includes all MCPs that ship with this pack, **disabled by default except `agentmemory`** (which Plus needs). Enable one when you actually need its capability.
+## MCPs (enabled per-need, not auto-on)
+
+The example config includes all MCPs that ship with this pack. **`agentmemory` is enabled by default** (because of the required-dependency rule above). All other MCPs are `enabled: false` — turn one on when you actually need its capability.
 
 | MCP                    | What it unlocks                                        | Required             | Risk if disabled |
 |------------------------|--------------------------------------------------------|----------------------|------------------|
-| `agentmemory`          | Persistent cross-session memory (Plus dependency)      | Plus server + `AGENTMEMORY_SERVER_URL` | No memory — every session starts from zero |
+| `agentmemory`          | Persistent cross-session memory (**required dependency**) | `AGENTMEMORY_SERVER_URL` (Plus server) | No memory — every session starts from zero |
 | `context7`             | Up-to-date library docs (replaces stale training data) | `CONTEXT7_API_KEY` (free) | Docs lookup falls back to model knowledge (often outdated) |
 | `stitch`               | AI-generated UI mockups, used by `designer` agent      | `GOOGLE_API_KEY`     | **`designer` becomes inert** — `builder` and `planner` delegate UI work to `designer`, so all UI tasks degrade |
 | `chrome-devtools`      | Live browser debug (DOM, network, console, perf)       | none                 | No live browser inspection |
@@ -260,7 +254,7 @@ See [docs/COMMANDS.md](docs/COMMANDS.md) for the full mechanics.
 | Linux | ⚠️ Untested by maintainer — see below |
 | `graphify` | Optional — degrades to plain search if missing |
 | `agentmemory` | Optional — falls back to in-session memory only if missing |
-| MCP servers | Optional — see Performance Tiers |
+| MCP servers | Optional — see [Required dependencies](#-required-dependencies) and [MCPs](#-mcps-enabled-per-need-not-auto-on) |
 
 ### 🍎 macOS / Linux support
 

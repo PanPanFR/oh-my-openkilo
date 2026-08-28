@@ -53,23 +53,9 @@ git clone https://github.com/PanPanFR/oh-my-openkilo.git ~/.config/opencode/oh-m
 | `-SkipPlugins`            | `--no-plugins`     | Skip `plugins/` copy |
 | `-ConfigDir <path>`       | `--config-dir=<path>` | Override target config dir |
 
-## After install: pick your tier
+## After install: required dependencies
 
-oh-my-openkilo ships with two layers. **Core is always installed** by `install.ps1`. Plus is opt-in for the highest-leverage features.
-
-### Core (always installed)
-
-- 11 agents, 46 skills, 7 rules, 9 commands
-- Plugins: `agentmemory-capture`, `caveman`, `ponytail`, `superpowers`
-- `AGENTS.md` global rules
-- `examples/opencode.example.json` (seeded if you had no `opencode.json`)
-- All MCP entries in the example config (most `enabled: false` by default — only `agentmemory` is on, because Plus needs it)
-
-This is the baseline. Without anything else, OpenCode already uses caveman-style terse replies, ponytail-style minimal code, and the entire skill library.
-
-### Plus (recommended for "smart" performance)
-
-Two external tools unlock the highest-leverage features:
+The pack **requires** two external tools to deliver its core value. Without them, the `agentmemory` and `graphify` rules load but their tools are missing — the pack degrades to a much weaker version of itself. Install these **immediately after** the pack itself:
 
 ```bash
 # Knowledge graph -- the `graphify` rule and skill depend on this
@@ -79,20 +65,22 @@ npm i -g graphify
 npm i -g @agentmemory/server
 ```
 
-Then make sure your `opencode.json` has the `agentmemory` MCP block (the example already has it). Start the agentmemory server once with `agentmemory serve` (or whatever the package's start command is — see its README).
+Then start the agentmemory server (see its README) and make sure `mcp.agentmemory` is enabled in `opencode.json` (the example already has it). Start the server once with `agentmemory serve` (or whatever the package's start command is — see its README).
 
-**Risk if you skip Plus:**
+**What you lose without each:**
 
-- **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos. The `graphify` rule will load but its tools will be missing.
-- **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `agentmemory` rule will degrade to nothing useful.
+- **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos. The `graphify` rule and skill both rely on this binary.
+- **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `agentmemory` rule and the `recall`/`remember`/`recap` commands all depend on this.
+
+The pack's `instructions` array registers `rules/agentmemory.md` and `rules/graphify.md` as always-on, so the rules fire every session — but they degrade to no-ops if the dependencies are missing.
 
 ### MCPs (enable per-need, not auto-on)
 
-The example config lists all MCPs that ship with this pack, **disabled by default except `agentmemory`**. Enable one when you need it.
+The example config lists all MCPs that ship with this pack. **`agentmemory` is enabled by default** (required dependency). All other MCPs are `enabled: false` — turn one on when you need it.
 
 | MCP                    | Capability                                          | Required env / key                      | Risk if disabled |
 |------------------------|-----------------------------------------------------|-----------------------------------------|------------------|
-| `agentmemory`          | Persistent cross-session memory (Plus dependency)   | Plus server + `AGENTMEMORY_SERVER_URL`  | No memory — every session starts from zero |
+| `agentmemory`          | Persistent cross-session memory (**required**)      | `AGENTMEMORY_SERVER_URL` (Plus server)  | No memory — every session starts from zero |
 | `context7`             | Up-to-date library docs (replaces training data)    | `CONTEXT7_API_KEY` (free at context7.com) | Documentation lookup falls back to model knowledge (often outdated) |
 | `stitch`               | AI-generated UI mockups, used by `designer` agent   | `GOOGLE_API_KEY`                        | **`designer` agent becomes inert** — `builder` and `planner` delegate UI work to `designer` |
 | `chrome-devtools`      | Live browser debug (DOM, network, console, perf)    | none (uses installed Chrome)            | No live browser inspection; static fetch only |

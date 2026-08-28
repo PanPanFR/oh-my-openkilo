@@ -116,7 +116,7 @@ To enable:
 
 | MCP                    | Required env / file                                | Free? | Used by                                |
 |------------------------|----------------------------------------------------|-------|----------------------------------------|
-| `agentmemory`          | Plus server + `AGENTMEMORY_SERVER_URL`             | yes (Plus tier) | `agentmemory` rule, `recall`/`remember` |
+| `agentmemory`          | `AGENTMEMORY_SERVER_URL` (Plus server)             | yes (npm global) | `agentmemory` rule, `recall`/`remember` |
 | `chrome-devtools`      | none (uses installed Chrome)                       | yes   | `chrome-devtools` skill                |
 | `playwright`           | `npx playwright install chromium` (first run)      | yes   | `playwright-cli` skill                 |
 | `stitch`               | `GOOGLE_API_KEY`                                   | tier-based | `designer` agent, `stitch` skill    |
