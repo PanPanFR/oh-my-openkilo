@@ -14,14 +14,16 @@ A curated **OpenCode** configuration pack: specialized agents, skills, rules, an
 ## TL;DR
 
 ```powershell
-# Windows: one-liner install
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.ps1 | iex
+# Windows: one-liner install (pinned to v0.4.0)
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/install.ps1 | iex
 ```
 
 ```bash
 # macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/install.sh | bash
 ```
+
+> Want the bleeding edge instead of `v0.4.0`? Replace the tag in the URL with `main` (always tracks the latest commit) or the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest) tag.
 
 Then install the two required tools and restart OpenCode:
 
@@ -108,11 +110,11 @@ If you only want the lightest "VSCode experience", the official [OpenCode extens
 ### Windows (recommended)
 
 ```powershell
-# One-liner (downloads scripts/install.ps1 from main branch)
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.ps1 | iex
+# One-liner (pinned to v0.4.0)
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/install.ps1 | iex
 
 # Or preview first (after `git clone`)
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.ps1 -OutFile scripts/install.ps1
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/install.ps1 -OutFile scripts/install.ps1
 .\scripts\install.ps1 -WhatIf
 .\scripts\install.ps1
 ```
@@ -120,10 +122,10 @@ irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/insta
 ### macOS / Linux
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/install.sh | bash
 
 # Or preview first (after `git clone`)
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/install.sh -o scripts/install.sh
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/install.sh -o scripts/install.sh
 chmod +x scripts/install.sh
 ./scripts/install.sh --dry-run
 ./scripts/install.sh
@@ -536,13 +538,13 @@ Same logic, but driven by a script you can run from PowerShell or bash. Useful f
 **Windows (PowerShell):**
 
 ```powershell
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/update.ps1 | iex
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/update.ps1 | iex
 ```
 
 **macOS / Linux (bash):**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/main/scripts/update.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/update.sh | bash
 ```
 
 Both scripts:
