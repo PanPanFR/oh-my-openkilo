@@ -34,7 +34,7 @@
     "9router": {
       "npm": "@ai-sdk/openai-compatible",
       "options": {
-        "baseURL": "https://9router.panpan.my.id/v1",
+        "baseURL": "https://<YOUR_ROUTER_BASE_URL>/v1",
         "apiKey": "{env:NINE_ROUTER_API_KEY}"
       },
       "models": {}
