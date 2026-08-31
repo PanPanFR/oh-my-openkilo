@@ -72,9 +72,9 @@ Then start the agentmemory server (see its README) and make sure `mcp.agentmemor
 **What you lose without each:**
 
 - **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos. The `graphify` rule and skill both rely on this binary.
-- **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `agentmemory` rule and the `recall`/`remember`/`recap` commands all depend on this.
+- **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `memory-discipline`/`recall` skills and the `recall`/`remember`/`recap` commands all depend on this.
 
-The pack's `instructions` array registers `rules/agentmemory.md` and `rules/graphify.md` as always-on, so the rules fire every session; but they degrade to no-ops if the dependencies are missing.
+The pack's `instructions` array registers `rules/skill-reminder.md` as always-on, so the skill-check + memory-recall protocol fires every session; it degrades to no-op if the dependencies are missing.
 
 ### MCPs (enable per-need, not auto-on)
 
@@ -84,11 +84,8 @@ The example config lists all MCPs that ship with this pack. **`agentmemory` is e
 |------------------------|-----------------------------------------------------|-----------------------------------------|------------------|
 | `agentmemory`          | Persistent cross-session memory (**required**)      | `AGENTMEMORY_SERVER_URL` (Plus server)  | No memory. Every session starts from zero. |
 | `context7`             | Up-to-date library docs (replaces training data)    | `CONTEXT7_API_KEY` (free at context7.com) | Documentation lookup falls back to model knowledge (often outdated) |
-| `stitch`               | AI-generated UI mockups, used by `designer` agent   | `GOOGLE_API_KEY`                        | **`designer` agent becomes inert**: `builder` and `planner` delegate UI work to `designer` |
 | `chrome-devtools`      | Live browser debug (DOM, network, console, perf)    | none (uses installed Chrome)            | No live browser inspection; static fetch only |
 | `playwright`           | Stateful persistent browser loop, E2E test gen      | `npx playwright install chromium` first | E2E test generation disabled; `playwright-cli` skill degrades |
-| `remotion`             | Walkthrough video generation                        | none                                    | No video walkthrough capability |
-| `supabase-mcp-server`  | Supabase project ops (read schema, run migrations)  | `SUPABASE_ACCESS_TOKEN`                 | No Supabase integration; manual dashboard work |
 
 To enable any of these, edit `opencode.json` to set `enabled: true` and fill in the required env vars. The `install.ps1` validator scans your config and warns if any enabled MCP has a missing env var.
 

@@ -1,34 +1,28 @@
 # Rules
 
-Seven global rules. Rules are **not auto-loaded from the `rules/` folder**; each must be registered in `opencode.json` under `instructions`. The example file lists them in this order (protocol rules first, as configured in the maintainer's setup):
+Three global rules. Rules are **not auto-loaded from the `rules/` folder**; each must be registered in `opencode.json` under `instructions`. The example file lists them in this order (protocol rule first, as configured in the maintainer's setup):
 
 ```jsonc
 {
   "instructions": [
-    "rules/agentmemory.md",
-    "rules/graphify.md",
     "rules/skill-reminder.md",
-    "rules/delegation.md",
     "rules/language.md",
-    "rules/communication-style.md",
-    "rules/workers.md"
+    "rules/communication-style.md"
   ]
 }
 ```
 
 Order matters: earlier entries get better model compliance, so the first-action protocols come first.
 
-## The seven rules
+## The three rules
 
 | Rule                  | Applies        | Mandate                                                                                                |
 |-----------------------|----------------|--------------------------------------------------------------------------------------------------------|
-| `agentmemory`         | always         | Recall before work (run `memory_smart_search`); save at decision points and after outcomes             |
-| `graphify`            | always         | Use the knowledge graph for codebase questions; init with `graphify update .` if missing                |
-| `skill-reminder`      | always         | Load matching skill via the `skill` tool before any implementation task                                 |
-| `delegation`          | always         | Delegate specialized work to subagents; run independent subtasks in parallel                           |
+| `skill-reminder`      | always         | Load matching skill via the `skill` tool before any implementation task; recall agentmemory first        |
 | `language`            | always         | All file content in English; chat can be any language                                                  |
 | `communication-style` | always         | Caveman (terse) replies and Ponytail (minimal) code style in every session                             |
-| `workers`             | Cloudflare files | Prefer current Cloudflare docs over training data (conditional load; globs-based)                  |
+
+Other behaviors (memory recall, graphify navigation, parallel delegation, Cloudflare doc-first) are handled by the matching skills, loaded on demand. See [SKILLS.md](SKILLS.md).
 
 ## How rules differ from skills
 

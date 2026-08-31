@@ -1,7 +1,7 @@
 ---
 description: Technical writing specialist - creates and improves documentation
 mode: subagent
-model: opencode/muse-spark-1.2-contributor-free
+model: 9router/b.ai/mimo-v2.5
 tools:
   read: true
   write: true

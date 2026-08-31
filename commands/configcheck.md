@@ -1,0 +1,85 @@
+---
+description: Diagnose opencode config: validate opencode.json, test every MCP server actually runs, fix broken parts, ask user for missing credentials (API keys, tokens).
+---
+
+Run a full config health check and act as the user's config assistant. Optional scope argument (e.g. `mcp`, `stitch`, `plugins`): $ARGUMENTS
+
+## 1. Config file validation
+
+- Locate configs: global `~/.config/opencode/opencode.json` (or `.jsonc`), plus project-level `./opencode.json` / `.opencode/opencode.json` if present.
+- Parse each file. If JSON is invalid, report the exact error with line number, then fix it.
+- Verify every referenced path exists and is loadable: `instructions` files, local `plugin` paths, `skills.paths`. For npm/git plugin specs, just report them (installed at startup).
+- Verify `model` and `small_model` reference a defined provider, and each model id exists in that provider's `models` map.
+- Validate `mcp` entries: `type` present ("local" or "remote"), `command` is an array of strings (never a single string), remote entries have `url`.
+- Validate `permission` values are valid actions ("allow", "ask", "deny").
+- Flag unknown top-level keys (opencode rejects them with ConfigInvalidError and refuses to start).
+
+## 2. MCP server checks
+
+Skip `enabled: false` servers (list them as intentionally disabled). For each enabled server:
+
+- **local**: verify the runtime is available (`node --version` for npx commands, `python --version` for python commands) and any referenced script path exists. Then spawn it and send an MCP `initialize` JSON-RPC request; confirm a valid response. Report failures with stderr.
+- **remote**: send an HTTP JSON-RPC `initialize` request to the URL; confirm a valid response. Distinguish: 401/403 (auth problem), timeout (server down or blocked), connection refused, DNS failure.
+- **credentials**: if a server needs a key/token and it is missing, empty, a `{env:VAR}` placeholder with the var unset, or rejected with 401/403: STOP and ask the user to paste the credential. Insert it (prefer `{env:VAR}` interpolation only if the user sets the var themselves; otherwise inline it), then re-test until OK.
+- Servers with placeholder-looking values (e.g. `your-key-here`) count as missing credentials.
+
+## 3. Known-tricky components (deeper checks)
+
+These have multi-part installs. Check every part, not just the MCP entry.
+
+- **agentmemory** (3 parts):
+  1. MCP server `agentmemory` (npx `@agentmemory/mcp`) connects to a separate REST server at `AGENTMEMORY_SERVER_URL` (default `http://127.0.0.1:3111`). Test that REST server first: `GET http://127.0.0.1:3111/health`. If it is down, every MCP tool fails even though the MCP entry itself is fine: tell the user to start the agentmemory server.
+  2. Plugin `./plugins/agentmemory-capture.ts` (from `plugin` array): file must exist relative to the config dir.
+  3. Live check: call MCP tool `agentmemory_memory_diagnose` if available; report any subsystem errors it finds and offer to run `agentmemory_memory_heal`.
+  - Reference: local skills `agentmemory-config` (ports: REST 3111, streams 3112, viewer 3113, engine 49134) and `agentmemory-architecture`. Package: https://www.npmjs.com/package/@agentmemory/mcp
+
+- **graphify** (not an MCP here, a Python CLI):
+  1. Check `graphify --version` runs. If missing, detect how to install: try `uv tool` first (package name is `graphifyy`, note the double y), then pipx, then pip. Install detection logic is documented in `skills/graphify/SKILL.md` Step 1.
+  2. Verify `graphify-out/graph.json` is valid JSON where the skill is used (project-dependent, report only).
+  - Reference: https://pypi.org/project/graphifyy/ (package name is `graphifyy`, double y)
+
+- **stitch** (remote MCP, API key auth):
+  1. Header `X-Goog-Api-Key` must be present and non-placeholder. 401/403 = invalid/expired key: ask user for a fresh one, insert, re-test.
+  2. Stitch keys expire and tools may return Google API error JSON: report the exact error body, do not guess the cause.
+  - Reference: local skills `stitch` and its subskills. Official docs live online; fetch them (webfetch/context7) if the error is unclear.
+
+- **Docs rule (applies to every component)**: before stating how something installs or why it fails, consult the official source: the npm/PyPI page for the package, the vendor docs (context7 or webfetch), or the local skill files in `~/.config/opencode/skills/`. Never guess install steps or error meanings. If a doc URL 404s or docs conflict, say so in the report instead of picking one silently.
+
+## 4. Fix what is broken
+
+Fix within the existing config only:
+- malformed JSON, wrong field types, unknown top-level keys
+- missing `type`, `command` as string instead of array
+- missing/invalid credentials: prompt the user, insert, re-test
+- stale `{env:VAR}` references: ask user for value, offer inline literal
+
+Do NOT invent new MCP servers. Do NOT flip `enabled` unless the user asks. Do NOT touch unrelated fields.
+
+## 5. Official docs per MCP server
+
+Consult before diagnosing. All links verified live 2026-08-30; if one 404s, say so in the report.
+
+| Component | Docs | Repo |
+|---|---|---|
+| MCP `agentmemory` | https://www.npmjs.com/package/@agentmemory/mcp | https://github.com/rohitg00/agentmemory |
+| MCP `chrome-devtools` | https://www.npmjs.com/package/chrome-devtools-mcp | https://github.com/ChromeDevTools/chrome-devtools-mcp |
+| MCP `context7` (remote) | https://context7.com | https://github.com/upstash/context7 |
+| MCP `playwright` | https://www.npmjs.com/package/@playwright/mcp | https://github.com/microsoft/playwright-mcp |
+| MCP `remotion` | https://www.npmjs.com/package/remotion-mcp | https://github.com/Vidhanvyrs/remotion-mcp |
+| MCP `stitch` (remote) | local skills `stitch`/`generate-design`; vendor docs via webfetch if unclear | closed-source Google product, no public repo |
+| graphify (Python CLI, not MCP) | https://pypi.org/project/graphifyy/ | https://github.com/Graphify-Labs/graphify |
+| opencode config schema | https://opencode.ai/config.json | https://github.com/sst/opencode |
+
+When installing or fixing, fetch the doc page fresh (webfetch) instead of trusting memory: package versions and flags change.
+
+## 6. Report
+
+Print a table:
+
+| Component | Status | Detail |
+
+Status values: `OK`, `FIXED`, `NEEDS INPUT`, `BROKEN`, `SKIPPED (disabled)`.
+
+If anything was FIXED or NEEDS INPUT was resolved by editing config, end with: quit and restart opencode for changes to take effect (config is loaded once at startup).
+
+Scope argument: if a scope was passed, only run the matching section but still print the full status table.

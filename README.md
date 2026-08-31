@@ -5,7 +5,7 @@
 # oh-my-openkilo
 
 **Prompts in files. Models in config. Behavior in rules.**
-A curated OpenCode configuration pack: 8 agents, 46 skills, 7 rules, 4 plugins, 9 commands. ~23× lighter than comparable plugin packs. Zero credentials to start.
+A curated OpenCode configuration pack: 8 agents, 48 skills, 3 rules, 6 plugins, 10 commands. ~23× lighter than comparable plugin packs. Zero credentials to start.
 
 <sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's agentic workflow</sub>
 
@@ -31,10 +31,10 @@ A curated OpenCode configuration pack: 8 agents, 46 skills, 7 rules, 4 plugins, 
 ## ✨ Highlights
 
 - **[8 specialized agents](#-meet-the-agents)** — 2 primary (`builder`, `planner`) + 6 subagents with a delegation hierarchy already designed. `builder` routes to `planner` for complex work and fans out to specialists in parallel.
-- **[46 curated skills](#-skills)** — battle-tested playbooks (TDD, systematic debugging, code review, plans, web-perf) across 10 categories. Skills are prompt-based: no runtime, no build step.
-- **[7 always-on rules](#-rules)** — protocol rules loaded first (`agentmemory` recall, `graphify` navigation, `skill-reminder` check, parallel `delegation`), then style rules.
-- **[4 plugins](#-plugins)** — `agentmemory-capture` (auto-save observations), `caveman` (terse mode), `ponytail` (minimal code), `superpowers` (skill loader). All optional, all from existing tools.
-- **[9 slash commands](#-commands)** — `/update-pack` to keep in sync, `/recall` `/remember` for memory, plus 6 `/caveman-*` utilities.
+- **[48 curated skills](#-skills)** — battle-tested playbooks (TDD, systematic debugging, code review, plans, web-perf) across 10 categories. Skills are prompt-based: no runtime, no build step.
+- **[3 always-on rules](#-rules)** — `skill-reminder` (skill + memory check before any task), `language` (English files), `communication-style` (Caveman terse + Ponytail minimal). Other behaviors ship as on-demand skills.
+- **[6 plugins](#-plugins)** — `agentmemory-capture` (auto-save observations), `graphify` (graph sync), `caveman` (terse mode), `ponytail` (minimal code), `superpowers` (skill loader), `auto-commit`. All optional, all from existing tools.
+- **[10 slash commands](#-commands)** — `/update-pack` to keep in sync, `/recall` `/remember` for memory, plus 6 `/caveman-*` utilities.
 - **[Configuration only](#-what-do-you-get)** — 569 files / 2.6 MB. A comparable plugin pack is 507 files / 58.5 MB. ~23× smaller because the artifacts are markdown, not a built runtime.
 - **[Free by default](#-default-models-are-free)** — every agent ships with a free OpenCode model. No API key required to start.
 - **[Kilo Code flow, OpenCode runtime](#-what-is-oh-my-openkilo)** — same triage-then-delegate mental model that runs in VS Code/JetBrains via Kilo Code, here against OpenCode.
@@ -203,11 +203,8 @@ npm i -g @agentmemory/server   # persistent cross-session memory (the `agentmemo
 |-----|-----------------|-----------|
 | `agentmemory` | Persistent cross-session memory | yes (required dependency) |
 | `context7` | Up-to-date library docs | optional |
-| `stitch` | AI-generated UI mockups for `designer` | optional |
 | `chrome-devtools` | Live browser debug | optional |
 | `playwright` | E2E test gen, browser automation | optional |
-| `remotion` | Walkthrough video generation | optional |
-| `supabase-mcp-server` | Supabase project ops | optional |
 
 Enable by setting `"enabled": true` in `opencode.json` and filling any required env var. Per-MCP install commands and credential handling are in [docs/CONFIGURATION.md](docs/CONFIGURATION.md#mcp-servers).
 
@@ -410,17 +407,17 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 ## 🧩 Skills
 
-46 skills grouped into 10 categories. Skills are prompt-based playbooks injected into an agent's context when a task matches. They run no process; just focused instructions.
+48 skills grouped into 10 categories. Skills are prompt-based playbooks injected into an agent's context when a task matches. They run no process; just focused instructions.
 
 | Category | Count | Examples |
 |----------|-------|----------|
 | core | 18 | `clean-code`, `cloudflare`, `code-review`, `plans`, `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `web-perf` |
 | agentmemory | 6 | `agentmemory-architecture`, `agentmemory-config`, `agentmemory-mcp-tools`, `agentmemory-rest-api` |
 | caveman + cavecrew | 7 | `caveman`, `caveman-commit`, `caveman-review`, `cavecrew` |
-| workflow & memory | 12 | `commit-context`, `handoff`, `lesson`, `recall`, `remember`, `recap` |
+| workflow & memory | 14 | `commit-context`, `delegation`, `handoff`, `lesson`, `recall`, `remember`, `recap` |
 | browser & stitch | 3 | `playwright-cli`, `graphify`, `stitch` |
 
-> **Full skill table (all 46, with descriptions and per-agent bindings):** [docs/SKILLS.md](docs/SKILLS.md)
+> **Full skill table (all 48, with descriptions and per-agent bindings):** [docs/SKILLS.md](docs/SKILLS.md)
 
 ---
 

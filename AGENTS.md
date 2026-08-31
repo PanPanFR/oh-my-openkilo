@@ -1,57 +1,33 @@
 # OpenCode Global Instructions
 
-> **Lineage.** This pack is the **OpenCode adaptation of [Kilo Code](https://github.com/Kilo-Org/kilocode)'s agentic workflow**. Same primary-agent triage, same subagent delegation, same skills-as-protocols discipline, same graphify-first codebase navigation. The Kilo Code flow that runs in VS Code/JetBrains/CLI here runs against the OpenCode runtime, no plugin runtime needed.
->
-> **Lighter than [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim).** That pack is 507 files / 58.5 MB because it bundles a TypeScript build pipeline, a compiled `dist/`, and a `node_modules` tree. This pack is **configuration only**: 569 files / 2.6 MB, no build step, no npm runtime, no `dist/`. ~23× smaller. If you don't need background orchestration, AST-aware tools, or live model presets, you don't need omoslim's runtime; you need this pack's prompts.
+## Always-loaded (via `instructions` in opencode.json)
 
-## The Kilo Code flow
+Single source of truth. This file only indexes them; do not duplicate content here.
 
-| Stage | This pack | What it does |
-|-------|-----------|--------------|
-| **Triage** | `builder` (Kilo's `Code` mode) | Default entry. Simple fix → do directly. Complex work → route to next stage. |
-| **Design** | `planner` (Kilo's `Plan` mode) | Pre-impl architecture, writes plan files you confirm before any code is touched. |
-| **Specialists** | `designer`, `tester`, `reviewer`, `documenter`, `researcher`, `explorer` | Fans out in parallel from `builder` / `planner` for focused work. |
-| **Review** | `reviewer` (Kilo's `Review` mode) | Diff + security gate before merge. Read-only. |
+- Language: ALL file contents English; Indonesian chat-only -> `rules/language.md`
+- Comms/code style: Caveman + Ponytail -> `rules/communication-style.md`
+- Skill check: load matching skill before implementing -> `rules/skill-reminder.md` (also routes agentmemory recall + graphify + delegation to on-demand skills)
 
-`builder` is the default. It decides whether to do the work itself, delegate to `planner` for design, or fan out to specialists. You do not call subagents by hand unless you want to.
+## On-demand (skills, loaded via `skill` tool when task matches)
 
-8 agents total: 2 primary (`builder`, `planner`) + 6 subagents. Files in `agents/*.md`. (The `cavecrew-*` agents are an internal token-economy variant of the caveman family; see the [`cavecrew` skill](skills/cavecrew/SKILL.md) if you ever hit context pressure.)
+- Memory: recall before work, save after outcomes -> `memory-discipline` (+ `recall`, `remember`, `lesson`)
+- Graphify: knowledge graph before manual code browsing -> `graphify`
+- Delegation: parallel subagents for independent subtasks -> `delegation` (skills/delegation/)
+- Workers: Cloudflare Workers doc-first -> `workers` (skills/workers/)
 
-## Rules (loaded via `opencode.json: instructions`)
+## Superseded by skills (deleted 2026-08-30)
 
-Global rules live in `rules/*.md` — single source of truth. This file only indexes them; do not duplicate their content here. Order matters; protocol rules first.
-
-| Concern | Rule |
-|---------|------|
-| Memory | `rules/agentmemory.md` — recall before work, save after outcomes |
-| Codebase nav | `rules/graphify.md` — knowledge graph before manual `grep`/`read` |
-| Skill check | `rules/skill-reminder.md` — load matching skill before any implementation task |
-| Delegation | `rules/delegation.md` — parallel subagents for independent subtasks |
-| Language | `rules/language.md` — English-only files, chat can be any language |
-| Style | `rules/communication-style.md` — Caveman (terse) replies, Ponytail (minimal) code |
-| Platform | `rules/workers.md` — Cloudflare Workers doc-first (conditional, globs-based) |
+`rules/agentmemory.md`, `rules/graphify.md`, `rules/delegation.md`, `rules/workers.md`
 
 Active modes: Caveman (~65% fewer output tokens), Ponytail (~54% less code bloat), AgentMemory (persistent cross-session memory), Graphify (codebase knowledge graph).
 
-## Skills (46 total, loaded on demand)
+Agents: 11 (builder, planner = primary; general, explore, scout, tester, reviewer, docs = subagents; cavecrew-investigator, cavecrew-builder, cavecrew-reviewer = compressed cavecrew subagents). Ported from oh-my-kilo minus debug/ask (covered by systematic-debugging skill + normal chat). See `agents/*.md`. Workflow: builder delegates complex multi-step work to planner (Task call) → planner returns plan → builder executes.
 
-Grouped by purpose, all files in `skills/*/SKILL.md`:
+Skills: 46 total = 18 core (clean-code, cloudflare, code-review, codebase-design, documentation, git-commit, grilling, plans, ponytail-review, pwa-development, resolving-merge-conflicts, systematic-debugging, test-driven-development, ui-design, vercel-react, verification-before-completion, web-perf, writing-skills) + 6 agentmemory suite (agentmemory-agents, agentmemory-architecture, agentmemory-config, agentmemory-hooks, agentmemory-mcp-tools, agentmemory-rest-api) + 6 caveman/cavecrew (caveman, caveman-commit, caveman-compress, caveman-help, caveman-review, caveman-stats, cavecrew) + 15 workflow (brainstorming, commit-context, commit-history, delegation, forget, handoff, handoff-compact, lesson, memory-discipline, recall, recap, remember, session-history, subagent-driven-development, using-git-worktrees, using-superpowers, write-agentmemory-skill, writing-plans) + 2 infrastructure (graphify, workers). Consolidated 2026-08-30: rules/agentmemory.md, rules/graphify.md, rules/delegation.md, rules/workers.md moved on-demand (agentmemory+graphify covered by existing skills, delegation+workers became skills). Earlier: writing-plans+executing-plans -> `plans`, ponytail-audit merged into `ponytail-review`.
 
-- **Core (18):** `clean-code`, `cloudflare`, `code-review`, `codebase-design`, `documentation`, `git-commit`, `grilling`, `plans`, `ponytail-review`, `pwa-development`, `resolving-merge-conflicts`, `systematic-debugging`, `test-driven-development`, `ui-design`, `vercel-react`, `verification-before-completion`, `web-perf`, `writing-skills`
-- **Agentmemory (6):** `agentmemory-agents`, `agentmemory-architecture`, `agentmemory-config`, `agentmemory-hooks`, `agentmemory-mcp-tools`, `agentmemory-rest-api`
-- **Caveman family (7):** `caveman`, `caveman-help`, `caveman-commit`, `caveman-compress`, `caveman-review`, `caveman-stats`, `cavecrew` (cavecrew skill = token-economy decision guide for the internal `cavecrew-*` agents)
-- **Workflow & memory (12):** `commit-context`, `commit-history`, `forget`, `handoff`, `handoff-compact`, `lesson`, `memory-discipline`, `recall`, `recap`, `remember`, `session-history`, `write-agentmemory-skill`
-- **Browser & stitch (3):** `playwright-cli`, `graphify`, `stitch`
+Instructions order: skill-reminder first (routes all on-demand loading) as configured in `opencode.json: instructions`.
 
-Progressive disclosure: skills with `references/` only load the body unless a task needs detail. 8 skills are graphify-style (decision map + hard gates); others inline.
-
-## Commands (9 slash)
-
-`/update-pack`, `/recall`, `/remember`, plus the 6 `/caveman-*` utilities. Files in `commands/*.md`.
-
-## Boundaries
-
-This file ships in the pack. It runs in every session. Treat it as the user's house rules: English-only files, mandatory memory + skill check, knowledge graph first, parallel delegation, terse + minimal style.
+Progressive disclosure: 8 skills use graphify-style SKILL.md + references/ structure (pwa-development, vercel-react, systematic-debugging, test-driven-development, ui-design, web-perf, plans, writing-skills). Core = decision map with hard gates ("MUST read reference before coding that category"); details load on demand.
 
 <!-- caveman-begin -->
 Respond terse like smart caveman. All technical substance stay. Only fluff die.
@@ -70,3 +46,17 @@ Auto-Clarity: drop caveman for security warnings, irreversible actions, user con
 
 Boundaries: code/commits/PRs written normal.
 <!-- caveman-end -->
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+When the user types `/graphify`, use the installed graphify skill or instructions before doing anything else.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- Dirty graphify-out/ files are expected after hooks or incremental updates; dirty graph files are not a reason to skip graphify. Only skip graphify if the task is about stale or incorrect graph output, or the user explicitly says not to use it.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- Cross-project questions: `graphify query "..." --graph C:\Users\LENOVO\.graphify\global-graph.json` (global graph: cinepan, 9drive, finance-tracker, windows-setup). Refresh entry: `graphify global add <project>\graphify-out\graph.json --as <tag>`.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).

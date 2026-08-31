@@ -5,6 +5,8 @@ alwaysApply: true
 
 # Skill Check - Every Task
 
+**FIRST ACTION, before ANY task:** recall prior context via agentmemory (`memory_smart_search` with task keywords). Then check the table below.
+
 Before implementing: identify task type -> load matching skill via `skill` tool -> follow its instructions. Most specific skill wins; multiple independent concerns -> load all in parallel. No task too small. If unsure -> load anyway (irrelevant skill costs nothing; skipped relevant one costs quality).
 
 | Task involves... | Load skill |
@@ -23,16 +25,29 @@ Before implementing: identify task type -> load matching skill via `skill` tool 
 | PWA, service workers | `pwa-development` |
 | Vercel/Next.js best practices | `vercel-react` |
 | Cloudflare (Workers, D1, R2, KV, AI, DO, Wrangler, One, Email, Turnstile) | `cloudflare` |
+| Cloudflare Workers code (wrangler config, bindings, nodejs_compat, limits) | `workers` (doc-first) |
 | Over-engineering review (diff) or repo audit | `ponytail-review` |
 | Plan writing or plan execution | `plans` |
 | Knowledge graph queries | `graphify` |
+| ANY question about how codebase works (data flow, who calls/consumes X, where Y defined, architecture, >2 files) | `graphify` FIRST, before grep/read (hard gate below) |
 | Debugging, bug investigation | `systematic-debugging` |
 | Code review (standards + spec fidelity) | `code-review` |
 | Grilling/stress-testing plans/ideas | `grilling` |
 | Merge/rebase conflicts | `resolving-merge-conflicts` |
 | Writing/verifying skills | `writing-skills` |
+| Task dispatch, parallel subagents, inline-vs-delegate decisions | `delegation` |
 | Verification before claiming complete | `verification-before-completion` |
 
 Browser MCP/skill choice matches this style: `playwright-cli` skill (via bash) for high-volume token-efficient automation, `chrome-devtools` MCP to see/live-debug, `playwright` MCP for stateful persistent loops.
 
 Skill loading happens BEFORE any code is written or command is run.
+
+## Graphify Hard Gate
+
+**graphify-out/ exists in project → any codebase-relation question = graphify query FIRST.** No exceptions. grep/read only to answer a leftover detail the graph cannot.
+
+- Fast path: `graphify query "<question>"` or `graphify path A B` (existing graph, no rebuild).
+- New code missing from graph → `graphify --update` (incremental), then query.
+- Never answer data-flow/caller/architecture questions from memory, assumptions, or file-by-file reads when graph exists.
+- Red flags that mean you are about to skip it (reject on sight): "I know the codebase", "project is small", "grep is quicker", "just one file".
+- graphify-out/ missing → `graphify .` once at session start of a nontrivial task, then use it.

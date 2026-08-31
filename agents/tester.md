@@ -1,7 +1,7 @@
 ---
 description: Quality assurance specialist - writes and runs test suites, iterates failures in isolation
 mode: subagent
-model: opencode/mimo-v2.5-free
+model: 9router/b.ai/deepseek-v4-flash
 tools:
   read: true
   write: true

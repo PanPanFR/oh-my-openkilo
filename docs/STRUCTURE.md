@@ -45,7 +45,7 @@ oh-my-openkilo/
 │   ├── skill-reminder.md              # mandatory skill check before work
 │   └── workers.md                     # Cloudflare Workers doc-first (conditional)
 │
-├── commands/                          # 9 slash commands
+├── commands/                          # 10 slash commands
 │   ├── update-pack.md                 # pull + sync from GitHub
 │   ├── caveman.md                     # toggle terse mode
 │   ├── caveman-commit.md              # compressed commit message generator
@@ -112,4 +112,4 @@ Once an agent/skill/rule/command is published in the repo, the corresponding fil
 2. `git commit` and `git push`.
 3. Run `/update-pack` in OpenCode to pull the new version locally.
 
-This applies to **all 8 agents (plus 3 internal `cavecrew-*`), 46 skills, 7 rules, 9 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); the install script and `/update-pack` will not touch local files.
+This applies to **all 8 agents (plus 3 internal `cavecrew-*`), 48 skills, 3 rules, 10 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); the install script and `/update-pack` will not touch local files.

@@ -105,7 +105,7 @@ Each MCP server is one of two types:
 - `"type": "local"`: runs a command on your machine via `npx` or `python`
 - `"type": "remote"`: connects to a remote URL
 
-The example lists nine MCPs covering knowledge graph, browser automation, design, video, and external research. Each is `enabled: false` by default except the always-on ones (`agentmemory`, `chrome-devtools`, `playwright`, `stitch`, `context7`).
+The example lists four MCPs covering knowledge graph, browser automation, and library docs. Each is `enabled: false` by default except the always-on ones (`agentmemory`, `chrome-devtools`, `playwright`, `context7`).
 
 To enable:
 
@@ -121,10 +121,7 @@ To enable:
 | `agentmemory`          | `AGENTMEMORY_SERVER_URL` (Plus server)             | yes (npm global) | `agentmemory` rule, `recall`/`remember` |
 | `chrome-devtools`      | none (uses installed Chrome)                       | yes   | `chrome-devtools` skill                |
 | `playwright`           | `npx playwright install chromium` (first run)      | yes   | `playwright-cli` skill                 |
-| `stitch`               | `GOOGLE_API_KEY`                                   | tier-based | `designer` agent, `stitch` skill    |
 | `context7`             | `CONTEXT7_API_KEY` (free at context7.com)          | yes   | `researcher`, doc lookup               |
-| `remotion`             | none (uses local node)                             | yes   | `remotion` skill                       |
-| `supabase-mcp-server`  | `SUPABASE_ACCESS_TOKEN`                            | tier-based | Supabase ops                       |
 
 The `scripts/install.ps1` validator scans your config after install and warns if any enabled MCP has a missing env var. Re-run it after changing `opencode.json` to re-validate.
 
@@ -163,23 +160,6 @@ The `mcp.agentmemory` entry in `opencode.json` already points to `http://localho
 
 Get a free API key at [context7.com](https://context7.com), set `CONTEXT7_API_KEY` in your shell or `.env`, then enable. No local install.
 
-### `stitch` (remote, no install)
-
-```jsonc
-{
-  "mcp": {
-    "stitch": {
-      "type": "remote",
-      "url": "https://stitch.googleapis.com/mcp",
-      "headers": { "X-Goog-Api-Key": "{env:GOOGLE_API_KEY}" },
-      "enabled": true
-    }
-  }
-}
-```
-
-Requires a Google Cloud API key with Stitch access. **Without this MCP enabled, the `designer` agent becomes inert**; `builder` and `planner` delegate UI work to it.
-
 ### `chrome-devtools` (npm, no setup)
 
 ```jsonc
@@ -217,46 +197,6 @@ npx playwright install chromium       # ~150 MB
 ```
 
 Caches per machine; subsequent runs reuse the binary.
-
-### `remotion` (npm, no setup)
-
-```jsonc
-{
-  "mcp": {
-    "remotion": {
-      "type": "local",
-      "command": ["npx", "-y", "remotion-mcp"],
-      "enabled": true
-    }
-  }
-}
-```
-
-Downloads on first run. Video rendering needs FFmpeg on `PATH`.
-
-### `supabase-mcp-server` (npm + personal access token)
-
-```powershell
-# 1. Get a personal access token: https://supabase.com/dashboard/account/tokens
-# 2. Set env var (PowerShell)
-$env:SUPABASE_ACCESS_TOKEN = "sbp_..."
-
-# 3. Enable in opencode.json
-```
-
-```jsonc
-{
-  "mcp": {
-    "supabase-mcp-server": {
-      "type": "local",
-      "command": ["npx", "-y", "@supabase/mcp-server-supabase@latest", "--access-token", "{env:SUPABASE_ACCESS_TOKEN}"],
-      "enabled": true
-    }
-  }
-}
-```
-
-Token grants the MCP read/write access to your Supabase projects. Treat it like any other secret.
 
 ### Troubleshooting MCP installs
 

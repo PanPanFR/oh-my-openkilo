@@ -1,7 +1,7 @@
 ---
 description: Code and security review specialist - reviews diffs against repo standards, spec, and security baseline
 mode: subagent
-model: opencode/nemotron-3-ultra-free
+model: 9router/b.ai/deepseek-v4-flash
 tools:
   read: true
   glob: true

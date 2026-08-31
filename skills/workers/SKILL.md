@@ -1,18 +1,6 @@
 ---
-description: Cloudflare Workers - doc-first retrieval for all Workers, KV, R2, D1, DO, Queues, AI, Vectorize, Wrangler tasks. Conditional rule (globs below).
-alwaysApply: false
-globs:
-  - "**/*.ts"
-  - "**/*.tsx"
-  - "**/*.js"
-  - "**/*.mts"
-  - "**/*.mjs"
-  - "wrangler.jsonc"
-  - "wrangler.json"
-  - "wrangler.toml"
-  - "worker-configuration.d.ts"
-  - "**/workers/**"
-  - "**/worker/**"
+name: workers
+description: Use when writing, debugging, or deploying Cloudflare Workers code - wrangler.jsonc/toml config, wrangler CLI, KV, R2, D1, Durable Objects, Queues, Vectorize, Workers AI, Agents SDK, worker-configuration.d.ts, nodejs_compat, compatibility_flags, error 1102, CPU/memory limits. Also when a repo contains wrangler config or a worker/ directory.
 ---
 
 # Cloudflare Workers

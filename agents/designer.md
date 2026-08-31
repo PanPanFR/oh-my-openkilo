@@ -1,7 +1,7 @@
 ---
 description: Frontend specialist - UI/UX, React/Next.js, design system, performance, accessibility. Stitch MCP integrated for AI-generated UI mockups.
 mode: subagent
-model: opencode/muse-spark-1.2-contributor-free
+model: 9router/b.ai/glm-5.3-flash
 tools:
   read: true
   write: true

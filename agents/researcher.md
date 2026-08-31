@@ -1,7 +1,7 @@
-f---
+---
 description: External research specialist - library/framework docs, dependency cache, Context7 with cited findings
 mode: subagent
-model: opencode/hy3-free
+model: 9router/b.ai/mimo-v2.5
 tools:
   read: true
   glob: true

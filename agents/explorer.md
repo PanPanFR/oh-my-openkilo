@@ -1,7 +1,7 @@
 ---
 description: Fast codebase exploration - mapping, pattern finding, file location
 mode: subagent
-model: opencode/mimo-v2.5-free
+model: 9router/b.ai/mimo-v2.5
 tools:
   read: true
   glob: true

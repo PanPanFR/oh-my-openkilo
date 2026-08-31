@@ -26,6 +26,7 @@
     "./plugins/agentmemory-capture.ts",
     "@dietrichgebert/ponytail",
     "./plugins/caveman/plugin.js",
+    "./plugins/graphify.js",
     "superpowers@git+https://github.com/obra/superpowers.git"
   ],
   "provider": {
@@ -65,40 +66,12 @@
       "type": "local",
       "command": ["npx", "@playwright/mcp@latest"],
       "enabled": false
-    },
-    "remotion": {
-      "type": "local",
-      "command": ["npx", "-y", "remotion-mcp"],
-      "enabled": false
-    },
-    "stitch": {
-      "type": "remote",
-      "url": "https://stitch.googleapis.com/mcp",
-      "headers": {
-        "X-Goog-Api-Key": "{env:GOOGLE_API_KEY}"
-      },
-      "enabled": false
-    },
-    "supabase-mcp-server": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@supabase/mcp-server-supabase@latest",
-        "--access-token",
-        "{env:SUPABASE_ACCESS_TOKEN}"
-      ],
-      "enabled": false
     }
   },
   "instructions": [
-    "rules/agentmemory.md",
-    "rules/graphify.md",
     "rules/skill-reminder.md",
-    "rules/delegation.md",
     "rules/language.md",
-    "rules/communication-style.md",
-    "rules/workers.md"
+    "rules/communication-style.md"
   ],
   "lsp": true
 }
