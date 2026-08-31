@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Pack synced from the maintainer's live config** (source of truth: `~/.config/opencode/`). `AGENTS.md`, 9 agent files, `commands/update-pack.md` + new `commands/configcheck.md`, `rules/skill-reminder.md`, `plugins/graphify.js` + new `plugins/auto-commit.ts`, and the new `skills/delegation` + `skills/workers` all match the live setup.
+- **Rules consolidated 7 → 3.** `rules/agentmemory.md`, `rules/graphify.md`, `rules/delegation.md`, `rules/workers.md` are superseded by on-demand skills: delegation + workers became skills, agentmemory + graphify are covered by the `skill-reminder` rule and existing skills. `docs/RULES.md` rewritten for the 3-rule setup.
+- **MCP list trimmed: removed `supabase-mcp-server`, `stitch`, `remotion`** from the example config and all docs (README, CONFIGURATION, INSTALL). The `stitch`/`remotion`/`stitch/remotion` skills remain in the pack; without the optional `stitch` MCP the `designer` agent falls back to text-only feedback.
+- **Docs recount and cleanup.** Pack counts updated everywhere: 48 skills, 3 rules, 6 plugins (4 bundled + 2 npm), 10 commands. `docs/SKILLS.md` rebuilt to match the actual filesystem (old version listed npm-only skills and missed 12 pack skills). Stale references fixed ("the agentmemory rule", "existing 11 agents", personal global-graph path in `AGENTS.md`, old `/configcheck` count).
+
 ## [0.4.0] - 2026-08-28
 
 ### Changed

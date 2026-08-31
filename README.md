@@ -16,7 +16,7 @@ A curated OpenCode configuration pack: 8 agents, 48 skills, 3 rules, 6 plugins, 
   <a href="https://github.com/PanPanFR/oh-my-openkilo/commits/main"><img src="https://img.shields.io/github/last-commit/PanPanFR/oh-my-openkilo?style=flat" alt="Last commit"></a>
   <br>
   <a href="#-meet-the-agents"><img src="https://img.shields.io/badge/agents-8-orange" alt="8 agents"></a>
-  <a href="#-skills"><img src="https://img.shields.io/badge/skills-46-green" alt="46 skills"></a>
+  <a href="#-skills"><img src="https://img.shields.io/badge/skills-48-green" alt="48 skills"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/credentials-zero-brightgreen" alt="Zero credentials"></a>
   <img src="https://img.shields.io/badge/size-2.6_MB-blueviolet" alt="Pack size: 2.6 MB">
   <img src="https://img.shields.io/badge/no_build_step-brightgreen" alt="No build step">
@@ -60,7 +60,7 @@ npm i -g graphify @agentmemory/server
 agentmemory serve
 ```
 
-You now have 8 agents, 46 skills, 7 rules, and `/update-pack` to keep everything fresh. **Zero credentials** to start; the pack ships with free OpenCode models.
+You now have 8 agents, 48 skills, 3 rules, and `/update-pack` to keep everything fresh. **Zero credentials** to start; the pack ships with free OpenCode models.
 
 > [!TIP]
 > Replace `v0.4.0` in the URL with `main` for the bleeding edge, or pick a tag from the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest). Run the installer with `-WhatIf` / `--dry-run` first to preview what it will copy.
@@ -109,10 +109,10 @@ The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `po
 | Component | Count | What it does |
 |-----------|-------|--------------|
 | Agents    | 8     | 2 primary + 6 subagents. `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
-| Skills    | 46    | Curated playbooks across 10 categories. See [docs/SKILLS.md](docs/SKILLS.md) for the full table. |
-| Rules     | 7     | Always-on session guardrails, loaded via the `instructions` config (protocol rules first). See [docs/RULES.md](docs/RULES.md). |
-| Plugins   | 4     | `agentmemory-capture`, `caveman`, `ponytail`, `superpowers`. All optional. |
-| Commands  | 9     | `/update-pack`, `/recall`, `/remember`, plus 6 `/caveman-*` utilities. See [docs/COMMANDS.md](docs/COMMANDS.md). |
+| Skills    | 48    | Curated playbooks across 5 categories. See [docs/SKILLS.md](docs/SKILLS.md) for the full table. |
+| Rules     | 3     | Always-on session guardrails, loaded via the `instructions` config. See [docs/RULES.md](docs/RULES.md). |
+| Plugins   | 6     | `agentmemory-capture`, `graphify`, `caveman`, `auto-commit`, plus npm `ponytail` + `superpowers`. All optional. |
+| Commands  | 10    | `/update-pack`, `/recall`, `/remember`, plus 6 `/caveman-*` utilities. See [docs/COMMANDS.md](docs/COMMANDS.md). |
 
 ```mermaid
 graph TD
@@ -175,7 +175,7 @@ The installer:
 1. **Edit `~/.config/opencode/opencode.json`** to set your model and provider keys. The example uses `{env:VAR}` placeholders.
 2. **Install required dependencies** (`graphify`, `agentmemory`). Without these the pack degrades severely. See [docs/INSTALL.md](docs/INSTALL.md#after-install-required-dependencies).
 3. **Restart OpenCode** or run `/reload`.
-4. **Verify:** ask `list your agents and confirm which skills are loaded`. You should see 8 agents, 46 skills, 7 rules.
+4. **Verify:** ask `list your agents and confirm which skills are loaded`. You should see 8 agents, 48 skills, 3 rules.
 
 > [!TIP]
 > The full per-step install guide (manual copy-paste fallback, uninstall, troubleshooting) lives in [docs/INSTALL.md](docs/INSTALL.md). The example config is explained block-by-block in [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
@@ -195,8 +195,8 @@ Want a different model? Edit the `model:` line in the agent's markdown file (YAM
 The pack **requires** two external tools to deliver its core value:
 
 ```bash
-npm i -g graphify              # knowledge graph (the `graphify` rule + skill depend on this)
-npm i -g @agentmemory/server   # persistent cross-session memory (the `agentmemory` rule depends on this)
+npm i -g graphify              # knowledge graph (the `graphify` skill depends on this)
+npm i -g @agentmemory/server   # persistent cross-session memory (the memory skills depend on this)
 ```
 
 | MCP | What it unlocks | Required? |
@@ -220,7 +220,7 @@ Two real prompts, showing what the pack actually does. Three more (new feature, 
 
 - **Agent:** `builder` → delegates `explorer` (recon) + `reviewer` (quality/security) in parallel
 - **Skills:** `clean-code`, `code-review`, `ponytail-review`
-- **Rules:** graphify-first navigation, parallel delegation
+- **Rules:** `skill-reminder` (graphify-first navigation, parallel delegation via on-demand skills)
 - **Result:** structured report backed by subagent findings, not one agent's opinion.
 
 ### 2. Debugging a flaky test
@@ -229,7 +229,7 @@ Two real prompts, showing what the pack actually does. Three more (new feature, 
 
 - **Agent:** `builder`
 - **Skills:** `systematic-debugging` (reproduce → isolate → bisect; no guessing)
-- **Rules:** agentmemory recall first, skill check before implementing, verification-before-completion
+- **Rules + skills:** `skill-reminder` rule (memory recall + skill check first), `systematic-debugging` skill (reproduce → isolate → bisect; no guessing), `verification-before-completion` skill
 - **Result:** root-cause analysis with evidence, fix only after diagnosis, regression test added.
 
 ---
@@ -423,17 +423,15 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 ## 📏 Rules
 
-Seven global rules loaded via `opencode.json` `instructions`. Order matters; protocol rules first.
+Three global rules loaded via `opencode.json` `instructions`. Order matters; the protocol rule comes first.
 
 | Rule | Mandate |
 |------|---------|
-| `agentmemory` | Recall before work; save at decision points and after outcomes |
-| `graphify` | Knowledge-graph-first navigation; init with `graphify update .` if missing |
-| `skill-reminder` | Load matching skill before any implementation task |
-| `delegation` | Delegate specialized work; run independent subtasks in parallel |
+| `skill-reminder` | Recall agentmemory, then load the matching skill before any implementation task |
 | `language` | All file content in English; chat can be any language |
 | `communication-style` | Caveman (terse) replies and Ponytail (minimal) code style |
-| `workers` | Cloudflare Workers doc-first (conditional, globs-based) |
+
+Memory, graphify navigation, delegation, and Cloudflare doc-first behavior ship as on-demand skills instead of rules.
 
 > **Full rule guide:** [docs/RULES.md](docs/RULES.md)
 
@@ -491,7 +489,7 @@ Use this as a map: start with install, then jump to agents/skills/rules based on
 | [docs/INSTALL.md](docs/INSTALL.md) | Step-by-step install, uninstall, troubleshooting |
 | [docs/WORKFLOWS.md](docs/WORKFLOWS.md) | Full example workflows (audit, debug, new feature, arch review, knowledge graph) |
 | [docs/AGENTS.md](docs/AGENTS.md) | All 8 agents: when to use each, how to edit, model table |
-| [docs/SKILLS.md](docs/SKILLS.md) | All 46 skills grouped by category, with descriptions |
+| [docs/SKILLS.md](docs/SKILLS.md) | All 48 skills grouped by category, with descriptions |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, `/update-pack` mechanics |
 
 ### ⚙️ Config & Reference
@@ -499,7 +497,7 @@ Use this as a map: start with install, then jump to agents/skills/rules based on
 | Doc | What it covers |
 |-----|----------------|
 | [docs/STRUCTURE.md](docs/STRUCTURE.md) | What's in the repo (every folder and file explained) |
-| [docs/RULES.md](docs/RULES.md) | The 7 global rules in detail |
+| [docs/RULES.md](docs/RULES.md) | The 3 global rules in detail |
 | [docs/CONFIGURATION.md](docs/CONFIGURATION.md) | `opencode.json` block-by-block, credential handling, per-MCP setup |
 
 ---

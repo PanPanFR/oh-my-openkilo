@@ -60,10 +60,10 @@ git clone https://github.com/PanPanFR/oh-my-openkilo.git ~/.config/opencode/oh-m
 The pack **requires** two external tools to deliver its core value. Without them, the `agentmemory` and `graphify` rules load but their tools are missing; the pack degrades to a much weaker version of itself. Install these **immediately after** the pack itself:
 
 ```bash
-# Knowledge graph -- the `graphify` rule and skill depend on this
+# Knowledge graph -- the `graphify` skill depends on this
 npm i -g graphify
 
-# Persistent cross-session memory -- the `agentmemory` rule depends on this
+# Persistent cross-session memory -- the memory skills depend on this
 npm i -g @agentmemory/server
 ```
 
@@ -97,7 +97,7 @@ Start OpenCode in any directory and ask:
 list your agents and confirm which skills are loaded
 ```
 
-You should see 8 agents (plus 3 internal `cavecrew-*`), 46 skills, and 7 rules. If something is missing, the most common cause is the `skills.paths` not pointing to your skills folder, but oh-my-openkilo's structure matches the default discovery path, so this should be automatic. If you have a custom `opencode.json` with non-default paths, see [CONFIGURATION.md](CONFIGURATION.md).
+You should see 8 agents (plus 3 internal `cavecrew-*`), 48 skills, and 3 rules. If something is missing, the most common cause is the `skills.paths` not pointing to your skills folder, but oh-my-openkilo's structure matches the default discovery path, so this should be automatic. If you have a custom `opencode.json` with non-default paths, see [CONFIGURATION.md](CONFIGURATION.md).
 
 ## Uninstall
 

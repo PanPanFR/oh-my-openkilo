@@ -7,6 +7,7 @@ Slash commands. Type the name (with leading `/`) at the start of an OpenCode pro
 | `/update-pack`       | Pull the latest pack from GitHub and sync into your config (per-file diff + backup)  |
 | `/update-pack --check`  | Only check whether upstream has new commits, do not sync                          |
 | `/update-pack --diff`   | Show what would change, do not sync                                             |
+| `/configcheck [scope]` | Diagnose config: validate opencode.json, test MCP servers, fix, ask for credentials |
 | `/recall <query>`    | Search agentmemory for past session observations matching the query                  |
 | `/remember <note>`   | Save a decision, insight, or pattern to agentmemory's long-term storage              |
 | `/caveman`           | Toggle terse caveman-mode replies                                                   |

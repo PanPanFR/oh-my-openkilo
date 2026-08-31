@@ -29,7 +29,7 @@ oh-my-openkilo/
 │   ├── cavecrew-investigator.md
 │   └── cavecrew-reviewer.md
 │
-├── skills/                            # 46 skill packs (mirror of ~/.config/opencode/skills/)
+├── skills/                            # 48 skill packs (mirror of ~/.config/opencode/skills/)
 │   └── <skill-name>/
 │       ├── SKILL.md                   # always present
 │       ├── README.md                  # optional, user-facing
@@ -71,8 +71,8 @@ oh-my-openkilo/
     ├── INSTALL.md                     # this install guide
     ├── STRUCTURE.md                   # this file
     ├── AGENTS.md                      # 8 agents in detail (plus 3 internal `cavecrew-*` token-economy variants)
-    ├── SKILLS.md                      # 46 skills table
-    ├── RULES.md                       # 7 rules in detail
+    ├── SKILLS.md                      # 48 skills table
+    ├── RULES.md                       # 3 rules in detail
     ├── COMMANDS.md                    # command reference
     └── CONFIGURATION.md               # opencode.json breakdown
 ```

@@ -118,7 +118,7 @@ To enable:
 
 | MCP                    | Required env / file                                | Free? | Used by                                |
 |------------------------|----------------------------------------------------|-------|----------------------------------------|
-| `agentmemory`          | `AGENTMEMORY_SERVER_URL` (Plus server)             | yes (npm global) | `agentmemory` rule, `recall`/`remember` |
+| `agentmemory`          | `AGENTMEMORY_SERVER_URL` (Plus server)             | yes (npm global) | memory skills, `recall`/`remember` |
 | `chrome-devtools`      | none (uses installed Chrome)                       | yes   | `chrome-devtools` skill                |
 | `playwright`           | `npx playwright install chromium` (first run)      | yes   | `playwright-cli` skill                 |
 | `context7`             | `CONTEXT7_API_KEY` (free at context7.com)          | yes   | `researcher`, doc lookup               |

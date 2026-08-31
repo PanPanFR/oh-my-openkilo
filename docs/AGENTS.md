@@ -233,4 +233,4 @@ Free models are good for everyday work but slower and less capable than paid one
 
 ## Adding a new agent
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md#adding-a-new-agent--skill--rule). New agents are typically subagents specialized for one job that the existing 11 don't cover well.
+See [CONTRIBUTING.md](../CONTRIBUTING.md#adding-a-new-agent--skill--rule). New agents are typically subagents specialized for one job that the existing 8 don't cover well.
