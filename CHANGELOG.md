@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-09-01
+
 ### Added
 - **CONTRIBUTING.md: versioning policy.** Patch bump (`0.5.0` → `0.5.1`) for doc fixes, wording, counts, optional examples. Minor bump (`0.5.0` → `0.6.0`) for dropping a plugin/skill/agent, renaming a command, or changing the install path of a required dep. When in doubt, minor.
 - **`/configcheck` warns on npx-launched agentmemory MCP.** If `mcp.agentmemory.command` is `["npx", "-y", "@agentmemory/mcp"]`, the report flags it and tells the user to pin a local install path. Avoids silent breakage on cold starts and during npm-registry outages.
