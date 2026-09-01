@@ -3,7 +3,7 @@
 ## Quick start (Windows, recommended)
 
 ```powershell
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/install.ps1 | iex
 ```
 
 This downloads `scripts/install.ps1`, runs it in-memory. It will:
@@ -16,12 +16,12 @@ This downloads `scripts/install.ps1`, runs it in-memory. It will:
 
 After it finishes, edit `~/.config/opencode/opencode.json` to set your model and provider keys, then restart OpenCode or run `/reload`.
 
-> Want the bleeding edge instead of `v0.4.0`? Replace the tag in the URL with `main` (always tracks the latest commit) or the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest) tag.
+> Want the bleeding edge instead of `v0.5.0`? Replace the tag in the URL with `main` (always tracks the latest commit) or the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest) tag.
 
 ## Quick start (macOS / Linux)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/install.sh | bash
 ```
 
 > ⚠️ **Heads up:** the maintainer develops and tests on Windows only. `install.sh` is structurally similar to `install.ps1` but has **not been tested on macOS or Linux**. If it fails, the safest fallback is **manual copy-paste**; see [macOS / Linux support](../README.md#-macos--linux-support) in the README. Please [open an issue](https://github.com/PanPanFR/oh-my-openkilo/issues) if you hit a Unix-specific bug so it can be fixed.

@@ -45,12 +45,12 @@ A curated OpenCode configuration pack: 8 agents, 46 skills, 3 rules, 6 plugins, 
 
 ```powershell
 # Windows (recommended)
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/install.ps1 | iex
 ```
 
 ```bash
 # macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/install.sh | bash
 ```
 
 Then install the two required tools and restart OpenCode:
@@ -63,7 +63,7 @@ agentmemory serve
 You now have 8 agents, 46 skills, 3 rules, and `/update-pack` to keep everything fresh. **Zero credentials** to start; the pack ships with free OpenCode models.
 
 > [!TIP]
-> Replace `v0.4.0` in the URL with `main` for the bleeding edge, or pick a tag from the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest). Run the installer with `-WhatIf` / `--dry-run` first to preview what it will copy.
+> Replace `v0.5.0` in the URL with `main` for the bleeding edge, or pick a tag from the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest). Run the installer with `-WhatIf` / `--dry-run` first to preview what it will copy.
 
 ---
 
@@ -150,13 +150,13 @@ graph TD
 ### Windows (recommended)
 
 ```powershell
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/install.ps1 | iex
 ```
 
 ### macOS / Linux
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/install.sh | bash
 ```
 
 The installer:
@@ -462,11 +462,11 @@ Two ways, same end result.
 **From the terminal (no OpenCode session required):**
 
 ```powershell
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/update.ps1 | iex
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/update.ps1 | iex
 ```
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.4.0/scripts/update.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/update.sh | bash
 ```
 
 Both pull latest, then for each pack file: `added` if new, `unchanged` if identical, `updated` (with `.local-<timestamp>` backup) if it differs. Restart OpenCode or run `/reload` after.
