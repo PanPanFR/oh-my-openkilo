@@ -28,9 +28,13 @@ Skip `enabled: false` servers (list them as intentionally disabled). For each en
 These have multi-part installs. Check every part, not just the MCP entry.
 
 - **agentmemory** (3 parts):
-  1. MCP server `agentmemory` (npx `@agentmemory/mcp`) connects to a separate REST server at `AGENTMEMORY_SERVER_URL` (default `http://127.0.0.1:3111`). Test that REST server first: `GET http://127.0.0.1:3111/health`. If it is down, every MCP tool fails even though the MCP entry itself is fine: tell the user to start the agentmemory server.
-  2. Plugin `./plugins/agentmemory-capture.ts` (from `plugin` array): file must exist relative to the config dir.
-  3. Live check: call MCP tool `agentmemory_memory_diagnose` if available; report any subsystem errors it finds and offer to run `agentmemory_memory_heal`.
+  1. MCP server `agentmemory` connects to a separate REST server at `AGENTMEMORY_SERVER_URL` (default `http://127.0.0.1:3111`). Test that REST server first: `GET http://127.0.0.1:3111/health`. If it is down, every MCP tool fails even though the MCP entry itself is fine: tell the user to start the agentmemory server.
+  2. **Check the MCP launch command.** If `mcp.agentmemory.command` is `["npx", "-y", "@agentmemory/mcp"]` (or any other npx form), WARN the user: npx re-downloads on every cold start, masks the version, and breaks silently when npm registry is unreachable. RECOMMEND: `npm i -g @agentmemory/mcp`, then point `command` at the local entry point.
+     - Windows: `["node", "C:\\Users\\<You>\\AppData\\Roaming\\npm\\node_modules\\@agentmemory\\mcp\\bin.mjs"]`
+     - macOS: `["node", "/usr/local/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
+     - Linux: `["node", "/usr/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
+  3. Plugin `./plugins/agentmemory-capture.ts` (from `plugin` array): file must exist relative to the config dir.
+  4. Live check: call MCP tool `agentmemory_memory_diagnose` if available; report any subsystem errors it finds and offer to run `agentmemory_memory_heal`.
   - Reference: local skills `agentmemory-config` (ports: REST 3111, streams 3112, viewer 3113, engine 49134) and `agentmemory-architecture`. Package: https://www.npmjs.com/package/@agentmemory/mcp
 
 - **graphify** (not an MCP here, a Python CLI):

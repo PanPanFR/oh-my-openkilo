@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **CONTRIBUTING.md: versioning policy.** Patch bump (`0.5.0` → `0.5.1`) for doc fixes, wording, counts, optional examples. Minor bump (`0.5.0` → `0.6.0`) for dropping a plugin/skill/agent, renaming a command, or changing the install path of a required dep. When in doubt, minor.
+- **`/configcheck` warns on npx-launched agentmemory MCP.** If `mcp.agentmemory.command` is `["npx", "-y", "@agentmemory/mcp"]`, the report flags it and tells the user to pin a local install path. Avoids silent breakage on cold starts and during npm-registry outages.
+- **`/update-pack` safety contract.** The slash command now opens with an explicit MUST-NOT list: never touch `opencode.json`, never delete user files, never install npm/Python tools, never change model/provider/keys/MCP servers, abort on any `git pull` failure. Plus a Step-3 note on the nested-folder trap and how to fix it.
+- **README + install.ps1 + INSTALL.md: hard "install these first" callout.** Prominent block on `uv tool install graphifyy` (or `npm i -g graphify`) and `npm i -g @agentmemory/server` + `@agentmemory/mcp`, with `agentmemory serve` to start the REST server. Previously these were a single line; the new wording is meant to be the first thing a new user sees.
+
+### Changed
+- **`examples/opencode.example.json`** restored to the working `npx` form for the agentmemory MCP, so first-time installs run out of the box. The local-pin recommendation lives in the docs and is enforced by `/configcheck`.
+- **docs/INSTALL.md** restructured the "After install" section: required-deps first, local-pin recommendation second, MCP overview third. The "what you lose" sublist and the env-var validator note are kept.
+
+## [0.5.0] - 2026-09-01
+
+### Added
 - **`plugins/checkpoint.ts`** — shadow-checkpoint safety net. Snapshots every `edit`/`write` to a local git repo under `~/.cache/opencode/checkpoints/<sha1(project)>` (capped at 500 commits per project). Recovery: `git -C ~/.cache/opencode/checkpoints/<hash> checkout <sha> -- <relpath>`. Local-only, never staged into the project repo, never pushed.
 - **`plugins/recall-first.ts`** — one-shot recall gate. Blocks the first `edit`/`write/patch/apply_patch/multiedit` of a session until a memory recall ran (matches `memory_smart_search` or `memory_recall` by suffix, so both bare and `<server>_-prefixed` MCP names register). Fail-open: if the memory server is down the model is told to proceed and mention it.
 

@@ -3,7 +3,7 @@
 ## Quick start (Windows, recommended)
 
 ```powershell
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.1/scripts/install.ps1 | iex
 ```
 
 This downloads `scripts/install.ps1`, runs it in-memory. It will:
@@ -16,12 +16,12 @@ This downloads `scripts/install.ps1`, runs it in-memory. It will:
 
 After it finishes, edit `~/.config/opencode/opencode.json` to set your model and provider keys, then restart OpenCode or run `/reload`.
 
-> Want the bleeding edge instead of `v0.5.0`? Replace the tag in the URL with `main` (always tracks the latest commit) or the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest) tag.
+> Want the bleeding edge instead of `v0.5.1`? Replace the tag in the URL with `main` (always tracks the latest commit) or the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest) tag.
 
 ## Quick start (macOS / Linux)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.1/scripts/install.sh | bash
 ```
 
 > ⚠️ **Heads up:** the maintainer develops and tests on Windows only. `install.sh` is structurally similar to `install.ps1` but has **not been tested on macOS or Linux**. If it fails, the safest fallback is **manual copy-paste**; see [macOS / Linux support](../README.md#-macos--linux-support) in the README. Please [open an issue](https://github.com/PanPanFR/oh-my-openkilo/issues) if you hit a Unix-specific bug so it can be fixed.
@@ -57,17 +57,37 @@ git clone https://github.com/PanPanFR/oh-my-openkilo.git ~/.config/opencode/oh-m
 
 ## After install: required dependencies
 
-The pack **requires** two external tools to deliver its core value. Without them the pack loads fine, but its sharpest features go quiet. Install these **immediately after** the pack itself:
+> [!IMPORTANT]
+> **Install these BEFORE the first session.** Without them the pack loads fine but the `/graphify` workflow and every memory skill (`recall`, `remember`, `recap`, `memory-discipline`) are unavailable. The pack degrades to a much weaker version of itself.
+
+The pack needs two external tools. Install in this order:
 
 ```bash
-# Knowledge graph -- the `graphify` skill depends on this
-npm i -g graphify
+# 1. Knowledge graph (Python — `graphifyy` is the PyPI package, double y)
+uv tool install graphifyy
+#   or: pipx install graphifyy
+#   or: pip install graphifyy
+#   or, if you already use the Node CLI from Kilo Code: npm i -g graphify
 
-# Persistent cross-session memory -- the memory skills depend on this
-npm i -g @agentmemory/server
+# 2. Persistent cross-session memory
+npm i -g @agentmemory/server          # the REST server (separate process)
+npm i -g @agentmemory/mcp             # the MCP server OpenCode launches
+
+# 3. Start the memory REST server (one-time per session, or set up as a service)
+agentmemory serve
 ```
 
-Then start the agentmemory server (see its README) and make sure `mcp.agentmemory` is enabled in `opencode.json` (the example already has it). One-shot: `agentmemory serve`. Or wire it up as a system service so you never have to think about it again.
+### Pin the agentmemory MCP locally (strongly recommended)
+
+The example `opencode.json` ships with the agentmemory MCP launched via `npx -y @agentmemory/mcp`. That works on first run, but **pin it to a local install** so OpenCode does not redownload it on every cold start and does not silently break when npm is unreachable.
+
+After `npm i -g @agentmemory/mcp`, replace the `mcp.agentmemory.command` in your `opencode.json` with:
+
+- **Windows**: `["node", "C:\\Users\\<You>\\AppData\\Roaming\\npm\\node_modules\\@agentmemory\\mcp\\bin.mjs"]`
+- **macOS**: `["node", "/usr/local/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
+- **Linux**: `["node", "/usr/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
+
+`/configcheck` flags the `npx` form automatically and tells you to switch.
 
 **What you lose without each:**
 
@@ -82,7 +102,7 @@ The example config ships two MCPs enabled: `agentmemory` (required for the memor
 
 | MCP                    | Capability                                          | Required env / key                      | Risk if disabled |
 |------------------------|-----------------------------------------------------|-----------------------------------------|------------------|
-| `agentmemory`          | Persistent cross-session memory (**required**)      | `AGENTMEMORY_SERVER_URL` (Plus server)  | No memory. Every session starts from zero. |
+| `agentmemory`          | Persistent cross-session memory (**required**)      | `AGENTMEMORY_SERVER_URL` (default `http://127.0.0.1:3111`) | No memory. Every session starts from zero. |
 | `chrome-devtools`      | Live browser debug (DOM, network, console, perf)    | none (uses installed Chrome)            | No live browser inspection; static fetch only |
 
 To enable any others, edit `opencode.json` to set `enabled: true` and fill in the required env vars. The `install.ps1` validator scans your config and warns if any enabled MCP has a missing env var.

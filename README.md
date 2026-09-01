@@ -45,25 +45,46 @@ A curated OpenCode prompt + plugin source pack: 8 agents, 46 skills, 3 rules, 6 
 
 ```powershell
 # Windows (recommended)
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.1/scripts/install.ps1 | iex
 ```
 
 ```bash
 # macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.1/scripts/install.sh | bash
 ```
 
-Then install the two required tools and restart OpenCode:
+Then install the two required tools and restart OpenCode.
+
+> [!IMPORTANT]
+> **Install these BEFORE the first session**, or memory skills and the `/graphify` workflow will be unavailable. Both are required for the pack to deliver its full value.
 
 ```bash
-npm i -g graphify @agentmemory/server
+# 1. Knowledge graph (Python — `graphifyy` is the PyPI package, double y)
+uv tool install graphifyy            # or: pipx install graphifyy, or: pip install graphifyy
+# 1b. Knowledge graph (Node — older path, if you already have it)
+npm i -g graphify
+
+# 2. Persistent cross-session memory
+npm i -g @agentmemory/server
+npm i -g @agentmemory/mcp            # the MCP server OpenCode talks to
+
+# 3. Start the memory REST server (do this once, leave it running)
 agentmemory serve
 ```
+
+> [!TIP]
+> **Pin the agentmemory MCP locally, not via `npx`.** Replace the `mcp.agentmemory.command` in `opencode.json` with the absolute path to the locally installed entry point. npx re-downloads on every cold start and silently breaks when npm registry is unreachable.
+>
+> - Windows: `["node", "C:\\Users\\<You>\\AppData\\Roaming\\npm\\node_modules\\@agentmemory\\mcp\\bin.mjs"]`
+> - macOS: `["node", "/usr/local/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
+> - Linux: `["node", "/usr/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
+>
+> Run `/configcheck` to verify everything is wired up; it'll flag the `npx` form for you.
 
 You now have 8 agents, 46 skills, 3 rules, and `/update-pack` to keep everything fresh. **Zero credentials** to start; the pack ships with free OpenCode models.
 
 > [!TIP]
-> Replace `v0.5.0` in the URL with `main` for the bleeding edge, or pick a tag from the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest). Run the installer with `-WhatIf` / `--dry-run` first to preview what it will copy.
+> Replace `v0.5.1` in the URL with `main` for the bleeding edge, or pick a tag from the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest). Run the installer with `-WhatIf` / `--dry-run` first to preview what it will copy.
 
 ---
 
@@ -150,13 +171,13 @@ graph TD
 ### Windows (recommended)
 
 ```powershell
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.1/scripts/install.ps1 | iex
 ```
 
 ### macOS / Linux
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.1/scripts/install.sh | bash
 ```
 
 The installer:
@@ -462,11 +483,11 @@ Two ways, same end result.
 **From the terminal (no OpenCode session required):**
 
 ```powershell
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/update.ps1 | iex
+irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.1/scripts/update.ps1 | iex
 ```
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.0/scripts/update.sh | bash
+curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.1/scripts/update.sh | bash
 ```
 
 Both pull latest, then for each pack file: `added` if new, `unchanged` if identical, `updated` (with `.local-<timestamp>` backup) if it differs. Restart OpenCode or run `/reload` after.

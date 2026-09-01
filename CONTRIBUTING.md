@@ -31,6 +31,15 @@ Before opening a PR, ask: **does this add a new agent/skill/rule, or change an e
 - Code: lazy where possible (see `rules/communication-style.md` for the caveman/ponytail philosophy baked into the agents themselves).
 - Commit messages: conventional commits, subject ≤ 50 chars.
 
+## Versioning policy
+
+This pack is pre-1.0, so the second number carries the most weight for users. Bump in the smallest scope that matches the change.
+
+- **Patch bump** (`0.5.0` → `0.5.1`): doc fixes, wording polish, counts correction, behavior tweaks that don't remove anything, new optional examples. Backwards-compatible for users coming from the previous tag.
+- **Minor bump** (`0.5.0` → `0.6.0`): dropping a plugin / skill / agent, renaming a command, changing how `opencode.json` is read, changing the install path of a required dep, or any change where a user might need to re-do a step from the install guide.
+
+When in doubt, minor. The cost of being slightly too cautious is a user who reads one extra CHANGELOG entry; the cost of being too loose is a broken install.
+
 ## What we won't accept
 
 - Generic "AI agent" prompts that re-invent `builder.md` or `planner.md` with a different name
