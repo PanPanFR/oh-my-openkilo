@@ -7,8 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`plugins/checkpoint.ts`** — shadow-checkpoint safety net. Snapshots every `edit`/`write` to a local git repo under `~/.cache/opencode/checkpoints/<sha1(project)>` (capped at 500 commits per project). Recovery: `git -C ~/.cache/opencode/checkpoints/<hash> checkout <sha> -- <relpath>`. Local-only, never staged into the project repo, never pushed.
+- **`plugins/recall-first.ts`** — one-shot recall gate. Blocks the first `edit`/`write/patch/apply_patch/multiedit` of a session until a memory recall ran (matches `memory_smart_search` or `memory_recall` by suffix, so both bare and `<server>_-prefixed` MCP names register). Fail-open: if the memory server is down the model is told to proceed and mention it.
+
 ### Changed
-- **Pack synced from the maintainer's live config** (source of truth: `~/.config/opencode/`). `AGENTS.md`, 9 agent files, `commands/update-pack.md` + new `commands/configcheck.md`, `rules/skill-reminder.md`, `plugins/graphify.js` + new `plugins/auto-commit.ts`, and the new `skills/delegation` + `skills/workers` all match the live setup.
+- **Pack synced from the maintainer's live config** (source of truth: `~/.config/opencode/`). All 8 agents (`builder`, `planner`, `designer`, `explorer`, `researcher`, `tester`, `reviewer`, `documenter`), `commands/configcheck.md`, `rules/skill-reminder.md`, `plugins/agentmemory-capture.ts`, `plugins/graphify.ts` (renamed from `.js`), `plugins/caveman/*`, `skills/delegation`, `skills/playwright-cli` mirror the live setup.
+- **Dropped `agents/cavecrew-{builder,investigator,reviewer}.md`** — pack now ships 8 agents, matching live. These were internal token-economy siblings already absent from live config.
+- **Dropped `skills/cavecrew/` and `skills/stitch/`** — pack now ships 46 skills, matching live. `stitch` MCP and skill were both removed in the 2026-08-31 sync.
+- **Dropped `plugins/auto-commit.ts`** — replaced by the standard `/commit` workflow.
+- **`plugins/graphify.js` → `plugins/graphify.ts`** — live switched to TS, pack follows.
+- **All user-facing docs updated to 8 agents / 46 skills / 3 rules / 6 plugins / 10 commands** (`README.md`, `docs/SKILLS.md`, `docs/STRUCTURE.md`, `docs/AGENTS.md`, `docs/INSTALL.md`, `CONTRIBUTING.md`, `examples/opencode.example.json`, root `AGENTS.md`).
+- **`examples/opencode.example.json` updated** — `graphify.ts` path, `agentmemory.environment.AGENTMEMORY_TOOLS: "core"`, `chrome-devtools` enabled by default, `perplexity`/`tinypuppet` kept out (personal MCPs, not public). The personal `9router` baseURL/API key placeholder is unchanged.
+- **Root `AGENTS.md`** — counts 8 agents / 46 skills, personal global-graph path scrubbed to placeholder (`<global-graph-path>`).
+- **`README.md` skills table** — `caveman + cavecrew | 7` → `caveman | 6`; `browser & stitch | 3` → `browser | 2`; `stitch` row removed. Plugin table: `auto-commit` replaced by `checkpoint` + `recall-first`. Designer agent section: removed the "Stitch-integrated" + `stitch` MCP requirement, replaced with multimodal-model recommendation.
 - **Rules consolidated 7 → 3.** `rules/agentmemory.md`, `rules/graphify.md`, `rules/delegation.md`, `rules/workers.md` are superseded by on-demand skills: delegation + workers became skills, agentmemory + graphify are covered by the `skill-reminder` rule and existing skills. `docs/RULES.md` rewritten for the 3-rule setup.
 - **MCP list trimmed: removed `supabase-mcp-server`, `stitch`, `remotion`** from the example config and all docs (README, CONFIGURATION, INSTALL). The `stitch`/`remotion`/`stitch/remotion` skills remain in the pack; without the optional `stitch` MCP the `designer` agent falls back to text-only feedback.
 - **Docs recount and cleanup.** Pack counts updated everywhere: 48 skills, 3 rules, 6 plugins (4 bundled + 2 npm), 10 commands. `docs/SKILLS.md` rebuilt to match the actual filesystem (old version listed npm-only skills and missed 12 pack skills). Stale references fixed ("the agentmemory rule", "existing 11 agents", personal global-graph path in `AGENTS.md`, old `/configcheck` count).
