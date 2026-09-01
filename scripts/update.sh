@@ -42,13 +42,39 @@ run() {
     fi
 }
 
+if [ ! -d "$REPO_DIR" ] || [ ! -d "$REPO_DIR/scripts" ]; then
+    if [ -d "$REPO_DIR" ]; then
+        echo "[!] Pack repo at $REPO_DIR has no scripts/ folder (likely a pre-v0.4.0 install). Re-cloning to get the current layout." >&2
+        rm -rf "$REPO_DIR"
+    fi
+    echo "[+] Cloning pack repo into $REPO_DIR"
+    if [ "$DRY_RUN" -eq 1 ]; then
+        echo "[dry-run] git clone https://github.com/PanPanFR/oh-my-openkilo.git $REPO_DIR"
+        # In dry-run, fabricate a minimal expected layout so the rest of the
+        # script can still print its summary. Use empty placeholder dirs.
+        mkdir -p "$REPO_DIR/scripts" "$REPO_DIR/agents" "$REPO_DIR/skills" "$REPO_DIR/rules" "$REPO_DIR/commands" "$REPO_DIR/plugins"
+    else
+        git clone https://github.com/PanPanFR/oh-my-openkilo.git "$REPO_DIR" || { echo "ERROR: git clone failed. Check your network and try again." >&2; exit 1; }
+        # Re-exec into the freshly cloned script so the rest of the run uses
+        # the latest update.sh.
+        local_cloned="$REPO_DIR/scripts/update.sh"
+        if [ -f "$local_cloned" ]; then
+            echo "[+] Re-running the freshly cloned update.sh"
+            extra=()
+            [ "$DRY_RUN" -eq 1 ] && extra+=(--dry-run)
+            [ "$SKIP_GIT" -eq 1 ] && extra+=(--no-git-pull)
+            extra+=(--config-dir="$CONFIG_DIR" --repo-dir="$REPO_DIR")
+            exec "$local_cloned" "${extra[@]}"
+        fi
+    fi
+fi
 if [ ! -d "$REPO_DIR/agents" ]; then
-    echo "ERROR: pack repo not found at $REPO_DIR. Run install.sh first or pass --repo-dir." >&2
+    echo "ERROR: pack repo at $REPO_DIR is missing agents/. Re-clone may have failed." >&2
     exit 1
 fi
 if [ ! -d "$CONFIG_DIR" ]; then
-    echo "ERROR: target config dir not found at $CONFIG_DIR. Run install.sh first or pass --config-dir." >&2
-    exit 1
+    echo "[+] Creating config dir $CONFIG_DIR"
+    mkdir -p "$CONFIG_DIR"
 fi
 
 # git pull

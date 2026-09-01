@@ -59,12 +59,44 @@ $SrcCommands = Join-Path $RepoDir 'commands'
 $SrcPlugins  = Join-Path $RepoDir 'plugins'
 $SrcAgentsMd = Join-Path $RepoDir 'AGENTS.md'
 
-# Sanity checks
-if (-not (Test-Path $SrcAgents)) {
-    throw "Pack repo not found at $RepoDir. Run install.ps1 first or pass -RepoDir."
-}
+# Sanity checks (self-healing: clone the pack repo if missing, create the config
+# dir if missing). This makes the one-liner safe to run on a brand new machine,
+# on a v0.3.0 install where the scripts/ folder does not exist, or after a
+# manual delete of the pack folder.
 if (-not (Test-Path $ConfigDir)) {
-    throw "Target config dir not found at $ConfigDir. Run install.ps1 first or pass -ConfigDir."
+    Write-Host "[+] Creating config dir $ConfigDir" -ForegroundColor Green
+    New-Item -ItemType Directory -Path $ConfigDir -Force | Out-Null
+}
+if ((-not (Test-Path $RepoDir)) -or (-not (Test-Path (Join-Path $RepoDir 'scripts')))) {
+    if ($PSCmdlet.ShouldProcess($RepoDir, 'git clone (pack repo missing or pre-v0.4.0 layout)')) {
+        if (Test-Path $RepoDir) {
+            Write-Host "[!] Pack repo at $RepoDir has no scripts/ folder (likely a pre-v0.4.0 install). Re-cloning to get the current layout." -ForegroundColor Yellow
+            Remove-Item -LiteralPath $RepoDir -Recurse -Force
+        }
+        Write-Host "[+] Cloning pack repo into $RepoDir" -ForegroundColor Green
+        & git clone https://github.com/PanPanFR/oh-my-openkilo.git $RepoDir
+        if ($LASTEXITCODE -ne 0) {
+            throw "git clone failed. Check your network and try again."
+        }
+        # After a fresh clone the script we are running lives at scripts/update.ps1
+        # in the clone we just made. Re-exec into that copy so all subsequent
+        # logic uses the freshly pulled code.
+        $clonedScript = Join-Path $RepoDir 'scripts\update.ps1'
+        if (Test-Path $clonedScript) {
+            Write-Host "[+] Re-running the freshly cloned update.ps1" -ForegroundColor Green
+            $argValues = @{
+                ConfigDir = $ConfigDir
+                RepoDir   = $RepoDir
+            }
+            if ($SkipGitPull) { $argValues['SkipGitPull'] = $true }
+            if ($WhatIfPreference) { $argValues['WhatIf'] = $true }
+            & $clonedScript @argValues
+            exit $LASTEXITCODE
+        }
+    }
+}
+if (-not (Test-Path $SrcAgents) -and -not $WhatIfPreference) {
+    throw "Pack repo at $RepoDir is missing agents/. Re-clone may have failed."
 }
 
 # --- Dry-run banner ----------------------------------------------------------
