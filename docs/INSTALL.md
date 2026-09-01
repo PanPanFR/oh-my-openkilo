@@ -1,59 +1,37 @@
 # Installation
 
-## Quick start (Windows, recommended)
+There is no installer. The pack is a Git repo and the in-session `/update-pack` command is self-contained (it hardcodes the canonical URL, runs `git` directly, and syncs the files itself). One source of truth, no scripts that can go stale.
+
+## Quick start (Windows, PowerShell)
 
 ```powershell
-irm https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.1/scripts/install.ps1 | iex
+git clone https://github.com/PanPanFR/oh-my-openkilo.git "$env:USERPROFILE\.config\opencode\oh-my-openkilo"
+Copy-Item -Recurse -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\agents"   "$env:USERPROFILE\.config\opencode\agents"
+Copy-Item -Recurse -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\skills"   "$env:USERPROFILE\.config\opencode\skills"
+Copy-Item -Recurse -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\rules"    "$env:USERPROFILE\.config\opencode\rules"
+Copy-Item -Recurse -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\commands" "$env:USERPROFILE\.config\opencode\commands"
+Copy-Item -Recurse -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\plugins"  "$env:USERPROFILE\.config\opencode\plugins"
+Copy-Item -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\AGENTS.md"        "$env:USERPROFILE\.config\opencode\AGENTS.md"
+if (-not (Test-Path "$env:USERPROFILE\.config\opencode\opencode.json")) {
+    Copy-Item -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\examples\opencode.example.json" "$env:USERPROFILE\.config\opencode\opencode.json"
+}
 ```
-
-This downloads `scripts/install.ps1`, runs it in-memory. It will:
-
-1. Verify `~/.config/opencode` exists (create if missing).
-2. Back up your existing config to `~/.config/opencode.backup-<timestamp>`.
-3. Copy `agents/`, `skills/`, `rules/`, `commands/`, `plugins/`, `AGENTS.md` from the pack into your config.
-4. If you don't have `opencode.json` yet, copy `examples/opencode.example.json` there for you to edit.
-5. Print next steps.
-
-After it finishes, edit `~/.config/opencode/opencode.json` to set your model and provider keys, then restart OpenCode or run `/reload`.
-
-> Want the bleeding edge instead of `v0.5.1`? Replace the tag in the URL with `main` (always tracks the latest commit) or the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest) tag.
 
 ## Quick start (macOS / Linux)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PanPanFR/oh-my-openkilo/v0.5.1/scripts/install.sh | bash
-```
-
-> ⚠️ **Heads up:** the maintainer develops and tests on Windows only. `install.sh` is structurally similar to `install.ps1` but has **not been tested on macOS or Linux**. If it fails, the safest fallback is **manual copy-paste**; see [macOS / Linux support](../README.md#-macos--linux-support) in the README. Please [open an issue](https://github.com/PanPanFR/oh-my-openkilo/issues) if you hit a Unix-specific bug so it can be fixed.
-
-## Manual install (full control)
-
-```powershell
-# 1. Clone the pack to a subfolder of your config
-git clone https://github.com/PanPanFR/oh-my-openkilo.git "$env:USERPROFILE\.config\opencode\oh-my-openkilo"
-
-# 2. Preview what install would do
-& "$env:USERPROFILE\.config\opencode\oh-my-openkilo\scripts\install.ps1" -WhatIf
-
-# 3. Apply
-& "$env:USERPROFILE\.config\opencode\oh-my-openkilo\scripts\install.ps1"
-```
-
-```bash
-# macOS / Linux
 git clone https://github.com/PanPanFR/oh-my-openkilo.git ~/.config/opencode/oh-my-openkilo
-~/.config/opencode/oh-my-openkilo/scripts/install.sh --dry-run
-~/.config/opencode/oh-my-openkilo/scripts/install.sh
+for d in agents skills rules commands plugins; do
+    cp -r ~/.config/opencode/oh-my-openkilo/$d ~/.config/opencode/$d
+done
+cp ~/.config/opencode/oh-my-openkilo/AGENTS.md ~/.config/opencode/AGENTS.md
+[ -f ~/.config/opencode/opencode.json ] || cp ~/.config/opencode/oh-my-openkilo/examples/opencode.example.json ~/.config/opencode/opencode.json
 ```
 
-## Install flags
+> [!IMPORTANT]
+> The commands above overwrite any existing `agents/`, `skills/`, `rules/`, `commands/`, `plugins/`, and `AGENTS.md` under your config dir. Your `opencode.json`, model, provider, API keys, and MCP server entries are NOT touched. If you have local edits you want to keep, back them up first.
 
-| Flag (PowerShell)         | Flag (Bash)        | Effect |
-|---------------------------|--------------------|--------|
-| `-WhatIf`                 | `--dry-run`        | Print actions, change nothing |
-| `-SkipBackup`             | `--no-backup`      | Skip the timestamped backup |
-| `-SkipPlugins`            | `--no-plugins`     | Skip `plugins/` copy |
-| `-ConfigDir <path>`       | `--config-dir=<path>` | Override target config dir |
+> Want the bleeding edge instead of `main`? Replace `main` in the URL with a tag (e.g. `v0.5.2`) or pick the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest).
 
 ## After install: required dependencies
 
@@ -94,8 +72,6 @@ After `npm i -g @agentmemory/mcp`, replace the `mcp.agentmemory.command` in your
 - **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos, but the rest of the pack still works.
 - **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `memory-discipline`/`recall` skills and the `recall`/`remember`/`recap` commands all depend on it.
 
-The pack's `instructions` array registers `rules/skill-reminder.md` as always-on, so the skill-check + memory-recall protocol fires every session; it degrades to a no-op if the dependencies are missing.
-
 ### MCPs (enable per-need, not all auto-on)
 
 The example config ships two MCPs enabled: `agentmemory` (required for the memory skills) and `chrome-devtools` (for the `chrome-devtools` skill). Anything else you want — `playwright` for the `playwright-cli` skill, `context7` for live library docs, your own — you add yourself by following the same shape: drop the entry into `mcp` in `opencode.json`, set `enabled: true`, and provide any env vars the server needs.
@@ -105,32 +81,15 @@ The example config ships two MCPs enabled: `agentmemory` (required for the memor
 | `agentmemory`          | Persistent cross-session memory (**required**)      | `AGENTMEMORY_SERVER_URL` (default `http://127.0.0.1:3111`) | No memory. Every session starts from zero. |
 | `chrome-devtools`      | Live browser debug (DOM, network, console, perf)    | none (uses installed Chrome)            | No live browser inspection; static fetch only |
 
-To enable any others, edit `opencode.json` to set `enabled: true` and fill in the required env vars. The `install.ps1` validator scans your config and warns if any enabled MCP has a missing env var.
+To enable any others, edit `opencode.json` to set `enabled: true` and fill in the required env vars. `/configcheck` validates your config and warns if any enabled MCP has a missing env var.
 
 ## Verify the install
 
-Start OpenCode in any directory and ask:
-
-```
-list your agents and confirm which skills are loaded
-```
-
-You should see 8 agents, 46 skills, and 3 rules. If something is missing, the most common cause is the `skills.paths` not pointing to your skills folder, but oh-my-openkilo's structure matches the default discovery path, so this should be automatic. If you have a custom `opencode.json` with non-default paths, see [CONFIGURATION.md](CONFIGURATION.md).
+Start OpenCode in any directory. Type `/configcheck`. It will tell you what is wired up and what is missing.
 
 ## Uninstall
 
-Restore the backup folder created at install time:
-
-```powershell
-# Find your backup
-Get-ChildItem "$env:USERPROFILE\.config\opencode.backup-*"
-
-# Restore
-Remove-Item "$env:USERPROFILE\.config\opencode" -Recurse -Force
-Move-Item "$env:USERPROFILE\.config\opencode.backup-<timestamp>" "$env:USERPROFILE\.config\opencode"
-```
-
-Or, surgical removal (deletes only pack files, leaves your custom `opencode.json` and any other files alone):
+Surgical removal (deletes only pack files, leaves your custom `opencode.json` and any other files alone):
 
 ```powershell
 Remove-Item "$env:USERPROFILE\.config\opencode\agents"     -Recurse -Force
@@ -141,6 +100,14 @@ Remove-Item "$env:USERPROFILE\.config\opencode\plugins"    -Recurse -Force
 Remove-Item "$env:USERPROFILE\.config\opencode\AGENTS.md"  -Force
 ```
 
+```bash
+# macOS / Linux
+rm -rf ~/.config/opencode/{agents,skills,rules,commands,plugins}
+rm -f ~/.config/opencode/AGENTS.md
+```
+
+The pack repo clone at `~/.config/opencode/oh-my-openkilo/` is also safe to delete; it is the source `/update-pack` pulls from, but `/update-pack` re-clones if the folder is missing.
+
 ## Update the pack
 
 In an OpenCode session, type:
@@ -149,24 +116,18 @@ In an OpenCode session, type:
 /update-pack
 ```
 
-This pulls the latest commit from GitHub, then syncs each file with per-file diff and backup of any local changes you made. See [COMMANDS.md](COMMANDS.md) for the full mechanics.
+The command is self-contained. It clones or pulls from the canonical URL on its own, then syncs each file with per-file diff and backup of any local changes you made. Nothing on your disk can go stale. See [COMMANDS.md](COMMANDS.md) for the full mechanics.
 
 ## Troubleshooting
-
-### "Permission denied" during install on macOS/Linux
-
-```bash
-chmod +x ~/.config/opencode/oh-my-openkilo/scripts/install.sh
-```
 
 ### Skills not loading
 
 Make sure the skills folder is at the path OpenCode scans. Default is the same dir as `opencode.json` (i.e. `~/.config/opencode/skills/`). If you've moved it, register it in `opencode.json`:
 
-```jsonc
+```json
 {
   "skills": {
-    "paths": ["C:\\Users\\<You>\\.config\\opencode\\skills"]
+    "paths": ["~/.config/opencode/skills"]
   }
 }
 ```

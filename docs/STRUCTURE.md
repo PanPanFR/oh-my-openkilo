@@ -10,12 +10,6 @@ oh-my-openkilo/
 ├── AGENTS.md                          # the AGENTS.md that ships with the pack
 ├── .gitignore                         # excludes opencode.json, node_modules, state files
 │
-├── scripts/                           # installer + updater entry points
-│   ├── install.ps1                    # Windows installer
-│   ├── install.sh                     # Unix installer
-│   ├── update.ps1                     # Windows updater (terminal-side /update-pack)
-│   └── update.sh                      # Unix updater (terminal-side /update-pack)
-│
 ├── agents/                            # 8 agent prompts (mirror of ~/.config/opencode/agents/)
 │   ├── builder.md
 │   ├── planner.md
@@ -97,9 +91,11 @@ Edits flow one way: edit in `~/.config/opencode/`, kick the tires in a real sess
 - `LICENSE`, `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md`: repo governance
 - `docs/`: repo-only documentation, not loaded by OpenCode
 - `examples/opencode.example.json`: hand-maintained, never derived from the runtime config (to guarantee no leaks)
-- `scripts/install.ps1`, `scripts/install.sh`: installer scripts (resolves repo root from the script's parent dir)
-- `scripts/update.ps1`, `scripts/update.sh`: terminal-side equivalent of `/update-pack` (git pull + per-file sync with backup)
 - `.gitignore`: repo-only
+
+## Install and update
+
+There is no installer or updater script in the pack. Install is a one-time `git clone` + `cp -r` (full recipe in [INSTALL.md](INSTALL.md)). Update is the in-session `/update-pack` command, which is self-contained: it hardcodes the canonical URL, runs `git` directly, and syncs each file with per-file backup. Nothing on the user's disk can go stale.
 
 ## What gets mirrored but not edited directly
 
@@ -109,4 +105,4 @@ Once an agent/skill/rule/command is published in the repo, the corresponding fil
 2. `git commit` and `git push`.
 3. Run `/update-pack` in OpenCode to pull the new version locally.
 
-This applies to **all 8 agents, 46 skills, 3 rules, 10 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); the install script and `/update-pack` will not touch local files.
+This applies to **all 8 agents, 46 skills, 3 rules, 10 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); `/update-pack` will not touch local files.

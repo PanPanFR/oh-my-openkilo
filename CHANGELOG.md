@@ -1,3 +1,11 @@
+# v0.5.2 (2026-09-01)
+
+## Features
+- **/update-pack**: hardcode the pack URL inside the command and run `git` directly. The in-session command no longer depends on any script that lives in the pack repo, so an outdated pack cannot get an outdated update flow.
+
+## Fixes
+- **Install flow**: drop `scripts/install.ps1`, `scripts/install.sh`, `scripts/update.ps1`, and `scripts/update.sh`. The pack is now a Git repo plus slash commands. Install is a one-time `git clone` + `cp -r` (full recipe in `README.md` and `docs/INSTALL.md`); update is `/update-pack`.
+
 # v0.5.1 (2026-09-01)
 
 ## Features

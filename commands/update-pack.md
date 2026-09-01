@@ -70,7 +70,7 @@ For each source path, walk every file under it. For each file:
 
 **Avoid the nested-folder trap.** When both source `<repo>/skills/<name>` and target `<config>/skills/<name>` are directories, do NOT run `cp -r` or `Copy-Item -Recurse -Force` against the target while it still exists. That nests the source inside a same-named subfolder. The rename-then-copy pattern (backup the target first, then copy) prevents it.
 
-You can use any tool to do the per-file copy. The simplest approach: emit one shell script per platform (PowerShell on Windows, bash on Unix), run it, and parse the output. The script in `scripts/update.ps1` and `scripts/update.sh` of the freshly-pulled pack repo is the reference implementation, but the same logic in inline shell from the model is fine. The reference implementation is at the source of truth URL above, so you can `curl` it or read the freshly-cloned copy.
+You can use any tool to do the per-file copy. Emit one shell script per platform (PowerShell on Windows, bash on Unix), run it, and parse the output. Inline shell from the model is fine; there is no separate reference script.
 
 If the upstream removed a file, warn the user and leave the local copy in place. Never delete.
 
@@ -132,4 +132,4 @@ The nested-folder trap. The previous sync ran `cp -r` against an existing target
 
 ## Why this is the right shape
 
-The URL is hardcoded in this command. Even if `scripts/update.ps1` and `scripts/update.sh` on the user's disk are old, `/update-pack` always reaches the latest source of truth because the command itself is short enough to read in one go, the URL is literal, and the AI executes `git` and `cp` directly. The scripts in `scripts/` are kept as a convenience for users who run from a terminal without an OpenCode session, but the in-session `/update-pack` does not depend on them.
+The URL is hardcoded in this command. Even if any earlier pack version on the user's disk is old, `/update-pack` always reaches the latest source of truth because the command itself is short enough to read in one go, the URL is literal, and the AI executes `git` and `cp` directly. There is no separate update script to go stale.

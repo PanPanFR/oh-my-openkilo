@@ -123,7 +123,7 @@ To enable:
 
 Anything beyond the two above (playwright, context7, perplexity, tinypuppet, your own) is something you wire up yourself; the example just shows you the shape.
 
-The `scripts/install.ps1` validator scans your config after install and warns if any enabled MCP has a missing env var. Re-run it after changing `opencode.json` to re-validate.
+`/configcheck` validates your config (parses the JSON, lists enabled MCPs, checks each MCP can launch, and warns if any enabled MCP has a missing env var). Run it after changing `opencode.json` to re-validate.
 
 ## Installing MCP servers
 
