@@ -28,7 +28,7 @@ Skip `enabled: false` servers (list them as intentionally disabled). For each en
 These have multi-part installs. Check every part, not just the MCP entry.
 
 - **agentmemory** (3 parts):
-  1. MCP server `agentmemory` connects to a separate REST server at `AGENTMEMORY_SERVER_URL` (default `http://127.0.0.1:3111`). Test that REST server first: `GET http://127.0.0.1:3111/health`. If it is down, every MCP tool fails even though the MCP entry itself is fine: tell the user to start the agentmemory server.
+  1. MCP server `agentmemory` connects to a separate REST server at `AGENTMEMORY_SERVER_URL` (default `http://127.0.0.1:3111`). Test that REST server first with `Invoke-WebRequest` / `curl`: a 2xx response means the server is up. A 404 on `/health` is a soft-fail (the server may use a different health path) but the server IS listening, so report it as reachable. A connection refused / timeout means the server is down, every MCP tool will fail, and the user should start it with `agentmemory serve`.
   2. **Check the MCP launch command.** If `mcp.agentmemory.command` is `["npx", "-y", "@agentmemory/mcp"]` (or any other npx form), WARN the user: npx re-downloads on every cold start, masks the version, and breaks silently when npm registry is unreachable. RECOMMEND: `npm i -g @agentmemory/mcp`, then point `command` at the local entry point.
      - Windows: `["node", "C:\\Users\\<You>\\AppData\\Roaming\\npm\\node_modules\\@agentmemory\\mcp\\bin.mjs"]`
      - macOS: `["node", "/usr/local/lib/node_modules/@agentmemory/mcp/bin.mjs"]`

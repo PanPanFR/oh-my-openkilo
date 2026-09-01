@@ -16,9 +16,11 @@ If you (the model) are unsure whether an action falls under one of the "MUST NOT
 ## Usage
 
 ```
-/update-pack            # pull + sync
-/update-pack --check    # only check whether upstream has new commits, do not sync
-/update-pack --diff     # show what would change, do not sync
+/update-pack                       # pull + sync
+/update-pack --check               # only check whether upstream has new commits, do not sync
+/update-pack --diff                # show what would change, do not sync
+/update-pack --dry-run             # preview every step, do not write any file or run any side-effecting command
+/update-pack --no-git-pull         # skip the git pull step (you already pulled manually, just re-sync files)
 ```
 
 ## Instructions
@@ -52,7 +54,7 @@ Source paths to mirror (and only these): `agents/`, `skills/`, `rules/`, `comman
 For each file in the source (recursive), per source-relative path:
 
 - If the same relative path does NOT exist in the target config dir: copy it. Count as **added**.
-- If the file exists and is byte-identical (compare a hash of name+contents for directories): skip. Count as **unchanged**.
+- If the file exists and is byte-identical (compare a content-hash for files, or a hash of every relative path inside for directories): skip. Count as **unchanged**. The hash MUST use relative paths inside the directory, not absolute paths; absolute paths would make the hash depend on the location and break the source-vs-target comparison.
 - If the file exists but differs:
   1. Back it up: rename target to `<target>/<file>.local-<timestamp>` (e.g. `agents/builder.md.local-20260828-153012`). This MUST happen BEFORE the new version is written.
   2. Copy the new version from the repo into the target location.
