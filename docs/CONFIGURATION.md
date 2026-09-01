@@ -1,10 +1,10 @@
 # Configuration
 
-`opencode.json` is the **runtime configuration file** for OpenCode. It lives at `~/.config/opencode/opencode.json` and is **never committed** to this repo (it contains credentials).
+`opencode.json` is the brain of your OpenCode install. It lives at `~/.config/opencode/opencode.json` and is **never committed** to this repo (it contains your secrets, not ours).
 
-[`examples/opencode.example.json`](../examples/opencode.example.json) is a **ready-to-use** configuration file, not a blank skeleton. It already includes the plugin loaders, the rules wiring, the MCP server entries, the provider template, and a working permission block. You don't need to write `opencode.json` from scratch; just copy the example, replace the `{env:VAR}` placeholders with your real env vars, and save it as `~/.config/opencode/opencode.json`.
+[`examples/opencode.example.json`](../examples/opencode.example.json) is the brain we ship, and it ships **ready to use**: plugin loaders wired, rules registered, MCP servers declared, provider template in place, sensible permission defaults. You don't need to write `opencode.json` from scratch. Copy the example, swap the `{env:VAR}` placeholders for your real env vars, and save it as `~/.config/opencode/opencode.json`. Done.
 
-This document describes each block of the example file so you know what you're editing. If you want the full reference for the OpenCode config schema, see [opencode.ai/docs/config/](https://opencode.ai/docs/config/).
+Below is a tour of every block in that example so you know what you're editing. For the full OpenCode schema reference, see [opencode.ai/docs/config/](https://opencode.ai/docs/config/).
 
 ## Top-level fields
 
@@ -75,7 +75,7 @@ A more balanced setup for security-sensitive work:
 - An npm package name: `@dietrichgebert/ponytail`
 - A git URL: `superpowers@git+https://github.com/obra/superpowers.git`
 
-The example lists the four plugins oh-my-openkilo needs. Remove any you don't want to use.
+The example lists the 6 plugins the pack ships: 5 small TypeScript files we own (`agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`) plus 2 npm packages (`ponytail`, `superpowers`). Drop any you don't want to load — the pack degrades gracefully without them, the only required one being `agentmemory-capture` if you use the memory skills.
 
 ## Provider
 
@@ -105,7 +105,7 @@ Each MCP server is one of two types:
 - `"type": "local"`: runs a command on your machine via `npx` or `python`
 - `"type": "remote"`: connects to a remote URL
 
-The example lists four MCPs covering knowledge graph, browser automation, and library docs. Each is `enabled: false` by default except the always-on ones (`agentmemory`, `chrome-devtools`, `playwright`, `context7`).
+The example ships a small starter set: `agentmemory` (always on, you need it for the memory skills) and `chrome-devtools` (always on, for the `chrome-devtools` skill). Other MCPs you might want (perplexity search, tinypuppet, custom ones) you add yourself by following the same shape.
 
 To enable:
 
@@ -118,14 +118,16 @@ To enable:
 
 | MCP                    | Required env / file                                | Free? | Used by                                |
 |------------------------|----------------------------------------------------|-------|----------------------------------------|
-| `agentmemory`          | `AGENTMEMORY_SERVER_URL` (Plus server)             | yes (npm global) | memory skills, `recall`/`remember` |
+| `agentmemory`          | `AGENTMEMORY_SERVER_URL` (default: local server)    | yes (npm global) | memory skills, `recall`/`remember` |
 | `chrome-devtools`      | none (uses installed Chrome)                       | yes   | `chrome-devtools` skill                |
-| `playwright`           | `npx playwright install chromium` (first run)      | yes   | `playwright-cli` skill                 |
-| `context7`             | `CONTEXT7_API_KEY` (free at context7.com)          | yes   | `researcher`, doc lookup               |
+
+Anything beyond the two above (playwright, context7, perplexity, tinypuppet, your own) is something you wire up yourself; the example just shows you the shape.
 
 The `scripts/install.ps1` validator scans your config after install and warns if any enabled MCP has a missing env var. Re-run it after changing `opencode.json` to re-validate.
 
 ## Installing MCP servers
+
+Two MCPs ship enabled in the example: `agentmemory` (memory skills) and `chrome-devtools` (browser automation). Both are listed below. Everything else (`playwright`, `context7`, perplexity, tinypuppet, your own) is opt-in — copy the shape, set the env var, flip `enabled: true`.
 
 Most MCPs in this pack are `npx`-based; OpenCode downloads the package on first use. None of them require a separate install step before enabling in `opencode.json`, but several need a one-time setup after the first run.
 
@@ -143,7 +145,7 @@ agentmemory serve
 
 The `mcp.agentmemory` entry in `opencode.json` already points to `http://localhost:3111` via the `AGENTMEMORY_SERVER_URL` env var. If you change the port, update that env var to match.
 
-### `context7` (remote, no install)
+### `context7` (opt-in, remote, no install)
 
 ```jsonc
 {
@@ -160,7 +162,7 @@ The `mcp.agentmemory` entry in `opencode.json` already points to `http://localho
 
 Get a free API key at [context7.com](https://context7.com), set `CONTEXT7_API_KEY` in your shell or `.env`, then enable. No local install.
 
-### `chrome-devtools` (npm, no setup)
+### `chrome-devtools` (already enabled, npm, no setup)
 
 ```jsonc
 {
@@ -176,7 +178,7 @@ Get a free API key at [context7.com](https://context7.com), set `CONTEXT7_API_KE
 
 `npx` downloads it on first invocation. Requires Chrome/Chromium installed on the system.
 
-### `playwright` (npm + one-time browser download)
+### `playwright` (opt-in, npm + one-time browser download)
 
 ```jsonc
 {
@@ -217,7 +219,7 @@ Paths to always-on rule files, relative to the directory containing `opencode.js
 
 ## LSP
 
-`"lsp": true` enables the Language Server Protocol integration. Recommended on. If you turn it off, agents lose type-aware code navigation and refactor.
+`"lsp": true` flips on the Language Server Protocol integration. Recommended on. If you turn it off, agents lose type-aware code navigation and refactor.
 
 ## Verifying your config
 

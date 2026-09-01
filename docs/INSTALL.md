@@ -57,7 +57,7 @@ git clone https://github.com/PanPanFR/oh-my-openkilo.git ~/.config/opencode/oh-m
 
 ## After install: required dependencies
 
-The pack **requires** two external tools to deliver its core value. Without them, the `agentmemory` and `graphify` rules load but their tools are missing; the pack degrades to a much weaker version of itself. Install these **immediately after** the pack itself:
+The pack **requires** two external tools to deliver its core value. Without them the pack loads fine, but its sharpest features go quiet. Install these **immediately after** the pack itself:
 
 ```bash
 # Knowledge graph -- the `graphify` skill depends on this
@@ -67,27 +67,25 @@ npm i -g graphify
 npm i -g @agentmemory/server
 ```
 
-Then start the agentmemory server (see its README) and make sure `mcp.agentmemory` is enabled in `opencode.json` (the example already has it). Start the server once with `agentmemory serve` (or whatever the package's start command is; see its README).
+Then start the agentmemory server (see its README) and make sure `mcp.agentmemory` is enabled in `opencode.json` (the example already has it). One-shot: `agentmemory serve`. Or wire it up as a system service so you never have to think about it again.
 
 **What you lose without each:**
 
-- **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos. The `graphify` rule and skill both rely on this binary.
-- **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `memory-discipline`/`recall` skills and the `recall`/`remember`/`recap` commands all depend on this.
+- **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos, but the rest of the pack still works.
+- **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `memory-discipline`/`recall` skills and the `recall`/`remember`/`recap` commands all depend on it.
 
-The pack's `instructions` array registers `rules/skill-reminder.md` as always-on, so the skill-check + memory-recall protocol fires every session; it degrades to no-op if the dependencies are missing.
+The pack's `instructions` array registers `rules/skill-reminder.md` as always-on, so the skill-check + memory-recall protocol fires every session; it degrades to a no-op if the dependencies are missing.
 
-### MCPs (enable per-need, not auto-on)
+### MCPs (enable per-need, not all auto-on)
 
-The example config lists all MCPs that ship with this pack. **`agentmemory` is enabled by default** (required dependency). All other MCPs are `enabled: false`; turn one on when you need it.
+The example config ships two MCPs enabled: `agentmemory` (required for the memory skills) and `chrome-devtools` (for the `chrome-devtools` skill). Anything else you want — `playwright` for the `playwright-cli` skill, `context7` for live library docs, your own — you add yourself by following the same shape: drop the entry into `mcp` in `opencode.json`, set `enabled: true`, and provide any env vars the server needs.
 
 | MCP                    | Capability                                          | Required env / key                      | Risk if disabled |
 |------------------------|-----------------------------------------------------|-----------------------------------------|------------------|
 | `agentmemory`          | Persistent cross-session memory (**required**)      | `AGENTMEMORY_SERVER_URL` (Plus server)  | No memory. Every session starts from zero. |
-| `context7`             | Up-to-date library docs (replaces training data)    | `CONTEXT7_API_KEY` (free at context7.com) | Documentation lookup falls back to model knowledge (often outdated) |
 | `chrome-devtools`      | Live browser debug (DOM, network, console, perf)    | none (uses installed Chrome)            | No live browser inspection; static fetch only |
-| `playwright`           | Stateful persistent browser loop, E2E test gen      | `npx playwright install chromium` first | E2E test generation disabled; `playwright-cli` skill degrades |
 
-To enable any of these, edit `opencode.json` to set `enabled: true` and fill in the required env vars. The `install.ps1` validator scans your config and warns if any enabled MCP has a missing env var.
+To enable any others, edit `opencode.json` to set `enabled: true` and fill in the required env vars. The `install.ps1` validator scans your config and warns if any enabled MCP has a missing env var.
 
 ## Verify the install
 

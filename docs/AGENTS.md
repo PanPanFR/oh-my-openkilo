@@ -205,7 +205,7 @@ To re-enable them, edit your `opencode.json` and remove the corresponding `disab
 In a normal OpenCode session, you can either:
 
 - Let `builder` pick the right subagent automatically (most common).
-- Be explicit: "Ask `tester` to write tests for the auth module", "Have `designer` generate a mockup for the dashboard".
+- Be explicit: "Ask `tester` to write tests for the auth module", "Have `reviewer` sanity-check this diff", "Have `designer` review the UI for a11y".
 
 Subagents are also dispatched by `builder` and `planner` via the `task` tool, in parallel when the subtasks are independent.
 

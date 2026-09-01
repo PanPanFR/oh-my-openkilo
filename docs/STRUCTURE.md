@@ -39,23 +39,27 @@ oh-my-openkilo/
 │   └── skill-reminder.md              # mandatory skill check before work
 │
 ├── commands/                          # 10 slash commands
-│   ├── update-pack.md                 # pull + sync from GitHub
-│   ├── caveman.md                     # toggle terse mode
 │   ├── caveman-commit.md              # compressed commit message generator
 │   ├── caveman-compress.md            # compress memory files
 │   ├── caveman-help.md                # caveman help card
 │   ├── caveman-review.md              # compressed code review
 │   ├── caveman-stats.md               # show token savings
+│   ├── caveman.md                     # toggle terse mode
+│   ├── configcheck.md                 # post-install health check
 │   ├── recall.md                      # search agentmemory
-│   └── remember.md                    # save to agentmemory
+│   ├── remember.md                    # save to agentmemory
+│   └── update-pack.md                 # pull + sync from GitHub
 │
-├── plugins/                           # plugin sources (node_modules NOT included)
+├── plugins/                           # 5 small TS plugin files (no dist/, no node_modules)
 │   ├── agentmemory-capture.ts         # hook for capturing session observations
-│   └── caveman/
-│       ├── plugin.js
-│       ├── caveman-config.cjs
-│       ├── caveman-parse.cjs
-│       └── package.json
+│   ├── caveman/                       # terse-mode + style pack
+│   │   ├── plugin.js
+│   │   ├── caveman-config.cjs
+│   │   ├── caveman-parse.cjs
+│   │   └── package.json
+│   ├── checkpoint.ts                  # shadow-checkpoint safety net
+│   ├── graphify.ts                    # codebase knowledge graph hook
+│   └── recall-first.ts                # one-shot recall gate for edits
 │
 ├── examples/
 │   └── opencode.example.json          # portable config template, credentials redacted
@@ -86,7 +90,7 @@ The repo is the **upstream source of truth** for the pack, but the actual runtim
 └── oh-my-openkilo/                   the repo
 ```
 
-Edits flow: edit in `~/.config/opencode/`, test in a real session, then copy to `oh-my-openkilo/` and commit. Never edit the repo first.
+Edits flow one way: edit in `~/.config/opencode/`, kick the tires in a real session, then copy the changed file(s) into `oh-my-openkilo/` and commit. The repo never leads.
 
 ## What does not get mirrored (lives only in the repo)
 
