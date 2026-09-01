@@ -1,6 +1,6 @@
 # Skills
 
-48 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
+46 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
 
 The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-gain`, `ponytail-help`) and the superpowers plugin skills (`brainstorming`, `using-superpowers`, `writing-plans`, `executing-plans`, `dispatching-parallel-agents`, `subagent-driven-development`, `receiving-code-review`, `requesting-code-review`, `finishing-a-development-branch`, `using-git-worktrees`, `orchestration`) install via the plugin system. They are not counted below; the count is `ls skills/`, the filesystem is the source of truth.
 
@@ -38,7 +38,7 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `agentmemory-mcp-tools`     | Choosing a memory MCP tool, argument details                         |
 | `agentmemory-rest-api`      | Talking to the memory server over HTTP, MCP fallback                 |
 
-## Caveman family (7)
+## Caveman family (6)
 
 | Skill               | When it loads                                                       |
 |---------------------|---------------------------------------------------------------------|
@@ -48,7 +48,6 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `caveman-help`      | Quick-reference card for caveman modes and commands                  |
 | `caveman-review`    | Compressed PR review comments                                        |
 | `caveman-stats`     | Real token usage and savings from the session log                    |
-| `cavecrew`          | Delegate to cavecrew subagents to save main context                  |
 
 ## Workflow & memory (14)
 
@@ -69,13 +68,12 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `workers`                 | Cloudflare Workers code: wrangler config, bindings, limits, error 1102     |
 | `write-agentmemory-skill` | House format for writing or updating agentmemory skills                    |
 
-## Browser & stitch (3)
+## Browser (2)
 
 | Skill             | When it loads                                                                |
 |-------------------|------------------------------------------------------------------------------|
 | `playwright-cli`  | High-volume browser automation, E2E tests, snapshots, request mocking        |
 | `graphify`        | Codebase questions, architecture exploration, file relationship queries      |
-| `stitch`          | Stitch design system tasks: generation, edit, conversion, iteration loop (requires the optional stitch MCP; without it, `designer` falls back to text-only) |
 
 ## How skills are loaded
 
@@ -85,7 +83,7 @@ Skills with `references/` use progressive disclosure: `SKILL.md` is short and de
 
 ## Total count
 
-The numbers above add to **48** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
+The numbers above add to **46** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
 
 ## Editing a skill
 

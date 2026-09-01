@@ -1,6 +1,6 @@
 ---
 name: delegation
-description: Decide when and how to delegate work to subagents (planner, general, scout, tester, reviewer, docs, explore, cavecrew-*). Use when dispatching subagents, running parallel tasks, choosing a subagent for a job, or deciding inline-vs-delegate. Front-load triggers: delegate, subagent, parallel, task dispatch, spawn agent, launch agents.
+description: Decide when and how to delegate work to subagents (planner, builder, designer, documenter, tester, reviewer, explorer, researcher). Use when dispatching subagents, running parallel tasks, choosing a subagent for a job, or deciding inline-vs-delegate. Front-load triggers: delegate, subagent, parallel, task dispatch, spawn agent, launch agents.
 ---
 
 # Delegation Policy
@@ -12,29 +12,25 @@ You have specialized subagents. Delegate when it improves quality or speed.
 | Subagent | Use for |
 |----------|---------|
 | `planner` | Pre-implementation design, brainstorming, architecture planning, implementation plans. Primary mode, can also be delegated to by other primary agents (builder) for complex multi-step work |
-| `general` | UI/frontend builds, refactors, multi-step execution of well-defined tasks |
-| `scout` | External research - library/framework/API docs with cited findings |
+| `builder` | Primary agent. Implementation, refactors, multi-step execution of well-defined tasks |
+| `designer` | UI/frontend builds - components, design system, accessibility |
+| `documenter` | Technical writing - create and improve documentation in `docs/` |
 | `tester` | Test suites - write, run, iterate failures in isolation, report compact results |
 | `reviewer` | Code + security review of diffs vs repo standards and spec (read-only) |
-| `docs` | Technical writing - create and improve documentation in `docs/` |
-| `explore` | Codebase reconnaissance: file location, pattern finding, structure mapping |
-| `cavecrew-investigator` | Compressed code locator - where is X defined, read-only `file:line` table (60% fewer tokens) |
-| `cavecrew-builder` | 1-2 file surgical edit, caveman receipt (`too-big` if 3+ files) |
-| `cavecrew-reviewer` | Diff review, one line per finding, severity-tagged |
-
-> **Cavecrew vs vanilla**: `cavecrew-*` come from the caveman protocol (`skills/cavecrew/SKILL.md` + `plugins/caveman`). Output is compressed, saves main context ~60%. Does not conflict with vanilla `explore`/`reviewer`. Use cavecrew when saving tokens matters (locate->fix->verify chain). Use vanilla when you need prose/architecture advice.
+| `explorer` | Codebase reconnaissance: file location, pattern finding, structure mapping |
+| `researcher` | External research - library/framework/API docs with cited findings |
 
 ## When to Delegate (DO)
 
 - Task matches a subagent's specialization AND benefits from isolated context
 - Independent subtasks exist -> launch them ALL in parallel in a SINGLE message (multiple Task calls)
 - Task is large-scale search/audit/research that would bloat your context
-- Research-heavy work -> `scout` (keeps your context lean, cited findings)
+- Research-heavy work -> `researcher` (keeps your context lean, cited findings)
 - Quick web grab (1-2 URLs, no synthesis needed) -> use native `webfetch`/`websearch` directly, don't delegate
 - Security-sensitive review -> `reviewer` (specialized checklist, verified findings)
 - Writing tests alongside implementation -> `tester` (parallel: you implement, it tests)
-- Writing docs alongside implementation -> `docs` (parallel: you implement, it documents)
-- Unknown codebase territory -> `explore` first, then act
+- Writing docs alongside implementation -> `documenter` (parallel: you implement, it documents)
+- Unknown codebase territory -> `explorer` first, then act
 
 ## When NOT to Delegate (DON'T)
 

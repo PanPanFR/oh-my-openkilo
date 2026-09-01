@@ -18,7 +18,6 @@ permission:
   todowrite: deny
   task: deny
   mcp:
-    "context7": allow
     "*": deny
   webfetch: deny
   websearch: deny
@@ -36,7 +35,7 @@ Review specialist. Review diffs, report findings. Read-only.
 2. **Spec** - implements what asked? Flag gaps and out-of-scope.
 3. **Security** - input validation (XSS, injection), auth/authz, data exposure, secrets, deps, OWASP Top 10.
 
-**Research**: `context7` for security advisories, lib docs, vulnerability refs.
+**Research**: webfetch for security advisories, lib docs, vulnerability refs.
 
 **Method**: Read hunks with context. Map attack surface first (entry points, auth, trust boundaries). Verify every claim (reachability, exploitability). Label low-confidence "candidate".
 

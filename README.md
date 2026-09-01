@@ -5,7 +5,7 @@
 # oh-my-openkilo
 
 **Prompts in files. Models in config. Behavior in rules.**
-A curated OpenCode configuration pack: 8 agents, 48 skills, 3 rules, 6 plugins, 10 commands. ~23× lighter than comparable plugin packs. Zero credentials to start.
+A curated OpenCode configuration pack: 8 agents, 46 skills, 3 rules, 6 plugins, 10 commands. ~23× lighter than comparable plugin packs. Zero credentials to start.
 
 <sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's agentic workflow</sub>
 
@@ -16,7 +16,7 @@ A curated OpenCode configuration pack: 8 agents, 48 skills, 3 rules, 6 plugins, 
   <a href="https://github.com/PanPanFR/oh-my-openkilo/commits/main"><img src="https://img.shields.io/github/last-commit/PanPanFR/oh-my-openkilo?style=flat" alt="Last commit"></a>
   <br>
   <a href="#-meet-the-agents"><img src="https://img.shields.io/badge/agents-8-orange" alt="8 agents"></a>
-  <a href="#-skills"><img src="https://img.shields.io/badge/skills-48-green" alt="48 skills"></a>
+  <a href="#-skills"><img src="https://img.shields.io/badge/skills-46-green" alt="46 skills"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/credentials-zero-brightgreen" alt="Zero credentials"></a>
   <img src="https://img.shields.io/badge/size-2.6_MB-blueviolet" alt="Pack size: 2.6 MB">
   <img src="https://img.shields.io/badge/no_build_step-brightgreen" alt="No build step">
@@ -31,9 +31,9 @@ A curated OpenCode configuration pack: 8 agents, 48 skills, 3 rules, 6 plugins, 
 ## ✨ Highlights
 
 - **[8 specialized agents](#-meet-the-agents)** — 2 primary (`builder`, `planner`) + 6 subagents with a delegation hierarchy already designed. `builder` routes to `planner` for complex work and fans out to specialists in parallel.
-- **[48 curated skills](#-skills)** — battle-tested playbooks (TDD, systematic debugging, code review, plans, web-perf) across 10 categories. Skills are prompt-based: no runtime, no build step.
+- **[46 curated skills](#-skills)** — battle-tested playbooks (TDD, systematic debugging, code review, plans, web-perf) across 10 categories. Skills are prompt-based: no runtime, no build step.
 - **[3 always-on rules](#-rules)** — `skill-reminder` (skill + memory check before any task), `language` (English files), `communication-style` (Caveman terse + Ponytail minimal). Other behaviors ship as on-demand skills.
-- **[6 plugins](#-plugins)** — `agentmemory-capture` (auto-save observations), `graphify` (graph sync), `caveman` (terse mode), `ponytail` (minimal code), `superpowers` (skill loader), `auto-commit`. All optional, all from existing tools.
+- **[6 plugins](#-plugins)** — `agentmemory-capture` (auto-save observations), `graphify` (graph sync), `caveman` (terse mode), `ponytail` (minimal code), `superpowers` (skill loader), `checkpoint`/`recall-first` (safety nets). All optional, all from existing tools.
 - **[10 slash commands](#-commands)** — `/update-pack` to keep in sync, `/recall` `/remember` for memory, plus 6 `/caveman-*` utilities.
 - **[Configuration only](#-what-do-you-get)** — 569 files / 2.6 MB. A comparable plugin pack is 507 files / 58.5 MB. ~23× smaller because the artifacts are markdown, not a built runtime.
 - **[Free by default](#-default-models-are-free)** — every agent ships with a free OpenCode model. No API key required to start.
@@ -60,7 +60,7 @@ npm i -g graphify @agentmemory/server
 agentmemory serve
 ```
 
-You now have 8 agents, 48 skills, 3 rules, and `/update-pack` to keep everything fresh. **Zero credentials** to start; the pack ships with free OpenCode models.
+You now have 8 agents, 46 skills, 3 rules, and `/update-pack` to keep everything fresh. **Zero credentials** to start; the pack ships with free OpenCode models.
 
 > [!TIP]
 > Replace `v0.4.0` in the URL with `main` for the bleeding edge, or pick a tag from the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest). Run the installer with `-WhatIf` / `--dry-run` first to preview what it will copy.
@@ -109,9 +109,9 @@ The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `po
 | Component | Count | What it does |
 |-----------|-------|--------------|
 | Agents    | 8     | 2 primary + 6 subagents. `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
-| Skills    | 48    | Curated playbooks across 5 categories. See [docs/SKILLS.md](docs/SKILLS.md) for the full table. |
+| Skills    | 46    | Curated playbooks across 5 categories. See [docs/SKILLS.md](docs/SKILLS.md) for the full table. |
 | Rules     | 3     | Always-on session guardrails, loaded via the `instructions` config. See [docs/RULES.md](docs/RULES.md). |
-| Plugins   | 6     | `agentmemory-capture`, `graphify`, `caveman`, `auto-commit`, plus npm `ponytail` + `superpowers`. All optional. |
+| Plugins   | 6     | `agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, plus npm `ponytail` + `superpowers`. All optional. |
 | Commands  | 10    | `/update-pack`, `/recall`, `/remember`, plus 6 `/caveman-*` utilities. See [docs/COMMANDS.md](docs/COMMANDS.md). |
 
 ```mermaid
@@ -175,7 +175,7 @@ The installer:
 1. **Edit `~/.config/opencode/opencode.json`** to set your model and provider keys. The example uses `{env:VAR}` placeholders.
 2. **Install required dependencies** (`graphify`, `agentmemory`). Without these the pack degrades severely. See [docs/INSTALL.md](docs/INSTALL.md#after-install-required-dependencies).
 3. **Restart OpenCode** or run `/reload`.
-4. **Verify:** ask `list your agents and confirm which skills are loaded`. You should see 8 agents, 48 skills, 3 rules.
+4. **Verify:** ask `list your agents and confirm which skills are loaded`. You should see 8 agents, 46 skills, 3 rules.
 
 > [!TIP]
 > The full per-step install guide (manual copy-paste fallback, uninstall, troubleshooting) lives in [docs/INSTALL.md](docs/INSTALL.md). The example config is explained block-by-block in [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
@@ -290,14 +290,14 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
       <br><sub><i>The Frontend Specialist</i></sub>
     </td>
     <td width="70%" valign="top">
-      UI/UX, React/Next.js, design systems, accessibility, performance. Stitch-integrated for AI mockups before code. Falls back to text-only feedback if the <code>stitch</code> MCP is disabled.
+      UI/UX, React/Next.js, design systems, accessibility, performance. Visual reviews via screenshots when available; falls back to text-only feedback otherwise.
     </td>
   </tr>
   <tr><td colspan="2"><b>Role:</b> <code>UI/UX + frontend implementation + a11y.</code></td></tr>
   <tr><td colspan="2"><b>Prompt:</b> <a href="agents/designer.md"><code>agents/designer.md</code></a></td></tr>
   <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.2-contributor-free</code></td></tr>
   <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
-  <tr><td colspan="2"><b>Requires:</b> <code>stitch</code> MCP enabled for mockup generation. Without it, <code>designer</code> becomes inert for visual work.</td></tr>
+  <tr><td colspan="2"><b>Requires:</b> multimodal model for visual work; text-only is fine for design review and a11y.</td></tr>
 </table>
 
 ### 04. `tester` — The Quality Gate
@@ -398,26 +398,23 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
   <tr><td colspan="2"><b>Use when:</b> first time in a repo, you need to find something fast, you want a lay of the land.</td></tr>
 </table>
 
-> [!NOTE]
-> **Token-economy variant:** the `agents/` folder also contains `cavecrew-investigator`, `cavecrew-builder`, `cavecrew-reviewer` — internal caveman-compressed siblings of `explorer`/`builder`/`reviewer` that return ~60% fewer tokens. The runtime pulls them in when context is tight. Decision guide: [skills/cavecrew/SKILL.md](skills/cavecrew/SKILL.md).
-
-> **How to invoke:** let `builder` pick the right subagent (most common), or be explicit: *"Ask `tester` to write tests for the auth module"* / *"Have `designer` generate a mockup for the dashboard"*. Full agent guide with all frontmatter fields, permission maps, and edit workflows: [docs/AGENTS.md](docs/AGENTS.md).
+> **How to invoke:** let `builder` pick the right subagent (most common), or be explicit: *"Ask `tester` to write tests for the auth module"* / *"Have `designer` review this UI"*. Full agent guide with all frontmatter fields, permission maps, and edit workflows: [docs/AGENTS.md](docs/AGENTS.md).
 
 ---
 
 ## 🧩 Skills
 
-48 skills grouped into 10 categories. Skills are prompt-based playbooks injected into an agent's context when a task matches. They run no process; just focused instructions.
+46 skills grouped into 9 categories. Skills are prompt-based playbooks injected into an agent's context when a task matches. They run no process; just focused instructions.
 
 | Category | Count | Examples |
 |----------|-------|----------|
 | core | 18 | `clean-code`, `cloudflare`, `code-review`, `plans`, `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `web-perf` |
 | agentmemory | 6 | `agentmemory-architecture`, `agentmemory-config`, `agentmemory-mcp-tools`, `agentmemory-rest-api` |
-| caveman + cavecrew | 7 | `caveman`, `caveman-commit`, `caveman-review`, `cavecrew` |
+| caveman | 6 | `caveman`, `caveman-commit`, `caveman-review` |
 | workflow & memory | 14 | `commit-context`, `delegation`, `handoff`, `lesson`, `recall`, `remember`, `recap` |
-| browser & stitch | 3 | `playwright-cli`, `graphify`, `stitch` |
+| browser | 2 | `playwright-cli`, `graphify` |
 
-> **Full skill table (all 48, with descriptions and per-agent bindings):** [docs/SKILLS.md](docs/SKILLS.md)
+> **Full skill table (all 46, with descriptions and per-agent bindings):** [docs/SKILLS.md](docs/SKILLS.md)
 
 ---
 
@@ -489,7 +486,7 @@ Use this as a map: start with install, then jump to agents/skills/rules based on
 | [docs/INSTALL.md](docs/INSTALL.md) | Step-by-step install, uninstall, troubleshooting |
 | [docs/WORKFLOWS.md](docs/WORKFLOWS.md) | Full example workflows (audit, debug, new feature, arch review, knowledge graph) |
 | [docs/AGENTS.md](docs/AGENTS.md) | All 8 agents: when to use each, how to edit, model table |
-| [docs/SKILLS.md](docs/SKILLS.md) | All 48 skills grouped by category, with descriptions |
+| [docs/SKILLS.md](docs/SKILLS.md) | All 46 skills grouped by category, with descriptions |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, `/update-pack` mechanics |
 
 ### ⚙️ Config & Reference

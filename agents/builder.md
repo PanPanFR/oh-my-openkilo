@@ -33,7 +33,6 @@ permission:
     "*": deny
   mcp:
     "graphify": allow
-    "context7": allow
     "agentmemory": allow
     "*": deny
   webfetch: allow
@@ -49,9 +48,9 @@ Senior software engineer. Expert in programming languages, design patterns, best
 3. Classify: simple (1-2 edits, known fix) → do directly. Complex/multi-step → delegate to `planner` (Task call) → execute returned plan. Specialist work → parallel Task calls: UI/frontend→`designer`, tests→`tester`, review→`reviewer`, docs→`documenter`, research→`researcher`.
 4. Dispatch only after steps 1-3.
 
-**UI/Frontend**: Delegate to `designer` (frontend specialist with Stitch MCP, design system, a11y). Simple UI edits → do directly.
+**UI/Frontend**: Delegate to `designer` (frontend specialist, design system, a11y). Simple UI edits → do directly.
 
-**Research**: Quick grabs → native `webfetch`/`websearch` or MCP `context7` (lib/docs/versions). Deep multi-source research with citations → spawn `researcher`.
+**Research**: Quick grabs → native `webfetch`/`websearch`. Deep multi-source research with citations → spawn `researcher`.
 
 **Discipline**: TDD. Verify each step (tests/lint/build). Plan cleanup: delete plan file after all steps verified. Commit before refactors. 2+ failed fixes → fresh prompt. Review own diff.
 

@@ -4,15 +4,13 @@ oh-my-openkilo ships **8 agents** in `agents/`. Each is a single markdown file: 
 
 The pack divides the team into **2 primary agents** (you talk to them directly) and **6 subagents** (primaries fan out work to them in parallel). Two of OpenCode's built-in agents are disabled to avoid duplication: `build` (replaced by `builder`) and `plan` (replaced by `planner`).
 
-> The `agents/` folder also contains `cavecrew-investigator`, `cavecrew-builder`, `cavecrew-reviewer` — internal caveman-compressed siblings of `explorer`/`builder`/`reviewer`. You don't invoke them directly; the runtime pulls them in when context is tight. Decision guide in the [`cavecrew` skill](../skills/cavecrew/SKILL.md).
-
 ## Quick reference
 
 | # | Agent | Mode | Default model | When to use |
 |---|-------|------|---------------|-------------|
 | 01 | `builder` | primary | `opencode/nemotron-3-ultra-free` | Default implementation. Triage, fan-out. |
 | 02 | `planner` | primary | `opencode/muse-spark-1.2-contributor-free` | Pre-impl design, architecture, plan files. |
-| 03 | `designer` | subagent | `opencode/muse-spark-1.2-contributor-free` | UI/UX, design system, a11y. Needs `stitch` MCP. |
+| 03 | `designer` | subagent | `opencode/muse-spark-1.2-contributor-free` | UI/UX, design system, a11y. Multimodal preferred for visual work. |
 | 04 | `tester` | subagent | `opencode/mimo-v2.5-free` | Test suites: write, run, isolate failures. |
 | 05 | `reviewer` | subagent | `opencode/nemotron-3-ultra-free` | Diff + security review. Read-only. |
 | 06 | `documenter` | subagent | `opencode/muse-spark-1.2-contributor-free` | README, runbook, API docs in `docs/`. |
@@ -71,7 +69,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 ### 03. `designer` — The Frontend Specialist
 
-**Role:** UI/UX, React/Next.js, design systems, accessibility, frontend performance. Stitch-integrated for AI-generated UI mockups before code. Falls back to text-only design feedback if the `stitch` MCP is disabled.
+**Role:** UI/UX, React/Next.js, design systems, accessibility, frontend performance. Visual reviews and frontend polish via screenshots when available; falls back to text-only feedback otherwise.
 
 **When to invoke:** new screen, design exploration, brand consistency check, frontend perf audit, accessibility review.
 
@@ -85,7 +83,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Tools:** `read`, `write`, `edit`, `bash`, `glob`, `grep`, `todowrite`, `mcp`, `webfetch`, `websearch`
 
-**Required MCP:** `stitch` (for AI-generated mockups). Without it, the agent still works but cannot generate visuals.
+**Required MCP:** none. Multimodal model recommended for visual work; text-only is fine for design review and a11y.
 
 **Dispatched by:** `builder` or `planner` when the task involves UI/UX work.
 
@@ -190,14 +188,6 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 **Tools:** `read`, `glob`, `grep`, `bash`, `mcp`, `webfetch`, `websearch` (no `write`/`edit`)
 
 **Dispatched by:** `builder` and `planner` for orientation, or by you.
-
----
-
-## Note on the `cavecrew-*` agents
-
-The `agents/` folder also contains `cavecrew-investigator`, `cavecrew-builder`, `cavecrew-reviewer`. These are internal token-economy siblings of `explorer`/`builder`/`reviewer`: same mental model, but caveman-compressed prompts and outputs that burn ~60% fewer main-context tokens.
-
-You don't invoke them directly. The runtime pulls them in when context is tight or the task is bounded. If you want to read about the decision logic, the [`cavecrew` skill](../skills/cavecrew/SKILL.md) is the source of truth.
 
 ---
 

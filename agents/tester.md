@@ -20,7 +20,7 @@ permission:
   todowrite: allow
   task: deny
   mcp:
-    "context7": allow
+    "agentmemory": allow
     "*": deny
   webfetch: deny
   websearch: deny

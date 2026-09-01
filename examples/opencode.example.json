@@ -26,7 +26,7 @@
     "./plugins/agentmemory-capture.ts",
     "@dietrichgebert/ponytail",
     "./plugins/caveman/plugin.js",
-    "./plugins/graphify.js",
+    "./plugins/graphify.ts",
     "superpowers@git+https://github.com/obra/superpowers.git"
   ],
   "provider": {
@@ -44,15 +44,16 @@
     "agentmemory": {
       "type": "local",
       "command": ["npx", "-y", "@agentmemory/mcp"],
-      "env": {
-        "AGENTMEMORY_SERVER_URL": "http://localhost:3111"
+      "environment": {
+        "AGENTMEMORY_SERVER_URL": "http://127.0.0.1:3111",
+        "AGENTMEMORY_TOOLS": "core"
       },
       "enabled": true
     },
     "chrome-devtools": {
       "type": "local",
       "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
-      "enabled": false
+      "enabled": true
     },
     "context7": {
       "type": "remote",

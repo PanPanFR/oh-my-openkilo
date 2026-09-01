@@ -2,7 +2,7 @@
 description: Diagnose opencode config: validate opencode.json, test every MCP server actually runs, fix broken parts, ask user for missing credentials (API keys, tokens).
 ---
 
-Run a full config health check and act as the user's config assistant. Optional scope argument (e.g. `mcp`, `stitch`, `plugins`): $ARGUMENTS
+Run a full config health check and act as the user's config assistant. Optional scope argument (e.g. `mcp`, `agentmemory`, `plugins`): $ARGUMENTS
 
 ## 1. Config file validation
 
@@ -38,12 +38,7 @@ These have multi-part installs. Check every part, not just the MCP entry.
   2. Verify `graphify-out/graph.json` is valid JSON where the skill is used (project-dependent, report only).
   - Reference: https://pypi.org/project/graphifyy/ (package name is `graphifyy`, double y)
 
-- **stitch** (remote MCP, API key auth):
-  1. Header `X-Goog-Api-Key` must be present and non-placeholder. 401/403 = invalid/expired key: ask user for a fresh one, insert, re-test.
-  2. Stitch keys expire and tools may return Google API error JSON: report the exact error body, do not guess the cause.
-  - Reference: local skills `stitch` and its subskills. Official docs live online; fetch them (webfetch/context7) if the error is unclear.
-
-- **Docs rule (applies to every component)**: before stating how something installs or why it fails, consult the official source: the npm/PyPI page for the package, the vendor docs (context7 or webfetch), or the local skill files in `~/.config/opencode/skills/`. Never guess install steps or error meanings. If a doc URL 404s or docs conflict, say so in the report instead of picking one silently.
+- **Docs rule (applies to every component)**: before stating how something installs or why it fails, consult the official source: the npm/PyPI page for the package, the vendor docs (webfetch), or the local skill files in `~/.config/opencode/skills/`. Never guess install steps or error meanings. If a doc URL 404s or docs conflict, say so in the report instead of picking one silently.
 
 ## 4. Fix what is broken
 
@@ -63,10 +58,6 @@ Consult before diagnosing. All links verified live 2026-08-30; if one 404s, say 
 |---|---|---|
 | MCP `agentmemory` | https://www.npmjs.com/package/@agentmemory/mcp | https://github.com/rohitg00/agentmemory |
 | MCP `chrome-devtools` | https://www.npmjs.com/package/chrome-devtools-mcp | https://github.com/ChromeDevTools/chrome-devtools-mcp |
-| MCP `context7` (remote) | https://context7.com | https://github.com/upstash/context7 |
-| MCP `playwright` | https://www.npmjs.com/package/@playwright/mcp | https://github.com/microsoft/playwright-mcp |
-| MCP `remotion` | https://www.npmjs.com/package/remotion-mcp | https://github.com/Vidhanvyrs/remotion-mcp |
-| MCP `stitch` (remote) | local skills `stitch`/`generate-design`; vendor docs via webfetch if unclear | closed-source Google product, no public repo |
 | graphify (Python CLI, not MCP) | https://pypi.org/project/graphifyy/ | https://github.com/Graphify-Labs/graphify |
 | opencode config schema | https://opencode.ai/config.json | https://github.com/sst/opencode |
 

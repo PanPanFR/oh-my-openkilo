@@ -194,7 +194,6 @@ playwright-cli --% goto "https://example.com/?a=1&b=2"
 | Many page reads, big snapshots, low context budget | `playwright-cli` via bash (this skill) |
 | Quick live inspect / debug / Lighthouse / perf trace | `chrome-devtools` MCP |
 | Cheap file-based screenshot/DOM peek | `chrome-devtools` MCP |
-| Stateful persistent MCP loop, self-healing tests | `playwright` MCP (`@playwright/mcp`) |
 
 ## Reference docs (load on demand)
 

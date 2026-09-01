@@ -97,7 +97,7 @@ Start OpenCode in any directory and ask:
 list your agents and confirm which skills are loaded
 ```
 
-You should see 8 agents (plus 3 internal `cavecrew-*`), 48 skills, and 3 rules. If something is missing, the most common cause is the `skills.paths` not pointing to your skills folder, but oh-my-openkilo's structure matches the default discovery path, so this should be automatic. If you have a custom `opencode.json` with non-default paths, see [CONFIGURATION.md](CONFIGURATION.md).
+You should see 8 agents, 46 skills, and 3 rules. If something is missing, the most common cause is the `skills.paths` not pointing to your skills folder, but oh-my-openkilo's structure matches the default discovery path, so this should be automatic. If you have a custom `opencode.json` with non-default paths, see [CONFIGURATION.md](CONFIGURATION.md).
 
 ## Uninstall
 

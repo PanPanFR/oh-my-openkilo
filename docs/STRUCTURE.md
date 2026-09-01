@@ -16,7 +16,7 @@ oh-my-openkilo/
 │   ├── update.ps1                     # Windows updater (terminal-side /update-pack)
 │   └── update.sh                      # Unix updater (terminal-side /update-pack)
 │
-├── agents/                            # 11 agent prompts (mirror of ~/.config/opencode/agents/)
+├── agents/                            # 8 agent prompts (mirror of ~/.config/opencode/agents/)
 │   ├── builder.md
 │   ├── planner.md
 │   ├── designer.md
@@ -24,26 +24,19 @@ oh-my-openkilo/
 │   ├── researcher.md
 │   ├── tester.md
 │   ├── reviewer.md
-│   ├── documenter.md
-│   ├── cavecrew-builder.md
-│   ├── cavecrew-investigator.md
-│   └── cavecrew-reviewer.md
+│   └── documenter.md
 │
-├── skills/                            # 48 skill packs (mirror of ~/.config/opencode/skills/)
+├── skills/                            # 46 skill packs (mirror of ~/.config/opencode/skills/)
 │   └── <skill-name>/
 │       ├── SKILL.md                   # always present
 │       ├── README.md                  # optional, user-facing
 │       ├── references/                # optional, progressive-disclosure
 │       └── scripts/, examples/, ...   # optional, skill-specific
 │
-├── rules/                             # 7 always-on rules (mirror of ~/.config/opencode/rules/)
-│   ├── agentmemory.md                 # mandatory memory search before work
+├── rules/                             # 3 always-on rules (mirror of ~/.config/opencode/rules/)
 │   ├── communication-style.md         # caveman + ponytail style
-│   ├── delegation.md                  # parallel subagent delegation
-│   ├── graphify.md                    # knowledge-graph-first navigation
 │   ├── language.md                    # English-only files
-│   ├── skill-reminder.md              # mandatory skill check before work
-│   └── workers.md                     # Cloudflare Workers doc-first (conditional)
+│   └── skill-reminder.md              # mandatory skill check before work
 │
 ├── commands/                          # 10 slash commands
 │   ├── update-pack.md                 # pull + sync from GitHub
@@ -70,8 +63,8 @@ oh-my-openkilo/
 └── docs/
     ├── INSTALL.md                     # this install guide
     ├── STRUCTURE.md                   # this file
-    ├── AGENTS.md                      # 8 agents in detail (plus 3 internal `cavecrew-*` token-economy variants)
-    ├── SKILLS.md                      # 48 skills table
+    ├── AGENTS.md                      # 8 agents in detail
+    ├── SKILLS.md                      # 46 skills table
     ├── RULES.md                       # 3 rules in detail
     ├── COMMANDS.md                    # command reference
     └── CONFIGURATION.md               # opencode.json breakdown
@@ -112,4 +105,4 @@ Once an agent/skill/rule/command is published in the repo, the corresponding fil
 2. `git commit` and `git push`.
 3. Run `/update-pack` in OpenCode to pull the new version locally.
 
-This applies to **all 8 agents (plus 3 internal `cavecrew-*`), 48 skills, 3 rules, 10 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); the install script and `/update-pack` will not touch local files.
+This applies to **all 8 agents, 46 skills, 3 rules, 10 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); the install script and `/update-pack` will not touch local files.

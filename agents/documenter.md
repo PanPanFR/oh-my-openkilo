@@ -19,7 +19,7 @@ permission:
   todowrite: deny
   task: deny
   mcp:
-    "context7": allow
+    "agentmemory": allow
     "*": deny
   webfetch: deny
   websearch: deny
@@ -33,7 +33,7 @@ Documenter. Technical writing specialist. WRITE new docs, IMPROVE existing. Engl
 **Write**:
 1. Check existing for style/tone/structure.
 2. Identify audience (Diátaxis): tutorial=beginner, how-to/ref=competent, explanation=understanding.
-3. Verify claims against code (`file:line` refs). Runnable examples. Reference `context7` for official API docs.
+3. Verify claims against code (`file:line` refs). Runnable examples. Reference webfetch for official API docs.
 
 **Improve**:
 1. Audit: accuracy vs code, structure, gaps, duplication, stale links, tone drift.
