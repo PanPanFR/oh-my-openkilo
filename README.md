@@ -5,7 +5,7 @@
 # oh-my-openkilo
 
 **Prompts in files. Models in config. Behavior in rules.**
-A curated OpenCode configuration pack: 8 agents, 46 skills, 3 rules, 6 plugins, 10 commands. ~23× lighter than comparable plugin packs. Zero credentials to start.
+A curated OpenCode prompt + plugin source pack: 8 agents, 46 skills, 3 rules, 6 plugins, 10 commands. ~18× lighter than comparable plugin packs. Zero credentials to start.
 
 <sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's agentic workflow</sub>
 
@@ -18,7 +18,7 @@ A curated OpenCode configuration pack: 8 agents, 46 skills, 3 rules, 6 plugins, 
   <a href="#-meet-the-agents"><img src="https://img.shields.io/badge/agents-8-orange" alt="8 agents"></a>
   <a href="#-skills"><img src="https://img.shields.io/badge/skills-46-green" alt="46 skills"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/credentials-zero-brightgreen" alt="Zero credentials"></a>
-  <img src="https://img.shields.io/badge/size-2.6_MB-blueviolet" alt="Pack size: 2.6 MB">
+  <img src="https://img.shields.io/badge/size-3.3_MB-blueviolet" alt="Pack size: 3.3 MB">
   <img src="https://img.shields.io/badge/no_build_step-brightgreen" alt="No build step">
 </p>
 
@@ -35,7 +35,7 @@ A curated OpenCode configuration pack: 8 agents, 46 skills, 3 rules, 6 plugins, 
 - **[3 always-on rules](#-rules)** — `skill-reminder` (skill + memory check before any task), `language` (English files), `communication-style` (Caveman terse + Ponytail minimal). Other behaviors ship as on-demand skills.
 - **[6 plugins](#-plugins)** — `agentmemory-capture` (auto-save observations), `graphify` (graph sync), `caveman` (terse mode), `ponytail` (minimal code), `superpowers` (skill loader), `checkpoint`/`recall-first` (safety nets). All optional, all from existing tools.
 - **[10 slash commands](#-commands)** — `/update-pack` to keep in sync, `/recall` `/remember` for memory, plus 6 `/caveman-*` utilities.
-- **[Configuration only](#-what-do-you-get)** — 569 files / 2.6 MB. A comparable plugin pack is 507 files / 58.5 MB. ~23× smaller because the artifacts are markdown, not a built runtime.
+- **[Prompts + rules in files, plugins in source](#-what-do-you-get)** — 509 files / 3.3 MB. A comparable plugin pack is 507 files / 58.5 MB. ~18× smaller because the artifacts are markdown + a few tiny TS plugin files, not a built runtime with `node_modules` and `dist/`.
 - **[Free by default](#-default-models-are-free)** — every agent ships with a free OpenCode model. No API key required to start.
 - **[Kilo Code flow, OpenCode runtime](#-what-is-oh-my-openkilo)** — same triage-then-delegate mental model that runs in VS Code/JetBrains via Kilo Code, here against OpenCode.
 
@@ -69,12 +69,12 @@ You now have 8 agents, 46 skills, 3 rules, and `/update-pack` to keep everything
 
 ## 📦 What is oh-my-openkilo?
 
-A **configuration pack** for [OpenCode](https://opencode.ai): plain files plus an installer that copies them into `~/.config/opencode`. No plugin runtime, no build step. Designed for Windows; macOS and Linux are supported via the Unix installer but **have not been tested by the maintainer** (see [Compatibility](#-compatibility)).
+A **prompt + plugin source pack** for [OpenCode](https://opencode.ai): plain files plus an installer that copies them into `~/.config/opencode`. The pack ships 5 small TypeScript plugins (loaded directly by OpenCode at runtime, no `dist/` or `node_modules` inside the pack) and a curated set of markdown prompts and rules. No build step on install. Designed for Windows; macOS and Linux are supported via the Unix installer but **have not been tested by the maintainer** (see [Compatibility](#-compatibility)).
 
 The pack inherits its workflow patterns from [Kilo Code](https://github.com/Kilo-Org/kilocode) (primary-agent triage, subagent delegation, skills as protocols, graphify-first navigation, caveman/ponytail style). Same mental model, different runtime.
 
 > [!NOTE]
-> The pack structure and "config-only" sharing approach are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)**. This pack adapts the philosophy (specialized agents + delegation + skills + rules + installer) into pure config, no `dist/`, no `node_modules`, no build step.
+> The pack structure and "prompt + plugin source" sharing approach are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)**. This pack adapts the philosophy (specialized agents + delegation + skills + rules + a few tiny plugins) without shipping `dist/`, `node_modules`, or a build step.
 
 The idea is simple: **prompts in files, models in config, behavior in rules.** Edit an agent by editing its file. Switch models via `opencode.json`. Add your own agents, skills, or rules without touching anything else.
 
@@ -85,22 +85,22 @@ The idea is simple: **prompts in files, models in config, behavior in rules.** E
 ```
 Size on disk (lower is better)
 ─────────────────────────────────────────────────────────────
-oh-my-openkilo         ██                                       2.6 MB
+oh-my-openkilo         ████                                     3.3 MB
 oh-my-opencode-slim    ████████████████████████████████████████  58.5 MB
 ─────────────────────────────────────────────────────────────
                        0 MB                                  60 MB
 ```
 
-| Aspect | oh-my-openkilo (config pack) | Typical plugin pack |
-|--------|------------------------------|---------------------|
-| **What you install** | Markdown files + shell scripts | TypeScript source, build output, npm deps |
+| Aspect | oh-my-openkilo (prompt + plugin source pack) | Typical plugin pack |
+|--------|----------------------------------------------|---------------------|
+| **What you install** | Markdown prompts + 5 small TS plugin files (<4 KB each) + shell scripts | TypeScript source, build output, npm deps |
 | **Build step** | None. Files are the artifact. | `bun install && bun run build` |
 | **Install time** | Seconds | Minutes (download deps, compile TS) |
 | **Update mechanism** | `git pull` + per-file copy + backup | `git pull` + `bun install` + rebuild |
-| **Runtime overhead** | Zero. OpenCode reads markdown directly. | Plugin loader runs on every startup |
-| **What can break** | A misformed frontmatter, a typo in a path | A version mismatch, a build error, a missing dep |
+| **Runtime overhead** | OpenCode reads markdown + executes 5 small TS plugin files (no `node_modules` to load) | Plugin loader runs on every startup with full dep tree |
+| **What can break** | A misformed frontmatter, a typo in a path, a stale plugin hook | A version mismatch, a build error, a missing dep |
 
-The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `ponytail`, `superpowers`) rather than building a new runtime.
+The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `ponytail`, `superpowers`) and ships 5 tiny plugins (`agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`) as plain TS source rather than building a new runtime.
 
 ---
 
@@ -517,7 +517,7 @@ Use this as a map: start with install, then jump to agents/skills/rules based on
 
 ## 🙏 Credits
 
-oh-my-openkilo is the OpenCode adaptation of **[oh-my-kilo](https://github.com/PanPanFR/oh-my-kilo)** (same maintainer). The structure and "config-only" sharing are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)** by [alvinunreal](https://github.com/alvinunreal). The agentic workflow patterns (triage, delegation, skills as protocols, graphify-first) were developed in **[Kilo Code](https://github.com/Kilo-Org/kilocode)**.
+oh-my-openkilo is the OpenCode adaptation of **[oh-my-kilo](https://github.com/PanPanFR/oh-my-kilo)** (same maintainer). The structure and "prompt + plugin source" sharing are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)** by [alvinunreal](https://github.com/alvinunreal). The agentic workflow patterns (triage, delegation, skills as protocols, graphify-first) were developed in **[Kilo Code](https://github.com/Kilo-Org/kilocode)**.
 
 For a visual control room on top of the OpenCode runtime, **[OpenChamber](https://openchamber.dev/)** (VS Code Marketplace, [github.com/openchamber/openchamber](https://github.com/openchamber/openchamber)) composes naturally with this pack.
 

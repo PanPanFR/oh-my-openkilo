@@ -4,9 +4,9 @@ Thanks for your interest in improving oh-my-openkilo. This pack is personal-cura
 
 ## Inspiration
 
-oh-my-openkilo is a port of [oh-my-kilo](https://github.com/PanPanFR/oh-my-kilo) (the same maintainer's pack for Kilo Code) onto the OpenCode runtime. The "config-only" sharing approach (plain markdown files plus an installer, no plugin runtime, no build step) is borrowed from [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim). The agentic workflow patterns (triage, delegation, skills as protocols, graphify-first) come from Kilo Code.
+oh-my-openkilo is a port of [oh-my-kilo](https://github.com/PanPanFR/oh-my-kilo) (the same maintainer's pack for Kilo Code) onto the OpenCode runtime. The "prompt + plugin source" sharing approach (plain markdown files + a few small TS plugin files, no `dist/`, no `node_modules`, no build step in the pack) is borrowed from [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim). The agentic workflow patterns (triage, delegation, skills as protocols, graphify-first) come from Kilo Code.
 
-When proposing changes, prefer the **minimal** diff that keeps these lineages coherent: don't add a runtime, don't add a build step, don't reinvent the agent hierarchy.
+When proposing changes, prefer the **minimal** diff that keeps these lineages coherent: don't add a build step, don't reinvent the agent hierarchy, keep new plugins under a few KB each.
 
 ## Scope
 
