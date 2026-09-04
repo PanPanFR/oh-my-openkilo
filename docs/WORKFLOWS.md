@@ -17,7 +17,7 @@ What does the pack actually *do*? Five real prompts with the agent, skills, rule
 
 > "Review this application's architecture and suggest improvements."
 
-- **Agent:** `planner` → delegates `explorer` (recon) + `researcher` (best practices for the stack) in parallel
+- **Agent:** `planner` → gathers evidence inline (graphify query for coupling, native webfetch/websearch for stack best practices)
 - **Skills:** `codebase-design` (deep-module vocabulary, finding deepening opportunities), `plans` (write up findings)
 - **Rules:** graphify-first (query the graph for actual coupling, not vibes), plan-file protocol, user confirmation loop before any implementation
 - **Result:** structured review with evidence from the codebase (specific files, specific call sites), explicit trade-offs, a plan you confirm before anything is refactored.

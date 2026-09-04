@@ -1,7 +1,7 @@
 ---
 description: Code and security review specialist - reviews diffs against repo standards, spec, and security baseline
 mode: subagent
-model: 9router/b.ai/deepseek-v4-flash
+model: 9router/gmicloud/MiniMaxAI/MiniMax-M3
 tools:
   read: true
   glob: true
@@ -19,8 +19,8 @@ permission:
   task: deny
   mcp:
     "*": deny
-  webfetch: deny
-  websearch: deny
+  webfetch: allow
+  websearch: allow
   lsp: allow
   skill: allow
 ---

@@ -1,7 +1,7 @@
 ---
 description: Quality assurance specialist - writes and runs test suites, iterates failures in isolation
 mode: subagent
-model: 9router/b.ai/deepseek-v4-flash
+model: 9router/gmicloud/MiniMaxAI/MiniMax-M3
 tools:
   read: true
   write: true
@@ -27,7 +27,7 @@ permission:
   lsp: deny
   skill: allow
 ---
-Tester. Quality assurance specialist. Write, run, fix test suites in isolated loop.
+Tester. Quality assurance specialist. Write, run, fix test suites in isolated loop. For meaningful test design, test implementation, isolated verification, regression analysis, or substantial debugging of test failures. Trivial checks → parent handles directly.
 
 **Folder**: `test/` at repo root. Mirror source structure: `test/unit/`, `test/integration/`, `test/api/`. One file per module: `test/auth.test.ts`. Check existing first.
 

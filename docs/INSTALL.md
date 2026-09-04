@@ -31,7 +31,7 @@ cp ~/.config/opencode/oh-my-openkilo/AGENTS.md ~/.config/opencode/AGENTS.md
 > [!IMPORTANT]
 > The commands above overwrite any existing `agents/`, `skills/`, `rules/`, `commands/`, `plugins/`, and `AGENTS.md` under your config dir. Your `opencode.json`, model, provider, API keys, and MCP server entries are NOT touched. If you have local edits you want to keep, back them up first.
 
-> Want the bleeding edge instead of `main`? Replace `main` in the URL with a tag (e.g. `v0.5.2`) or pick the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest).
+> Want the bleeding edge instead of `main`? Replace `main` in the URL with a tag (e.g. `v0.6.0`) or pick the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest).
 
 ## After install: required dependencies
 

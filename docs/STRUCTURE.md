@@ -10,15 +10,14 @@ oh-my-openkilo/
 ├── AGENTS.md                          # the AGENTS.md that ships with the pack
 ├── .gitignore                         # excludes opencode.json, node_modules, state files
 │
-├── agents/                            # 8 agent prompts (mirror of ~/.config/opencode/agents/)
+├── agents/                            # 7 agent prompts (mirror of ~/.config/opencode/agents/)
 │   ├── builder.md
 │   ├── planner.md
 │   ├── designer.md
-│   ├── explorer.md
-│   ├── researcher.md
 │   ├── tester.md
 │   ├── reviewer.md
-│   └── documenter.md
+│   ├── documenter.md
+│   └── integrator.md
 │
 ├── skills/                            # 46 skill packs (mirror of ~/.config/opencode/skills/)
 │   └── <skill-name>/
@@ -53,6 +52,7 @@ oh-my-openkilo/
 │   │   └── package.json
 │   ├── checkpoint.ts                  # shadow-checkpoint safety net
 │   ├── graphify.ts                    # codebase knowledge graph hook
+│   ├── prompt-polish.ts               # opt-in "pp " prompt rewrite via OpenAI-compatible API
 │   └── recall-first.ts                # one-shot recall gate for edits
 │
 ├── examples/
@@ -61,7 +61,7 @@ oh-my-openkilo/
 └── docs/
     ├── INSTALL.md                     # this install guide
     ├── STRUCTURE.md                   # this file
-    ├── AGENTS.md                      # 8 agents in detail
+    ├── AGENTS.md                      # 7 agents in detail
     ├── SKILLS.md                      # 46 skills table
     ├── RULES.md                       # 3 rules in detail
     ├── COMMANDS.md                    # command reference
@@ -105,4 +105,4 @@ Once an agent/skill/rule/command is published in the repo, the corresponding fil
 2. `git commit` and `git push`.
 3. Run `/update-pack` in OpenCode to pull the new version locally.
 
-This applies to **all 8 agents, 46 skills, 3 rules, 10 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); `/update-pack` will not touch local files.
+This applies to **all 7 agents, 46 skills, 3 rules, 10 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); `/update-pack` will not touch local files.

@@ -75,7 +75,7 @@ A more balanced setup for security-sensitive work:
 - An npm package name: `@dietrichgebert/ponytail`
 - A git URL: `superpowers@git+https://github.com/obra/superpowers.git`
 
-The example lists the 6 plugins the pack ships: 5 small TypeScript files we own (`agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`) plus 2 npm packages (`ponytail`, `superpowers`). Drop any you don't want to load — the pack degrades gracefully without them, the only required one being `agentmemory-capture` if you use the memory skills.
+The example lists the 6 plugins the pack ships: 6 small TypeScript files we own (`agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, `prompt-polish`) plus 2 npm packages (`ponytail`, `superpowers`). Drop any you don't want to load — the pack degrades gracefully without them, the only required one being `agentmemory-capture` if you use the memory skills. `prompt-polish` is opt-in: it only activates when the prompt starts with `pp ` and requires the `POLISH_BASE_URL`/`POLISH_API_KEY`/`POLISH_MODEL` env vars, so it is not in the example config by default.
 
 ## Provider
 

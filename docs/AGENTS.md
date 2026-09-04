@@ -1,8 +1,8 @@
 # Agents
 
-oh-my-openkilo ships **8 agents** in `agents/`. Each is a single markdown file: YAML frontmatter at the top (name, mode, model, tools) and a prompt body. Edit the file to change behavior, edit the `model:` line to swap models, edit `tools:` to change permissions. No build step.
+oh-my-openkilo ships **7 agents** in `agents/`. Each is a single markdown file: YAML frontmatter at the top (name, mode, model, tools) and a prompt body. Edit the file to change behavior, edit the `model:` line to swap models, edit `tools:` to change permissions. No build step.
 
-The pack divides the team into **2 primary agents** (you talk to them directly) and **6 subagents** (primaries fan out work to them in parallel). Two of OpenCode's built-in agents are disabled to avoid duplication: `build` (replaced by `builder`) and `plan` (replaced by `planner`).
+The pack divides the team into **2 primary agents** (you talk to them directly) and **5 subagents** (primaries fan out work to them in parallel). Two of OpenCode's built-in agents are disabled to avoid duplication: `build` (replaced by `builder`) and `plan` (replaced by `planner`).
 
 ## Quick reference
 
@@ -14,8 +14,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 | 04 | `tester` | subagent | `opencode/mimo-v2.5-free` | Test suites: write, run, isolate failures. |
 | 05 | `reviewer` | subagent | `opencode/nemotron-3-ultra-free` | Diff + security review. Read-only. |
 | 06 | `documenter` | subagent | `opencode/muse-spark-1.2-contributor-free` | README, runbook, API docs in `docs/`. |
-| 07 | `researcher` | subagent | `opencode/hy3-free` | Library docs, web research, cited findings. |
-| 08 | `explorer` | subagent | `opencode/mimo-v2.5-free` | Codebase recon: file location, mapping. |
+| 07 | `integrator` | subagent | `9router/b.ai/glm-5.3-flash` | Git/CI integration: branch sync, conflicts, merge readiness. |
 
 ---
 
@@ -39,15 +38,15 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Dispatched by:** you, directly. `builder` is the default agent when you start a session.
 
-**Dispatches to:** `planner` (complex design), `designer` (UI), `tester` (tests), `reviewer` (security/quality), `documenter` (docs), `researcher` (research), `explorer` (recon).
+**Dispatches to:** `planner` (complex design), `designer` (UI), `tester` (tests), `reviewer` (security/quality), `documenter` (docs), `integrator` (git/CI integration).
 
 ---
 
 ### 02. `planner` — The Oracle
 
-**Role:** Pre-implementation design partner. Reads the brief, spawns `explorer` + `researcher` + `reviewer` + `designer` in parallel to gather context, then writes a plan you confirm before any code is touched. The "think before you ship" agent.
+**Role:** Pre-implementation design partner. Reads the brief, gathers codebase evidence via `graphify query`/`graphify path` and native `webfetch`/`websearch`, then writes a plan you confirm before any code is touched. The "think before you ship" agent.
 
-**When to invoke:** new feature, big refactor, architecture decision, anything where you'd otherwise waste an hour coding the wrong thing. Pure research questions go to `researcher` instead.
+**When to invoke:** new feature, big refactor, architecture decision, anything where you'd otherwise waste an hour coding the wrong thing.
 
 **Prompt:** [`agents/planner.md`](../agents/planner.md)
 
@@ -61,7 +60,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Dispatched by:** you, directly, or by `builder` when it judges a task is too complex to implement without design.
 
-**Dispatches to:** `explorer`, `researcher`, `reviewer`, `designer` (in parallel).
+**Dispatches to:** `reviewer` (during analysis), with `designer`, `tester`, `documenter`, `integrator` recommended in the plan for the parent to run.
 
 ---
 
@@ -149,45 +148,23 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 ---
 
-### 07. `researcher` — The Investigator
+### 07. `integrator` — The Boundary Keeper
 
-**Role:** External research with cited findings. Uses `context7` for fresh library docs (avoids stale training data), `webfetch` and `websearch` for everything else. Returns links and quotes, not opinions.
+**Role:** Owns the boundary between completed implementation branches and main. Branch inspection, synchronization, conflict detection and assistance, CI/test status, merge readiness, integration order, branch/worktree cleanup.
 
-**When to invoke:** "what's the current way to do X in framework Y", "is this library still maintained", "what does the new API look like", "find me the official guide for Z".
+**When to invoke:** a feature branch is done and needs to land, you suspect merge conflicts, CI is red before a merge, or you want an integration order for a multi-branch plan.
 
-**Prompt:** [`agents/researcher.md`](../agents/researcher.md)
+**Prompt:** [`agents/integrator.md`](../agents/integrator.md)
 
-**Default model:** `opencode/hy3-free`
+**Default model:** `9router/b.ai/glm-5.3-flash`
 
-**Recommended models:** strong tool-use + reading. Good fits: `anthropic/claude-sonnet-4-5`, `9router/Gemini-3.6-Flash` (fast, web-friendly).
+**Recommended models:** strong git reasoning + careful shell use. Good fits: `anthropic/claude-sonnet-4-5`, `9router/Kimi-K2.6`. Accuracy matters more than speed: a wrong merge verdict is expensive.
 
-**Model guidance:** `researcher` is a tool-heavy agent (fetch, search, parse docs). Pick a model that uses tools reliably and is comfortable synthesizing citations. Multimodal is not required.
+**Model guidance:** `integrator` runs git commands and cites their output for every claim. Pick a model that follows strict reporting formats and never improvises destructive git actions.
 
-**Tools:** `read`, `glob`, `grep`, `bash`, `mcp`, `webfetch`, `websearch` (no `write`/`edit`)
+**Tools:** `read`, `edit`, `bash`, `glob`, `grep`, `mcp`, `webfetch`, `websearch`, `lsp`, `skill` (no `write`, no `task`; edits limited to conflict assistance)
 
-**Required MCP:** `context7` (for fresh library docs; without it, docs lookup falls back to model knowledge which is often outdated). Free API key at [context7.com](https://context7.com).
-
-**Dispatched by:** `planner` during plan writing, `builder` when an implementation needs API confirmation, or by you.
-
----
-
-### 08. `explorer` — The Scout
-
-**Role:** Fast, broad, shallow codebase reconnaissance. Where is X defined, what calls Y, map this directory, list the tests for module Z. Use this when you need orientation, not depth.
-
-**When to invoke:** first time in a repo, you need to find something fast, you want a lay of the land before committing to a plan.
-
-**Prompt:** [`agents/explorer.md`](../agents/explorer.md)
-
-**Default model:** `opencode/mimo-v2.5-free`
-
-**Recommended models:** fast, low-cost. Good fits: `9router/Grok-4.6`, `opencode/gpt-oss`, any `-free` model. No need for a frontier model.
-
-**Model guidance:** `explorer` does broad, shallow lookups. Speed and efficiency matter more than reasoning depth. The free models are intentionally fine for this.
-
-**Tools:** `read`, `glob`, `grep`, `bash`, `mcp`, `webfetch`, `websearch` (no `write`/`edit`)
-
-**Dispatched by:** `builder` and `planner` for orientation, or by you.
+**Dispatched by:** `builder` after implementation is verified, or per the plan's integration order.
 
 ---
 
@@ -217,10 +194,10 @@ Subagents are also dispatched by `builder` and `planner` via the `task` tool, in
 
 Free models are good for everyday work but slower and less capable than paid ones. If you have provider credentials configured in `opencode.json`, a useful split is:
 
-- **Cheap/free for:** `tester`, `explorer`, `documenter`
+- **Cheap/free for:** `tester`, `documenter`
 - **Pay for:** `builder`, `planner`, `designer`, `reviewer` (especially on auth/data paths)
-- **Always strong:** `researcher` (depends on tool use, not raw reasoning)
+- **Accuracy over speed:** `integrator` (git verdicts must be cited and correct)
 
 ## Adding a new agent
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md#adding-a-new-agent--skill--rule). New agents are typically subagents specialized for one job that the existing 8 don't cover well.
+See [CONTRIBUTING.md](../CONTRIBUTING.md#adding-a-new-agent--skill--rule). New agents are typically subagents specialized for one job that the existing 7 don't cover well.

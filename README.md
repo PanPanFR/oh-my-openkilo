@@ -1,11 +1,11 @@
 <div align="center">
 
-<img src="docs/images/hero.png" alt="oh-my-openkilo: 8 specialized agents, neon-on-black" width="100%">
+<img src="docs/images/hero.png" alt="oh-my-openkilo: 7 specialized agents, neon-on-black" width="100%">
 
 # oh-my-openkilo
 
 **Prompts in files. Models in config. Behavior in rules.**
-A curated OpenCode prompt + plugin source pack: 8 agents, 46 skills, 3 rules, 6 plugins, 10 commands. ~18× lighter than comparable plugin packs. Zero credentials to start.
+A curated OpenCode prompt + plugin source pack: 7 agents, 46 skills, 3 rules, 6 plugins, 10 commands. ~18× lighter than comparable plugin packs. Zero credentials to start.
 
 <sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's agentic workflow</sub>
 
@@ -15,7 +15,7 @@ A curated OpenCode prompt + plugin source pack: 8 agents, 46 skills, 3 rules, 6 
   <a href="https://github.com/PanPanFR/oh-my-openkilo/stargazers"><img src="https://img.shields.io/github/stars/PanPanFR/oh-my-openkilo?style=flat" alt="Stars"></a>
   <a href="https://github.com/PanPanFR/oh-my-openkilo/commits/main"><img src="https://img.shields.io/github/last-commit/PanPanFR/oh-my-openkilo?style=flat" alt="Last commit"></a>
   <br>
-  <a href="#-meet-the-agents"><img src="https://img.shields.io/badge/agents-8-orange" alt="8 agents"></a>
+  <a href="#-meet-the-agents"><img src="https://img.shields.io/badge/agents-7-orange" alt="7 agents"></a>
   <a href="#-skills"><img src="https://img.shields.io/badge/skills-46-green" alt="46 skills"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/credentials-zero-brightgreen" alt="Zero credentials"></a>
   <img src="https://img.shields.io/badge/size-3.3_MB-blueviolet" alt="Pack size: 3.3 MB">
@@ -30,7 +30,7 @@ A curated OpenCode prompt + plugin source pack: 8 agents, 46 skills, 3 rules, 6 
 
 ## ✨ Highlights
 
-- **[8 specialized agents](#-meet-the-agents)** — 2 primary (`builder`, `planner`) + 6 subagents with a delegation hierarchy already designed. `builder` routes to `planner` for complex work and fans out to specialists in parallel.
+- **[7 specialized agents](#-meet-the-agents)** — 2 primary (`builder`, `planner`) + 5 subagents with a delegation hierarchy already designed. `builder` routes to `planner` for complex work and fans out to specialists in parallel.
 - **[46 curated skills](#-skills)** — battle-tested playbooks (TDD, systematic debugging, code review, plans, web-perf) across 10 categories. Skills are prompt-based: no runtime, no build step.
 - **[3 always-on rules](#-rules)** — `skill-reminder` (skill + memory check before any task), `language` (English files), `communication-style` (Caveman terse + Ponytail minimal). Other behaviors ship as on-demand skills.
 - **[6 plugins](#-plugins)** — `agentmemory-capture` (auto-save observations), `graphify` (graph sync), `caveman` (terse mode), `ponytail` (minimal code), `superpowers` (skill loader), `checkpoint`/`recall-first` (safety nets). All optional, all from existing tools.
@@ -95,10 +95,10 @@ agentmemory serve
 >
 > Run `/configcheck` to verify everything is wired up; it'll flag the `npx` form for you.
 
-You now have 8 agents, 46 skills, 3 rules, and `/update-pack` to keep everything fresh. **Zero credentials** to start; the pack ships with free OpenCode models.
+You now have 7 agents, 46 skills, 3 rules, and `/update-pack` to keep everything fresh. **Zero credentials** to start; the pack ships with free OpenCode models.
 
 > [!TIP]
-> The `git clone` command above uses the latest `main` branch. To pin a specific release, replace `main` with a tag (e.g. `v0.5.2`) or check the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest).
+> The `git clone` command above uses the latest `main` branch. To pin a specific release, replace `main` with a tag (e.g. `v0.6.0`) or check the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest).
 
 ---
 
@@ -143,7 +143,7 @@ The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `po
 
 | Component | Count | What it does |
 |-----------|-------|--------------|
-| Agents    | 8     | 2 primary + 6 subagents. `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
+| Agents    | 7     | 2 primary + 5 subagents. `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
 | Skills    | 46    | Curated playbooks across 5 categories. See [docs/SKILLS.md](docs/SKILLS.md) for the full table. |
 | Rules     | 3     | Always-on session guardrails, loaded via the `instructions` config. See [docs/RULES.md](docs/RULES.md). |
 | Plugins   | 6     | `agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, plus npm `ponytail` + `superpowers`. All optional. |
@@ -157,25 +157,21 @@ graph TD
     T[tester<br/>TDD · test suites]
     R[reviewer<br/>diff + security]
     DOC[documenter<br/>docs in docs/]
-    RS[researcher<br/>external research]
-    EX[explorer<br/>codebase recon]
+    I[integrator<br/>git/CI integration]
 
     B -->|UI work| DS
     B -->|tests| T
     B -->|pre-merge| R
     B -->|docs gap| DOC
-    B -->|lib / API| RS
-    B -->|find X in repo| EX
+    B -->|branch landing| I
     B -->|architecture| P
-    P -->|recon| EX
-    P -->|best practices| RS
     P -->|spec review| R
     P -->|mockups| DS
 
     classDef primary fill:#1f6feb,color:#fff,stroke:#1f6feb;
     classDef sub fill:#2da44e,color:#fff,stroke:#2da44e;
     class B,P primary;
-    class DS,T,R,DOC,RS,EX sub;
+    class DS,T,R,DOC,I sub;
 ```
 
 ---
@@ -264,10 +260,10 @@ Two real prompts, showing what the pack actually does. Three more (new feature, 
 
 > "Audit this repository's architecture and identify the biggest problems."
 
-- **Agent:** `builder` → delegates `explorer` (recon) + `reviewer` (quality/security) in parallel
+- **Agent:** `builder` → gathers recon via `graphify query` + delegates `reviewer` (quality/security)
 - **Skills:** `clean-code`, `code-review`, `ponytail-review`
 - **Rules:** `skill-reminder` (graphify-first navigation, parallel delegation via on-demand skills)
-- **Result:** structured report backed by subagent findings, not one agent's opinion.
+- **Result:** structured report backed by graph evidence and review findings, not one agent's opinion.
 
 ### 2. Debugging a flaky test
 
@@ -282,9 +278,9 @@ Two real prompts, showing what the pack actually does. Three more (new feature, 
 
 ## 🏛️ Meet the agents
 
-8 agents. **Each one is a markdown file in `agents/`** that enriches a native agent with specialist protocols. Edit the prompt by editing the file. Model, variant, and permissions are configured via `opencode.json`.
+7 agents. **Each one is a markdown file in `agents/`** that enriches a native agent with specialist protocols. Edit the prompt by editing the file. Model, variant, and permissions are configured via `opencode.json`.
 
-The pack divides the team into **2 primary agents** (you talk to them directly) and **6 subagents** (the primaries fan out work to them in parallel). Two of OpenCode's built-in agents (`build` and `plan`) are disabled to avoid duplication; this pack's `builder` and `planner` replace them.
+The pack divides the team into **2 primary agents** (you talk to them directly) and **5 subagents** (the primaries fan out work to them in parallel). Two of OpenCode's built-in agents (`build` and `plan`) are disabled to avoid duplication; this pack's `builder` and `planner` replace them.
 
 ### 01. `builder` — The Architect
 
@@ -296,7 +292,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
       <br><sub><i>The Architect</i></sub>
     </td>
     <td width="70%" valign="top">
-      Default implementation agent. Triages: 1-line fix → do directly; feature with architecture → hand design to <code>planner</code>, supervise execution. Once a plan exists, fans out to <code>designer</code>, <code>tester</code>, <code>reviewer</code>, <code>documenter</code>.
+      Default implementation agent. Triages: 1-line fix → do directly; feature with architecture → hand design to <code>planner</code>, supervise execution. Once a plan exists, fans out to <code>designer</code>, <code>tester</code>, <code>reviewer</code>, <code>documenter</code>, <code>integrator</code>.
     </td>
   </tr>
   <tr><td colspan="2"><b>Role:</b> <code>Default entry. Triage + delegate + supervise.</code></td></tr>
@@ -316,7 +312,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
       <br><sub><i>The Oracle</i></sub>
     </td>
     <td width="70%" valign="top">
-      Pre-implementation design partner. Spawns <code>explorer</code>, <code>researcher</code>, <code>reviewer</code>, <code>designer</code> in parallel to gather context, then writes a plan you confirm before any code is touched.
+      Pre-implementation design partner. Gathers evidence via <code>graphify</code> and native web fetch, writes the plan to <code>plan/</code> (PRE-PLAN + modular implementation plans), then hands you a plan you confirm before any code is touched.
     </td>
   </tr>
   <tr><td colspan="2"><b>Role:</b> <code>Pre-impl design, architecture planning, plan files.</code></td></tr>
@@ -405,43 +401,23 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
   <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
 </table>
 
-### 07. `researcher` — The Investigator
+### 07. `integrator` — The Boundary Keeper
 
 <table>
   <tr>
     <td width="30%" align="center" valign="top">
-      <h3>🔍</h3>
-      <br><sub><b><code>researcher</code></b></sub>
-      <br><sub><i>The Investigator</i></sub>
+      <h3>🔀</h3>
+      <br><sub><b><code>integrator</code></b></sub>
+      <br><sub><i>The Boundary Keeper</i></sub>
     </td>
     <td width="70%" valign="top">
-      External research with cited findings. Uses <code>context7</code> for fresh library docs (avoids stale training data), and <code>webfetch</code>/<code>websearch</code> for everything else. Returns links and quotes, not opinions.
+      Git/CI integration specialist. Owns the boundary between implementation branches and main: branch sync, conflict detection, merge readiness, integration order, cleanup. Every claim cites git output.
     </td>
   </tr>
-  <tr><td colspan="2"><b>Role:</b> <code>Library / API research, current best practices.</code></td></tr>
-  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/researcher.md"><code>agents/researcher.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/hy3-free</code></td></tr>
+  <tr><td colspan="2"><b>Role:</b> <code>Branch inspection, conflict assistance, merge readiness.</code></td></tr>
+  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/integrator.md"><code>agents/integrator.md</code></a></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>9router/b.ai/glm-5.3-flash</code></td></tr>
   <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
-</table>
-
-### 08. `explorer` — The Scout
-
-<table>
-  <tr>
-    <td width="30%" align="center" valign="top">
-      <h3>🗺️</h3>
-      <br><sub><b><code>explorer</code></b></sub>
-      <br><sub><i>The Scout</i></sub>
-    </td>
-    <td width="70%" valign="top">
-      Fast, broad, shallow codebase reconnaissance. Where is X defined, what calls Y, map this directory. Use when you need orientation, not depth.
-    </td>
-  </tr>
-  <tr><td colspan="2"><b>Role:</b> <code>Codebase mapping, pattern finding, file location.</code></td></tr>
-  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/explorer.md"><code>agents/explorer.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/mimo-v2.5-free</code></td></tr>
-  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
-  <tr><td colspan="2"><b>Use when:</b> first time in a repo, you need to find something fast, you want a lay of the land.</td></tr>
 </table>
 
 > **How to invoke:** let `builder` pick the right subagent (most common), or be explicit: *"Ask `tester` to write tests for the auth module"* / *"Have `designer` review this UI"*. Full agent guide with all frontmatter fields, permission maps, and edit workflows: [docs/AGENTS.md](docs/AGENTS.md).
@@ -536,7 +512,7 @@ Use this as a map: start with install, then jump to agents/skills/rules based on
 |-----|----------------|
 | [docs/INSTALL.md](docs/INSTALL.md) | Step-by-step install, uninstall, troubleshooting |
 | [docs/WORKFLOWS.md](docs/WORKFLOWS.md) | Full example workflows (audit, debug, new feature, arch review, knowledge graph) |
-| [docs/AGENTS.md](docs/AGENTS.md) | All 8 agents: when to use each, how to edit, model table |
+| [docs/AGENTS.md](docs/AGENTS.md) | All 7 agents: when to use each, how to edit, model table |
 | [docs/SKILLS.md](docs/SKILLS.md) | All 46 skills grouped by category, with descriptions |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, `/update-pack` mechanics |
 

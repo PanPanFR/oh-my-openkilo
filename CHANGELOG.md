@@ -1,3 +1,15 @@
+# v0.6.0 (2026-09-04)
+
+## Features
+- **Agents**: synced from the maintainer's live config. Agent roster consolidated 8 → 7: dropped `explorer` and `researcher` (codebase recon now happens inline via `graphify query`/`graphify path`, external research via native `webfetch`/`websearch` with decomposed sub-questions), added `integrator` (Git/CI integration: branch sync, conflict detection, merge readiness, cleanup).
+- **Planner**: new OpenKilo workflow. Plans are written to `plan/` in the project root with a mandatory PRE-PLAN per objective, workstream analysis (one plan = one independently executable workstream), and modular self-contained plans. Dispatches to `designer`/`tester`/`reviewer`/`documenter`/`integrator`.
+- **Plugin**: added `plugins/prompt-polish.ts`. Opt-in prompt rewrite (prefix a prompt with `pp ` to get it rewritten shorter, clearer, and in English). Configured via `POLISH_BASE_URL`/`POLISH_API_KEY`/`POLISH_MODEL` env vars; fail-open, prompt passes through untouched on any error. Not in the example config (off by default).
+- **Designer/tester scoping**: both agents now decline trivial work (small CSS/text edits, trivial checks) and report back so the parent handles it directly.
+- **Delegation skill**: roster table and dispatch rules updated for the 7-agent team; recon routed to graphify, research routed to native fetch.
+
+## Docs
+- **README, docs/AGENTS.md, docs/STRUCTURE.md, docs/WORKFLOWS.md, docs/CONFIGURATION.md, CONTRIBUTING.md**: counts updated to 7 agents, `researcher`/`explorer` sections and mermaid nodes replaced with `integrator`, planner description rewritten for the PRE-PLAN workflow, `prompt-polish.ts` added to the structure and plugin listing.
+
 # v0.5.2 (2026-09-01)
 
 ## Features
