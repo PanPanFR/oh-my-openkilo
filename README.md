@@ -33,7 +33,7 @@ A curated OpenCode prompt + plugin source pack: 7 agents, 46 skills, 3 rules, 6 
 - **[7 specialized agents](#-meet-the-agents)** — 2 primary (`builder`, `planner`) + 5 subagents with a delegation hierarchy already designed. `builder` routes to `planner` for complex work and fans out to specialists in parallel.
 - **[46 curated skills](#-skills)** — battle-tested playbooks (TDD, systematic debugging, code review, plans, web-perf) across 10 categories. Skills are prompt-based: no runtime, no build step.
 - **[3 always-on rules](#-rules)** — `skill-reminder` (skill + memory check before any task), `language` (English files), `communication-style` (Caveman terse + Ponytail minimal). Other behaviors ship as on-demand skills.
-- **[6 plugins](#-plugins)** — `agentmemory-capture` (auto-save observations), `graphify` (graph sync), `caveman` (terse mode), `ponytail` (minimal code), `superpowers` (skill loader), `checkpoint`/`recall-first` (safety nets). All optional, all from existing tools.
+- **[6 plugins](#-plugins)** — `agentmemory-capture` (auto-save observations), `graphify` (graph sync), `caveman` (terse mode), `ponytail` (minimal code), `superpowers` (skill loader), `checkpoint`/`recall-first` (safety nets), `prompt-polish` (opt-in `pp` prompt rewrite). All optional, all from existing tools.
 - **[10 slash commands](#-commands)** — `/update-pack` to keep in sync, `/recall` `/remember` for memory, plus 6 `/caveman-*` utilities.
 - **[Prompts + rules in files, plugins in source](#-what-do-you-get)** — 509 files / 3.3 MB. A comparable plugin pack is 507 files / 58.5 MB. ~18× smaller because the artifacts are markdown + a few tiny TS plugin files, not a built runtime with `node_modules` and `dist/`.
 - **[Free by default](#-default-models-are-free)** — every agent ships with a free OpenCode model. No API key required to start.
@@ -128,14 +128,14 @@ oh-my-opencode-slim    ███████████████████
 
 | Aspect | oh-my-openkilo (prompt + plugin source pack) | Typical plugin pack |
 |--------|----------------------------------------------|---------------------|
-| **What you install** | Markdown prompts + 5 small TS plugin files (<4 KB each) + shell scripts | TypeScript source, build output, npm deps |
+| **What you install** | Markdown prompts + 6 small TS plugin files (<4 KB each) + shell scripts | TypeScript source, build output, npm deps |
 | **Build step** | None. Files are the artifact. | `bun install && bun run build` |
 | **Install time** | Seconds | Minutes (download deps, compile TS) |
 | **Update mechanism** | `git pull` + per-file copy + backup | `git pull` + `bun install` + rebuild |
-| **Runtime overhead** | OpenCode reads markdown + executes 5 small TS plugin files (no `node_modules` to load) | Plugin loader runs on every startup with full dep tree |
+| **Runtime overhead** | OpenCode reads markdown + executes 6 small TS plugin files (no `node_modules` to load) | Plugin loader runs on every startup with full dep tree |
 | **What can break** | A misformed frontmatter, a typo in a path, a stale plugin hook | A version mismatch, a build error, a missing dep |
 
-The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `ponytail`, `superpowers`) and ships 5 tiny plugins (`agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`) as plain TS source rather than building a new runtime.
+The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `ponytail`, `superpowers`) and ships 6 tiny plugins (`agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, `prompt-polish`) as plain TS source rather than building a new runtime. All of them are optional: remove any line from the `plugin` array in `opencode.json` and the pack keeps working. `prompt-polish` in particular is completely passive unless you opt in by starting a prompt with `pp ` (and it is not even wired up unless you set the `POLISH_*` env vars), so if you never use it, it never runs.
 
 ---
 
@@ -146,7 +146,7 @@ The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `po
 | Agents    | 7     | 2 primary + 5 subagents. `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
 | Skills    | 46    | Curated playbooks across 5 categories. See [docs/SKILLS.md](docs/SKILLS.md) for the full table. |
 | Rules     | 3     | Always-on session guardrails, loaded via the `instructions` config. See [docs/RULES.md](docs/RULES.md). |
-| Plugins   | 6     | `agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, plus npm `ponytail` + `superpowers`. All optional. |
+| Plugins   | 6     | `agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, `prompt-polish` (opt-in), plus npm `ponytail` + `superpowers`. All optional. |
 | Commands  | 10    | `/update-pack`, `/recall`, `/remember`, plus 6 `/caveman-*` utilities. See [docs/COMMANDS.md](docs/COMMANDS.md). |
 
 ```mermaid

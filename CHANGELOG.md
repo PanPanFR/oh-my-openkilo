@@ -9,6 +9,8 @@
 
 ## Docs
 - **README, docs/AGENTS.md, docs/STRUCTURE.md, docs/WORKFLOWS.md, docs/CONFIGURATION.md, CONTRIBUTING.md**: counts updated to 7 agents, `researcher`/`explorer` sections and mermaid nodes replaced with `integrator`, planner description rewritten for the PRE-PLAN workflow, `prompt-polish.ts` added to the structure and plugin listing.
+- **README**: states plainly that every plugin is optional and `prompt-polish` is fully passive unless you opt in with a `pp ` prefix and set the `POLISH_*` env vars. Not using it costs nothing.
+- **CONTRIBUTING.md**: versioning policy rewritten as standard semantic versioning (major / minor / patch), with clear examples for each bump level and what counts as a breaking change.
 
 # v0.5.2 (2026-09-01)
 

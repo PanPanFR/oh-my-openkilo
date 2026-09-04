@@ -33,12 +33,13 @@ Before opening a PR, ask: **does this add a new agent/skill/rule, or change an e
 
 ## Versioning policy
 
-This pack is pre-1.0, so the second number carries the most weight for users. Bump in the smallest scope that matches the change.
+Standard semantic versioning: `MAJOR.MINOR.PATCH`.
 
-- **Patch bump** (`0.5.0` → `0.5.1`): doc fixes, wording polish, counts correction, behavior tweaks that don't remove anything, new optional examples. Backwards-compatible for users coming from the previous tag.
-- **Minor bump** (`0.5.0` → `0.6.0`): dropping a plugin / skill / agent, renaming a command, changing how `opencode.json` is read, changing the install path of a required dep, or any change where a user might need to re-do a step from the install guide.
+- **Patch bump** (`0.5.0` → `0.5.1`): backwards-compatible fixes only. Doc fixes, wording polish, counts correction, behavior tweaks that don't remove anything, new optional examples. A user coming from the previous tag can update without doing anything.
+- **Minor bump** (`0.5.0` → `0.6.0`): backwards-compatible features and changes. Adding a plugin / skill / agent, dropping one (the pack's convention: removals are treated as feature changes while pre-1.0), renaming a command, changing how `opencode.json` is read, changing the install path of a required dep, or any change where a user might need to re-do a step from the install guide.
+- **Major bump** (`0.x.y` → `1.0.0`): breaking changes. Removing or renaming something users depend on without a fallback, requiring a fresh install, or changing the pack's structure in a way that invalidates existing setup steps. Once the pack hits 1.0, removals and renames move here.
 
-When in doubt, minor. The cost of being slightly too cautious is a user who reads one extra CHANGELOG entry; the cost of being too loose is a broken install.
+When in doubt between patch and minor, minor. The cost of being slightly too cautious is a user who reads one extra CHANGELOG entry; the cost of being too loose is a broken install.
 
 ## What we won't accept
 
