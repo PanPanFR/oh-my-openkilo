@@ -34,7 +34,7 @@ A curated OpenCode prompt + plugin source pack: 7 agents, 46 skills, 3 rules, 6 
 - **[46 curated skills](#-skills)** — battle-tested playbooks (TDD, systematic debugging, code review, plans, web-perf) across 10 categories. Skills are prompt-based: no runtime, no build step.
 - **[3 always-on rules](#-rules)** — `skill-reminder` (skill + memory check before any task), `language` (English files), `communication-style` (Caveman terse + Ponytail minimal). Other behaviors ship as on-demand skills.
 - **[6 plugins](#-plugins)** — `agentmemory-capture` (auto-save observations), `graphify` (graph sync), `caveman` (terse mode), `ponytail` (minimal code), `superpowers` (skill loader), `checkpoint`/`recall-first` (safety nets), `prompt-polish` (opt-in `pp` prompt rewrite). All optional, all from existing tools.
-- **[10 slash commands](#-commands)** — `/update-pack` to keep in sync, `/recall` `/remember` for memory, plus 6 `/caveman-*` utilities.
+- **10 slash commands, all optional helpers** - `/update-pack` keeps the pack fresh, `/recall` and `/remember` talk to memory, the `/caveman-*` set handles terse mode. Nothing here is load-bearing; skip them and the pack still works. See [docs/COMMANDS.md](docs/COMMANDS.md).
 - **[Prompts + rules in files, plugins in source](#-what-do-you-get)** — 509 files / 3.3 MB. A comparable plugin pack is 507 files / 58.5 MB. ~18× smaller because the artifacts are markdown + a few tiny TS plugin files, not a built runtime with `node_modules` and `dist/`.
 - **[Free by default](#-default-models-are-free)** — every agent ships with a free OpenCode model. No API key required to start.
 - **[Kilo Code flow, OpenCode runtime](#-what-is-oh-my-openkilo)** — same triage-then-delegate mental model that runs in VS Code/JetBrains via Kilo Code, here against OpenCode.
@@ -43,62 +43,23 @@ A curated OpenCode prompt + plugin source pack: 7 agents, 46 skills, 3 rules, 6 
 
 ## 🪄 TL;DR
 
-```powershell
-# Windows (PowerShell)
-git clone https://github.com/PanPanFR/oh-my-openkilo.git "$env:USERPROFILE\.config\opencode\oh-my-openkilo"
-Copy-Item -Recurse -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\agents"   "$env:USERPROFILE\.config\opencode\agents"
-Copy-Item -Recurse -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\skills"   "$env:USERPROFILE\.config\opencode\skills"
-Copy-Item -Recurse -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\rules"    "$env:USERPROFILE\.config\opencode\rules"
-Copy-Item -Recurse -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\commands" "$env:USERPROFILE\.config\opencode\commands"
-Copy-Item -Recurse -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\plugins"  "$env:USERPROFILE\.config\opencode\plugins"
-Copy-Item -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\AGENTS.md"        "$env:USERPROFILE\.config\opencode\AGENTS.md"
-if (-not (Test-Path "$env:USERPROFILE\.config\opencode\opencode.json")) {
-    Copy-Item -Force "$env:USERPROFILE\.config\opencode\oh-my-openkilo\examples\opencode.example.json" "$env:USERPROFILE\.config\opencode\opencode.json"
-}
-```
+No terminal knowledge needed. Open OpenCode, paste this prompt, and let the AI do everything:
 
-```bash
-# macOS / Linux
-git clone https://github.com/PanPanFR/oh-my-openkilo.git ~/.config/opencode/oh-my-openkilo
-for d in agents skills rules commands plugins; do
-    cp -r ~/.config/opencode/oh-my-openkilo/$d ~/.config/opencode/$d
-done
-cp ~/.config/opencode/oh-my-openkilo/AGENTS.md ~/.config/opencode/AGENTS.md
-[ -f ~/.config/opencode/opencode.json ] || cp ~/.config/opencode/oh-my-openkilo/examples/opencode.example.json ~/.config/opencode/opencode.json
-```
+> **"Install the oh-my-openkilo config pack for OpenCode: clone https://github.com/PanPanFR/oh-my-openkilo into `~/.config/opencode/oh-my-openkilo`, copy its `agents/`, `skills/`, `rules/`, `commands/`, `plugins/` folders and `AGENTS.md` into `~/.config/opencode/`, then run `/configcheck` and tell me what's missing."**
 
-Then install the two required tools, edit `opencode.json` to fill in your API key, and open OpenCode. Inside OpenCode, run `/configcheck` to verify and `/update-pack` to keep things fresh.
+The agent runs the git clone and file copies for you (it shows each command before running it, so nothing happens in the dark). Your existing `opencode.json`, API keys, and MCP servers are never touched.
 
-> [!IMPORTANT]
-> **Install these BEFORE the first session**, or memory skills and the `/graphify` workflow will be unavailable. Both are required for the pack to deliver its full value.
+Then, still by prompting:
 
-```bash
-# 1. Knowledge graph (Python — `graphifyy` is the PyPI package, double y)
-uv tool install graphifyy            # or: pipx install graphifyy, or: pip install graphifyy
-# 1b. Knowledge graph (Node — older path, if you already have it)
-npm i -g graphify
+> **"Install the required dependencies for this pack: the graphify knowledge graph CLI and the agentmemory server + MCP, then start the memory server."**
 
-# 2. Persistent cross-session memory
-npm i -g @agentmemory/server
-npm i -g @agentmemory/mcp            # the MCP server OpenCode talks to
-
-# 3. Start the memory REST server (do this once, leave it running)
-agentmemory serve
-```
+Restart OpenCode (or `/reload`) and you have 7 agents, 46 skills, 3 rules, and 6 plugins. **Zero credentials** to start; the pack ships with free OpenCode models.
 
 > [!TIP]
-> **Pin the agentmemory MCP locally, not via `npx`.** Replace the `mcp.agentmemory.command` in `opencode.json` with the absolute path to the locally installed entry point. npx re-downloads on every cold start and silently breaks when npm registry is unreachable.
->
-> - Windows: `["node", "C:\\Users\\<You>\\AppData\\Roaming\\npm\\node_modules\\@agentmemory\\mcp\\bin.mjs"]`
-> - macOS: `["node", "/usr/local/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
-> - Linux: `["node", "/usr/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
->
-> Run `/configcheck` to verify everything is wired up; it'll flag the `npx` form for you.
-
-You now have 7 agents, 46 skills, 3 rules, and `/update-pack` to keep everything fresh. **Zero credentials** to start; the pack ships with free OpenCode models.
+> Prefer doing it yourself in a terminal? The exact clone + copy commands for Windows, macOS, and Linux are in [Installation](#️-installation). Future updates are just `/update-pack` inside OpenCode, or the same install prompt again.
 
 > [!TIP]
-> The `git clone` command above uses the latest `main` branch. To pin a specific release, replace `main` with a tag (e.g. `v0.6.0`) or check the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest).
+> `main` is the recommended install source. To pin a specific release instead, tell the agent to replace `main` with a tag (e.g. `v0.6.0`) or check the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest).
 
 ---
 
@@ -147,7 +108,7 @@ The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `po
 | Skills    | 46    | Curated playbooks across 5 categories. See [docs/SKILLS.md](docs/SKILLS.md) for the full table. |
 | Rules     | 3     | Always-on session guardrails, loaded via the `instructions` config. See [docs/RULES.md](docs/RULES.md). |
 | Plugins   | 6     | `agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, `prompt-polish` (opt-in), plus npm `ponytail` + `superpowers`. All optional. |
-| Commands  | 10    | `/update-pack`, `/recall`, `/remember`, plus 6 `/caveman-*` utilities. See [docs/COMMANDS.md](docs/COMMANDS.md). |
+| Commands  | 10    | Optional helpers: `/update-pack`, `/recall`, `/remember`, plus 6 `/caveman-*` utilities. See [docs/COMMANDS.md](docs/COMMANDS.md). |
 
 ```mermaid
 graph TD
@@ -178,9 +139,16 @@ graph TD
 
 ## ⚙️ Installation
 
-There is no installer. The pack is a Git repo, and the in-session `/update-pack` command is self-contained (it clones from the canonical URL, runs `git` directly, and syncs the files itself). One source of truth, no scripts that can go stale.
+No installer, no build step. The pack is a Git repo and OpenCode's agent can do the whole thing from a prompt.
 
-### Windows (PowerShell)
+### Recommended: let the agent install it
+
+Open OpenCode and paste the [TL;DR prompt](#-tldr). The agent clones the repo, copies the files, installs the dependencies, and verifies the result. Watch each command as it runs; the agent explains every step.
+
+### Manual: run the commands yourself
+
+<details>
+<summary>Windows (PowerShell)</summary>
 
 ```powershell
 git clone https://github.com/PanPanFR/oh-my-openkilo.git "$env:USERPROFILE\.config\opencode\oh-my-openkilo"
@@ -195,7 +163,10 @@ if (-not (Test-Path "$env:USERPROFILE\.config\opencode\opencode.json")) {
 }
 ```
 
-### macOS / Linux
+</details>
+
+<details>
+<summary>macOS / Linux</summary>
 
 ```bash
 git clone https://github.com/PanPanFR/oh-my-openkilo.git ~/.config/opencode/oh-my-openkilo
@@ -206,15 +177,37 @@ cp ~/.config/opencode/oh-my-openkilo/AGENTS.md ~/.config/opencode/AGENTS.md
 [ -f ~/.config/opencode/opencode.json ] || cp ~/.config/opencode/oh-my-openkilo/examples/opencode.example.json ~/.config/opencode/opencode.json
 ```
 
+</details>
+
+<details>
+<summary>Required dependencies (both install paths need these)</summary>
+
+```bash
+# 1. Knowledge graph (Python, `graphifyy` is the PyPI package, double y)
+uv tool install graphifyy            # or: pipx install graphifyy, or: pip install graphifyy
+# 1b. Knowledge graph (Node, older path, if you already have it)
+npm i -g graphify
+
+# 2. Persistent cross-session memory
+npm i -g @agentmemory/server
+npm i -g @agentmemory/mcp            # the MCP server OpenCode talks to
+
+# 3. Start the memory REST server (do this once, leave it running)
+agentmemory serve
+```
+
+**Pin the agentmemory MCP locally, not via `npx`.** Replace the `mcp.agentmemory.command` in `opencode.json` with the absolute path to the locally installed entry point. npx re-downloads on every cold start and silently breaks when npm registry is unreachable. `/configcheck` flags the `npx` form for you; the full recipe is in [docs/INSTALL.md](docs/INSTALL.md).
+
+</details>
+
 ### After install
 
 1. **Edit `~/.config/opencode/opencode.json`** to set your model and provider keys. The example uses `{env:VAR}` placeholders.
-2. **Install required dependencies** (`graphify`, `agentmemory`). Without these the pack degrades severely. See [docs/INSTALL.md](docs/INSTALL.md#after-install-required-dependencies).
-3. **Restart OpenCode** or run `/reload`.
-4. **Verify:** inside OpenCode, run `/configcheck`. It will tell you what is wired up and what is missing.
+2. **Restart OpenCode** or run `/reload`.
+3. **Verify:** run `/configcheck`. It will tell you what is wired up and what is missing.
 
 > [!IMPORTANT]
-> The install commands above overwrite any existing `agents/`, `skills/`, `rules/`, `commands/`, `plugins/`, and `AGENTS.md` under your config dir. Your `opencode.json`, model, provider, API keys, and MCP server entries are NOT touched. If you have local edits you want to keep, read [docs/INSTALL.md](docs/INSTALL.md) for the manual recipe.
+> The install overwrites any existing `agents/`, `skills/`, `rules/`, `commands/`, `plugins/`, and `AGENTS.md` under your config dir. Your `opencode.json`, model, provider, API keys, and MCP server entries are NOT touched. If you have local edits you want to keep, read [docs/INSTALL.md](docs/INSTALL.md) for the manual recipe.
 
 > [!TIP]
 > After install, future updates are just `/update-pack` inside OpenCode. No terminal, no script, no version URL to remember. The command reads its own source-of-truth URL.
@@ -244,19 +237,26 @@ npm i -g @agentmemory/server   # persistent cross-session memory (the memory ski
 | MCP | What it unlocks | Required? |
 |-----|-----------------|-----------|
 | `agentmemory` | Persistent cross-session memory | yes (required dependency) |
-| `context7` | Up-to-date library docs | optional |
 | `chrome-devtools` | Live browser debug | optional |
-| `playwright` | E2E test gen, browser automation | optional |
 
-Enable by setting `"enabled": true` in `opencode.json` and filling any required env var. Per-MCP install commands and credential handling are in [docs/CONFIGURATION.md](docs/CONFIGURATION.md#mcp-servers).
+Browser automation itself runs through the bundled `playwright-cli` skill, which drives Playwright from the shell: no Playwright MCP needed. Anything beyond the table (a Playwright MCP for E2E generation, `context7` for live library docs, your own servers) is opt-in: copy the shape in [docs/CONFIGURATION.md](docs/CONFIGURATION.md#mcp-servers), set `enabled: true`, fill the env vars.
 
 ---
 
 ## 🎯 Example workflows
 
-Two real prompts, showing what the pack actually does. Three more (new feature, architecture review, knowledge graph exploration) live in [docs/WORKFLOWS.md](docs/WORKFLOWS.md).
+Three real prompts, showing what the pack actually does. Three more (new feature, architecture review, knowledge graph exploration) live in [docs/WORKFLOWS.md](docs/WORKFLOWS.md).
 
-### 1. Repository audit
+### 1. Plan before building (planner)
+
+> "Plan a rate-limiter for our API. Don't write code yet, show me the options first."
+
+- **Agent:** `planner` (invoke it directly, or `builder` hands off when the task has architecture)
+- **Skills:** `plans` (PRE-PLAN + modular implementation plans), `codebase-design` (deep-module vocabulary)
+- **Rules:** graphify-first (evidence from the graph, not vibes), plan written to `plan/` for you to confirm
+- **Result:** a PRE-PLAN with shared context, then per-workstream implementation plans with delegation strategy and quality gates. Nothing is implemented until you approve.
+
+### 2. Repository audit
 
 > "Audit this repository's architecture and identify the biggest problems."
 
@@ -265,7 +265,7 @@ Two real prompts, showing what the pack actually does. Three more (new feature, 
 - **Rules:** `skill-reminder` (graphify-first navigation, parallel delegation via on-demand skills)
 - **Result:** structured report backed by graph evidence and review findings, not one agent's opinion.
 
-### 2. Debugging a flaky test
+### 3. Debugging a flaky test
 
 > "This test passes locally but fails in CI. Find the root cause and fix it."
 
@@ -416,7 +416,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
   </tr>
   <tr><td colspan="2"><b>Role:</b> <code>Branch inspection, conflict assistance, merge readiness.</code></td></tr>
   <tr><td colspan="2"><b>Prompt:</b> <a href="agents/integrator.md"><code>agents/integrator.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>9router/b.ai/glm-5.3-flash</code></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
   <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
 </table>
 
@@ -458,32 +458,31 @@ Memory, graphify navigation, delegation, and Cloudflare doc-first behavior ship 
 
 ## ⌨️ Commands
 
-| Command | Description |
-|---------|-------------|
-| `/update-pack` | Pull latest from GitHub and sync into your config with per-file backup |
-| `/update-pack --check` | Check whether upstream has new commits, do not sync |
-| `/update-pack --diff` | Show what would change, do not sync |
-| `/recall <query>` | Search agentmemory for past observations |
-| `/remember <note>` | Save a decision or insight to agentmemory |
-| `/caveman`, `/caveman-help`, `/caveman-commit`, `/caveman-compress`, `/caveman-review`, `/caveman-stats` | Terse-mode and PR utilities |
+Ten slash commands ship with the pack. They are conveniences, not requirements: every one wraps something you could do by prompting the agent directly.
 
-> **Full command reference:** [docs/COMMANDS.md](docs/COMMANDS.md)
+- **`/update-pack`** (with `--check` / `--diff` variants) pulls the latest pack from GitHub and syncs it into your config with per-file backup. This is the one you will actually use, and rarely: once after install, then occasionally.
+- **`/recall <query>`** and **`/remember <note>`** search and save the agentmemory store.
+- **`/caveman`, `/caveman-help`, `/caveman-commit`, `/caveman-compress`, `/caveman-review`, `/caveman-stats`** terse-mode and PR utilities.
+
+If you forget these exist, just describe what you want in plain language ("update this pack", "what did we do about X") and the agent handles it. Full reference: [docs/COMMANDS.md](docs/COMMANDS.md)
 
 ---
 
 ## 🔄 Updating the pack
 
-Two ways, same end result.
+**Recommended: prompt the agent.** In an OpenCode session, either run `/update-pack` or just say:
 
-**From inside an OpenCode session:**
+> **"Update the oh-my-openkilo pack: pull the latest from https://github.com/PanPanFR/oh-my-openkilo and sync it into my config, backing up any file you overwrite."**
+
+**Slash command alternative:**
 
 ```
 /update-pack
 ```
 
-The command is self-contained. It hardcodes the canonical URL, clones or pulls on its own, and syncs each file with backup. Nothing on your disk can go stale.
+It is self-contained: it hardcodes the canonical URL, clones or pulls on its own, and syncs each file with backup. Nothing on your disk can go stale.
 
-**From the terminal (no OpenCode session required):**
+**Terminal alternative (no OpenCode session required):**
 
 ```bash
 # Pull latest, then copy each file the same way the in-session command does

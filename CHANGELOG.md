@@ -6,11 +6,13 @@
 - **Plugin**: added `plugins/prompt-polish.ts`. Opt-in prompt rewrite (prefix a prompt with `pp ` to get it rewritten shorter, clearer, and in English). Configured via `POLISH_BASE_URL`/`POLISH_API_KEY`/`POLISH_MODEL` env vars; fail-open, prompt passes through untouched on any error. Not in the example config (off by default).
 - **Designer/tester scoping**: both agents now decline trivial work (small CSS/text edits, trivial checks) and report back so the parent handles it directly.
 - **Delegation skill**: roster table and dispatch rules updated for the 7-agent team; recon routed to graphify, research routed to native fetch.
+- **Integrator model**: default model switched to the new OpenCode built-in free model `opencode/muse-spark-1.3-contributor-free` instead of the maintainer's router endpoint.
 
 ## Docs
 - **README, docs/AGENTS.md, docs/STRUCTURE.md, docs/WORKFLOWS.md, docs/CONFIGURATION.md, CONTRIBUTING.md**: counts updated to 7 agents, `researcher`/`explorer` sections and mermaid nodes replaced with `integrator`, planner description rewritten for the PRE-PLAN workflow, `prompt-polish.ts` added to the structure and plugin listing.
 - **README**: states plainly that every plugin is optional and `prompt-polish` is fully passive unless you opt in with a `pp ` prefix and set the `POLISH_*` env vars. Not using it costs nothing.
 - **CONTRIBUTING.md**: versioning policy rewritten as standard semantic versioning (major / minor / patch), with clear examples for each bump level and what counts as a breaking change.
+- **README**: install and update flows now lead with "let the agent do it" prompts (clone, copy, install dependencies, verify) so beginners never need terminal knowledge; the terminal commands moved into collapsible details blocks as the manual alternative. Commands section is prose instead of a table (slash commands are optional helpers, mostly provided by bundled tools/plugins). New planner example workflow ("Plan before building"). MCP table trimmed to `agentmemory` + `chrome-devtools`: browser automation runs through the bundled `playwright-cli` skill, so no Playwright MCP is listed; other MCPs (Playwright, context7, your own) are described as opt-in.
 
 # v0.5.2 (2026-09-01)
 

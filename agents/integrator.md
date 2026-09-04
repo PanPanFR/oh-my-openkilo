@@ -1,7 +1,7 @@
 ---
 description: Git/CI integration specialist - branch inspection, sync, conflict detection and assistance, merge readiness, cleanup
 mode: subagent
-model: 9router/b.ai/glm-5.3-flash
+model: opencode/muse-spark-1.3-contributor-free
 permission:
   read: allow
   write: deny

@@ -1,6 +1,10 @@
 # Installation
 
-There is no installer. The pack is a Git repo and the in-session `/update-pack` command is self-contained (it hardcodes the canonical URL, runs `git` directly, and syncs the files itself). One source of truth, no scripts that can go stale.
+There is no installer. The pack is a Git repo and OpenCode's agent can install it from a prompt. The in-session `/update-pack` command is self-contained (it hardcodes the canonical URL, runs `git` directly, and syncs the files itself). One source of truth, no scripts that can go stale.
+
+## Recommended: install by prompt
+
+Open OpenCode and paste the [TL;DR prompt from the README](../README.md#-tldr). The agent clones the repo, copies the files, installs the dependencies, and verifies the result, showing each command before it runs. The terminal recipe below is the same thing, step by step, for people who prefer running it themselves.
 
 ## Quick start (Windows, PowerShell)
 

@@ -14,7 +14,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 | 04 | `tester` | subagent | `opencode/mimo-v2.5-free` | Test suites: write, run, isolate failures. |
 | 05 | `reviewer` | subagent | `opencode/nemotron-3-ultra-free` | Diff + security review. Read-only. |
 | 06 | `documenter` | subagent | `opencode/muse-spark-1.2-contributor-free` | README, runbook, API docs in `docs/`. |
-| 07 | `integrator` | subagent | `9router/b.ai/glm-5.3-flash` | Git/CI integration: branch sync, conflicts, merge readiness. |
+| 07 | `integrator` | subagent | `opencode/muse-spark-1.3-contributor-free` | Git/CI integration: branch sync, conflicts, merge readiness. |
 
 ---
 
@@ -156,7 +156,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Prompt:** [`agents/integrator.md`](../agents/integrator.md)
 
-**Default model:** `9router/b.ai/glm-5.3-flash`
+**Default model:** `opencode/muse-spark-1.3-contributor-free`
 
 **Recommended models:** strong git reasoning + careful shell use. Good fits: `anthropic/claude-sonnet-4-5`, `9router/Kimi-K2.6`. Accuracy matters more than speed: a wrong merge verdict is expensive.
 

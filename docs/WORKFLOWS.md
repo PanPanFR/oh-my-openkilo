@@ -1,6 +1,6 @@
 # Example workflows
 
-What does the pack actually *do*? Five real prompts with the agent, skills, rules, and result for each. Two of these (audit, debug) are in the [README](../README.md#-example-workflows) for the headline scan; the other three live here.
+What does the pack actually *do*? Five real prompts with the agent, skills, rules, and result for each. Three of these (plan before building, audit, debug) are in the [README](../README.md#-example-workflows) for the headline scan; the other two live here.
 
 ## 3. New feature implementation
 
