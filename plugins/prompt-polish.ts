@@ -2,6 +2,7 @@
 // Opt-in: prefix prompt with "pp ". Without marker, prompt passes through untouched.
 // Config via env: POLISH_BASE_URL, POLISH_API_KEY, POLISH_MODEL (OpenAI-compatible).
 // Fail-open: any error sends the original prompt.
+// Shows a TUI toast so the user can tell the hook actually ran.
 
 const MARKER = /^pp[\s:]/
 
@@ -38,10 +39,13 @@ async function polish(prompt: string): Promise<string | null> {
 }
 
 export const PromptPolish = async ({ client }: { client: any }) => {
+  const toast = (message: string, variant: "info" | "warning" = "info") =>
+    client?.tui?.showToast({ body: { message, variant } })?.catch(() => {})
+
   const warn = (message: string) =>
     client
       ?.app?.log({ body: { service: "prompt-polish", level: "warn", message } })
-      .catch(() => console.warn("[prompt-polish]", message))
+      ?.catch(() => console.warn("[prompt-polish]", message))
 
   return {
     "chat.message": async (_input: unknown, output: { parts: any[] }) => {
@@ -52,8 +56,10 @@ export const PromptPolish = async ({ client }: { client: any }) => {
       try {
         const improved = await polish(raw)
         part.text = improved
+        await toast("prompt has been enhanced")
       } catch (e: any) {
         await warn(`fail-open, original prompt sent: ${e?.message ?? e}`)
+        await toast(`prompt-polish failed, original sent: ${e?.message ?? e}`, "warning")
       }
     },
   }
