@@ -1,6 +1,6 @@
 ---
 name: delegation
-description: Decide when and how to delegate work to subagents (planner, builder, designer, documenter, tester, reviewer, integrator). Use when dispatching subagents, running parallel tasks, choosing a subagent for a job, or deciding inline-vs-delegate. Front-load triggers: delegate, subagent, parallel, task dispatch, spawn agent, launch agents.
+description: Decide when and how to delegate work to subagents (planner, builder, designer, documenter, tester, reviewer). Use when dispatching subagents, running parallel tasks, choosing a subagent for a job, or deciding inline-vs-delegate. Front-load triggers: delegate, subagent, parallel, task dispatch, spawn agent, launch agents.
 ---
 
 # Delegation Policy
@@ -11,13 +11,12 @@ You have specialized subagents. Delegate when it improves quality or speed.
 
 | Subagent | Use for |
 |----------|---------|
-| `planner` | Pre-implementation design, brainstorming, architecture planning, implementation plans. Primary mode, can also be delegated to by other primary agents (builder) for complex multi-step work |
+| `planner` | Pre-implementation design, brainstorming, architecture planning, implementation plans. Primary mode; user switches to planner directly for upfront design. Never Task-spawned |
 | `builder` | Primary agent. Implementation, refactors, multi-step execution of well-defined tasks |
 | `designer` | UI/frontend builds - components, design system, accessibility |
 | `documenter` | Technical writing - create and improve documentation in `docs/` |
 | `tester` | Test suites - write, run, iterate failures in isolation, report compact results |
 | `reviewer` | Code + security review of diffs vs repo standards and spec (read-only) |
-| `integrator` | Git/CI integration - branch sync, conflict detection, merge readiness, cleanup |
 
 ## When to Delegate (DO)
 

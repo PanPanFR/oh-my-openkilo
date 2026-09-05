@@ -1,8 +1,8 @@
 # Agents
 
-oh-my-openkilo ships **7 agents** in `agents/`. Each is a single markdown file: YAML frontmatter at the top (name, mode, model, tools) and a prompt body. Edit the file to change behavior, edit the `model:` line to swap models, edit `tools:` to change permissions. No build step.
+oh-my-openkilo ships **6 agents** in `agents/`. Each is a single markdown file: YAML frontmatter at the top (name, mode, model, tools) and a prompt body. Edit the file to change behavior, edit the `model:` line to swap models, edit `tools:` to change permissions. No build step.
 
-The pack divides the team into **2 primary agents** (you talk to them directly) and **5 subagents** (primaries fan out work to them in parallel). Two of OpenCode's built-in agents are disabled to avoid duplication: `build` (replaced by `builder`) and `plan` (replaced by `planner`).
+The pack divides the team into **2 primary agents** (you talk to them directly) and **4 subagents** (primaries fan out work to them in parallel). Two of OpenCode's built-in agents are disabled to avoid duplication: `build` (replaced by `builder`) and `plan` (replaced by `planner`).
 
 ## Quick reference
 
@@ -14,7 +14,6 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 | 04 | `tester` | subagent | `opencode/mimo-v2.5-free` | Test suites: write, run, isolate failures. |
 | 05 | `reviewer` | subagent | `opencode/nemotron-3-ultra-free` | Diff + security review. Read-only. |
 | 06 | `documenter` | subagent | `opencode/muse-spark-1.2-contributor-free` | README, runbook, API docs in `docs/`. |
-| 07 | `integrator` | subagent | `opencode/muse-spark-1.3-contributor-free` | Git/CI integration: branch sync, conflicts, merge readiness. |
 
 ---
 
@@ -38,7 +37,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Dispatched by:** you, directly. `builder` is the default agent when you start a session.
 
-**Dispatches to:** `planner` (complex design), `designer` (UI), `tester` (tests), `reviewer` (security/quality), `documenter` (docs), `integrator` (git/CI integration).
+**Dispatches to:** `planner` (complex design), `designer` (UI), `tester` (tests), `reviewer` (security/quality), `documenter` (docs). Integration/merge/conflicts: handled inline (git).
 
 ---
 
@@ -60,7 +59,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Dispatched by:** you, directly, or by `builder` when it judges a task is too complex to implement without design.
 
-**Dispatches to:** `reviewer` (during analysis), with `designer`, `tester`, `documenter`, `integrator` recommended in the plan for the parent to run.
+**Dispatches to:** `reviewer` (during analysis), with `designer`, `tester`, `documenter` recommended in the plan for the parent to run.
 
 ---
 
@@ -148,26 +147,6 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 ---
 
-### 07. `integrator` — The Boundary Keeper
-
-**Role:** Owns the boundary between completed implementation branches and main. Branch inspection, synchronization, conflict detection and assistance, CI/test status, merge readiness, integration order, branch/worktree cleanup.
-
-**When to invoke:** a feature branch is done and needs to land, you suspect merge conflicts, CI is red before a merge, or you want an integration order for a multi-branch plan.
-
-**Prompt:** [`agents/integrator.md`](../agents/integrator.md)
-
-**Default model:** `opencode/muse-spark-1.3-contributor-free`
-
-**Recommended models:** strong git reasoning + careful shell use. Good fits: `anthropic/claude-sonnet-4-5`, `9router/Kimi-K2.6`. Accuracy matters more than speed: a wrong merge verdict is expensive.
-
-**Model guidance:** `integrator` runs git commands and cites their output for every claim. Pick a model that follows strict reporting formats and never improvises destructive git actions.
-
-**Tools:** `read`, `edit`, `bash`, `glob`, `grep`, `mcp`, `webfetch`, `websearch`, `lsp`, `skill` (no `write`, no `task`; edits limited to conflict assistance)
-
-**Dispatched by:** `builder` after implementation is verified, or per the plan's integration order.
-
----
-
 ## Built-in OpenCode agents (disabled)
 
 The pack disables two of OpenCode's built-in agents to avoid duplication:
@@ -196,8 +175,7 @@ Free models are good for everyday work but slower and less capable than paid one
 
 - **Cheap/free for:** `tester`, `documenter`
 - **Pay for:** `builder`, `planner`, `designer`, `reviewer` (especially on auth/data paths)
-- **Accuracy over speed:** `integrator` (git verdicts must be cited and correct)
 
 ## Adding a new agent
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md#adding-a-new-agent--skill--rule). New agents are typically subagents specialized for one job that the existing 7 don't cover well.
+See [CONTRIBUTING.md](../CONTRIBUTING.md#adding-a-new-agent--skill--rule). New agents are typically subagents specialized for one job that the existing 6 don't cover well.

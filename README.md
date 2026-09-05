@@ -5,7 +5,7 @@
 # oh-my-openkilo
 
 **Prompts in files. Models in config. Behavior in rules.**
-A curated OpenCode prompt + plugin source pack: 7 agents, 46 skills, 3 rules, 6 plugins, 10 commands. ~18× lighter than comparable plugin packs. Zero credentials to start.
+A curated OpenCode prompt + plugin source pack: 6 agents, 46 skills, 3 rules, 6 plugins, 10 commands. ~18× lighter than comparable plugin packs. Zero credentials to start.
 
 <sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's agentic workflow</sub>
 
@@ -15,7 +15,7 @@ A curated OpenCode prompt + plugin source pack: 7 agents, 46 skills, 3 rules, 6 
   <a href="https://github.com/PanPanFR/oh-my-openkilo/stargazers"><img src="https://img.shields.io/github/stars/PanPanFR/oh-my-openkilo?style=flat" alt="Stars"></a>
   <a href="https://github.com/PanPanFR/oh-my-openkilo/commits/main"><img src="https://img.shields.io/github/last-commit/PanPanFR/oh-my-openkilo?style=flat" alt="Last commit"></a>
   <br>
-  <a href="#-meet-the-agents"><img src="https://img.shields.io/badge/agents-7-orange" alt="7 agents"></a>
+  <a href="#-meet-the-agents"><img src="https://img.shields.io/badge/agents-6-orange" alt="6 agents"></a>
   <a href="#-skills"><img src="https://img.shields.io/badge/skills-46-green" alt="46 skills"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/credentials-zero-brightgreen" alt="Zero credentials"></a>
   <img src="https://img.shields.io/badge/size-3.3_MB-blueviolet" alt="Pack size: 3.3 MB">
@@ -53,7 +53,7 @@ Then, still by prompting:
 
 > **"Install the required dependencies for this pack: the graphify knowledge graph CLI and the agentmemory server + MCP, then start the memory server."**
 
-Restart OpenCode (or `/reload`) and you have 7 agents, 46 skills, 3 rules, and 6 plugins. **Zero credentials** to start; the pack ships with free OpenCode models.
+Restart OpenCode (or `/reload`) and you have 6 agents, 46 skills, 3 rules, and 6 plugins. **Zero credentials** to start; the pack ships with free OpenCode models.
 
 > [!TIP]
 > Prefer doing it yourself in a terminal? The exact clone + copy commands for Windows, macOS, and Linux are in [Installation](#️-installation). Future updates are just `/update-pack` inside OpenCode, or the same install prompt again.
@@ -104,7 +104,7 @@ The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `po
 
 | Component | Count | What it does |
 |-----------|-------|--------------|
-| Agents    | 7     | 2 primary + 5 subagents. `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
+| Agents    | 6     | 2 primary + 4 subagents. `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
 | Skills    | 46    | Curated playbooks across 5 categories. See [docs/SKILLS.md](docs/SKILLS.md) for the full table. |
 | Rules     | 3     | Always-on session guardrails, loaded via the `instructions` config. See [docs/RULES.md](docs/RULES.md). |
 | Plugins   | 6     | `agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, `prompt-polish` (opt-in), plus npm `ponytail` + `superpowers`. All optional. |
@@ -118,13 +118,11 @@ graph TD
     T[tester<br/>TDD · test suites]
     R[reviewer<br/>diff + security]
     DOC[documenter<br/>docs in docs/]
-    I[integrator<br/>git/CI integration]
 
     B -->|UI work| DS
     B -->|tests| T
     B -->|pre-merge| R
     B -->|docs gap| DOC
-    B -->|branch landing| I
     B -->|architecture| P
     P -->|spec review| R
     P -->|mockups| DS
@@ -252,9 +250,9 @@ Three real prompts, showing what the pack actually does. Three more (new feature
 > "Plan a rate-limiter for our API. Don't write code yet, show me the options first."
 
 - **Agent:** `planner` (invoke it directly, or `builder` hands off when the task has architecture)
-- **Skills:** `plans` (PRE-PLAN + modular implementation plans), `codebase-design` (deep-module vocabulary)
+- **Skills:** `plans` (self-contained implementation plans), `codebase-design` (deep-module vocabulary)
 - **Rules:** graphify-first (evidence from the graph, not vibes), plan written to `plan/` for you to confirm
-- **Result:** a PRE-PLAN with shared context, then per-workstream implementation plans with delegation strategy and quality gates. Nothing is implemented until you approve.
+- **Result:** one self-contained plan per workstream, each with delegation strategy and quality gates. Nothing is implemented until you approve.
 
 ### 2. Repository audit
 
@@ -278,7 +276,7 @@ Three real prompts, showing what the pack actually does. Three more (new feature
 
 ## 🏛️ Meet the agents
 
-7 agents. **Each one is a markdown file in `agents/`** that enriches a native agent with specialist protocols. Edit the prompt by editing the file. Model, variant, and permissions are configured via `opencode.json`.
+6 agents. **Each one is a markdown file in `agents/`** that enriches a native agent with specialist protocols. Edit the prompt by editing the file. Model, variant, and permissions are configured via `opencode.json`.
 
 The pack divides the team into **2 primary agents** (you talk to them directly) and **5 subagents** (the primaries fan out work to them in parallel). Two of OpenCode's built-in agents (`build` and `plan`) are disabled to avoid duplication; this pack's `builder` and `planner` replace them.
 
@@ -292,7 +290,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
       <br><sub><i>The Architect</i></sub>
     </td>
     <td width="70%" valign="top">
-      Default implementation agent. Triages: 1-line fix → do directly; feature with architecture → hand design to <code>planner</code>, supervise execution. Once a plan exists, fans out to <code>designer</code>, <code>tester</code>, <code>reviewer</code>, <code>documenter</code>, <code>integrator</code>.
+      Default implementation agent. Triages: 1-line fix → do directly; feature with architecture → hand design to <code>planner</code>, supervise execution. Once a plan exists, fans out to <code>designer</code>, <code>tester</code>, <code>reviewer</code>, <code>documenter</code>. Lands branches itself.
     </td>
   </tr>
   <tr><td colspan="2"><b>Role:</b> <code>Default entry. Triage + delegate + supervise.</code></td></tr>
@@ -312,7 +310,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
       <br><sub><i>The Oracle</i></sub>
     </td>
     <td width="70%" valign="top">
-      Pre-implementation design partner. Gathers evidence via <code>graphify</code> and native web fetch, writes the plan to <code>plan/</code> (PRE-PLAN + modular implementation plans), then hands you a plan you confirm before any code is touched.
+      Pre-implementation design partner. Gathers evidence via <code>graphify</code> and native web fetch, writes self-contained plans to <code>plan/</code>, then hands you a plan you confirm before any code is touched.
     </td>
   </tr>
   <tr><td colspan="2"><b>Role:</b> <code>Pre-impl design, architecture planning, plan files.</code></td></tr>
@@ -398,25 +396,6 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
   <tr><td colspan="2"><b>Role:</b> <code>READMEs, runbooks, API docs, onboarding.</code></td></tr>
   <tr><td colspan="2"><b>Prompt:</b> <a href="agents/documenter.md"><code>agents/documenter.md</code></a></td></tr>
   <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.2-contributor-free</code></td></tr>
-  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
-</table>
-
-### 07. `integrator` — The Boundary Keeper
-
-<table>
-  <tr>
-    <td width="30%" align="center" valign="top">
-      <h3>🔀</h3>
-      <br><sub><b><code>integrator</code></b></sub>
-      <br><sub><i>The Boundary Keeper</i></sub>
-    </td>
-    <td width="70%" valign="top">
-      Git/CI integration specialist. Owns the boundary between implementation branches and main: branch sync, conflict detection, merge readiness, integration order, cleanup. Every claim cites git output.
-    </td>
-  </tr>
-  <tr><td colspan="2"><b>Role:</b> <code>Branch inspection, conflict assistance, merge readiness.</code></td></tr>
-  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/integrator.md"><code>agents/integrator.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
   <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
 </table>
 
@@ -511,7 +490,7 @@ Use this as a map: start with install, then jump to agents/skills/rules based on
 |-----|----------------|
 | [docs/INSTALL.md](docs/INSTALL.md) | Step-by-step install, uninstall, troubleshooting |
 | [docs/WORKFLOWS.md](docs/WORKFLOWS.md) | Full example workflows (audit, debug, new feature, arch review, knowledge graph) |
-| [docs/AGENTS.md](docs/AGENTS.md) | All 7 agents: when to use each, how to edit, model table |
+| [docs/AGENTS.md](docs/AGENTS.md) | All 6 agents: when to use each, how to edit, model table |
 | [docs/SKILLS.md](docs/SKILLS.md) | All 46 skills grouped by category, with descriptions |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, `/update-pack` mechanics |
 

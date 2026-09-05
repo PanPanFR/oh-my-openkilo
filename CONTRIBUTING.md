@@ -16,7 +16,7 @@ Before opening a PR, ask: **does this add a new agent/skill/rule, or change an e
 
 ### Adding a new agent / skill / rule
 
-1. Open an issue first with: use case, why none of the existing 7 agents / 46 skills / 3 rules cover it, and one or two example prompts.
+1. Open an issue first with: use case, why none of the existing 6 agents / 46 skills / 3 rules cover it, and one or two example prompts.
 2. After issue approval, open a PR following the structure of the closest existing file.
 3. Skill files must be progressive-disclosure where applicable: `SKILL.md` short, references in `references/`.
 
