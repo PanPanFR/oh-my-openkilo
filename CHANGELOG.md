@@ -1,3 +1,12 @@
+# v0.7.0 (2026-09-05)
+
+## Features
+- **Agents**: roster consolidated 7 → 6. Dropped `integrator` (Git/CI integration); `builder` now lands branches itself. Team is back to 2 primary (builder, planner) + 4 subagents (designer, tester, reviewer, documenter).
+- **Planner**: workflow simplified. Dropped the mandatory PRE-PLAN step; planner writes one self-contained plan per workstream directly to `plan/`. Planner is never Task-spawned: the user switches to the `planner` agent directly for upfront design, then hands the plan to `builder`.
+
+## Docs
+- **README, docs/AGENTS.md, docs/STRUCTURE.md, CONTRIBUTING.md, skills/delegation/SKILL.md**: counts updated to 6 agents, `integrator` table row / mermaid node / example text removed, planner description rewritten for the simplified workflow, builder card now states it lands branches itself.
+
 # v0.6.0 (2026-09-04)
 
 ## Features
