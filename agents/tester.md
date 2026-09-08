@@ -1,7 +1,7 @@
 ---
 description: Quality assurance specialist - writes and runs test suites, iterates failures in isolation
 mode: subagent
-model: 9router/gmicloud/MiniMaxAI/MiniMax-M3
+model: 9router/b.ai/qwen3.8-flash
 tools:
   read: true
   write: true

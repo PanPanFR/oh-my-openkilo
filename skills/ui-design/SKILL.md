@@ -27,6 +27,8 @@ Comprehensive design guidance for web and mobile applications.
 
 **Decision criteria**: If the task will change how a feature **looks, feels, moves, or is interacted with**, this skill should be used.
 
+**Boundary**: This skill covers build-time design decisions. For reviewing/polishing/iterating EXISTING UI (critique, audit, polish, distill, harden, animate), load `impeccable` instead. Most specific wins.
+
 ## Reference Map - load BEFORE designing that area
 
 | Task | Read FIRST |

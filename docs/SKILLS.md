@@ -1,10 +1,10 @@
 # Skills
 
-46 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
+47 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
 
 The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-gain`, `ponytail-help`) and the superpowers plugin skills (`brainstorming`, `using-superpowers`, `writing-plans`, `executing-plans`, `dispatching-parallel-agents`, `subagent-driven-development`, `receiving-code-review`, `requesting-code-review`, `finishing-a-development-branch`, `using-git-worktrees`, `orchestration`) install via the plugin system. They are not counted below; the count is `ls skills/`, the filesystem is the source of truth.
 
-## Core (18)
+## Core (19)
 
 | Skill                              | When it loads                                                              |
 |------------------------------------|----------------------------------------------------------------------------|
@@ -15,6 +15,7 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `documentation`                    | Writing README, CHANGELOG, runbooks, API docs                              |
 | `git-commit`                       | User says commit, /commit, generate commit                                 |
 | `grilling`                         | Stress-test a plan, decision, or idea                                      |
+| `impeccable`                       | Review/polish/audit/iterate existing UI (build-time design stays `ui-design`) |
 | `plans`                            | Multi-step task before touching code, or executing a written plan          |
 | `ponytail-review`                  | Review a diff or repo for over-engineering                                 |
 | `pwa-development`                  | PWA, service workers, caching strategies, offline                          |
@@ -83,7 +84,7 @@ Skills with `references/` use progressive disclosure: `SKILL.md` is short and de
 
 ## Total count
 
-The numbers above add to **46** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
+The numbers above add to **47** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
 
 ## Editing a skill
 

@@ -1,7 +1,7 @@
 ---
 description: Code and security review specialist - reviews diffs against repo standards, spec, and security baseline
 mode: subagent
-model: 9router/gmicloud/MiniMaxAI/MiniMax-M3
+model: 9router/b.ai/qwen3.8-flash
 tools:
   read: true
   glob: true

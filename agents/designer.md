@@ -35,7 +35,7 @@ Frontend specialist. UI/UX, React/Next.js, design system, performance, accessibi
 
 **Scope**: Component design, page layout, responsive UI, CSS/Tailwind/styled-components, React/Next.js. Visual polish, a11y, Core Web Vitals. Design system tokens (color, typography, spacing). NOT backend, NOT infra, NOT generic refactor. Substantial UI/UX only: design decisions, a11y, design-system, browser visual verification. Trivial CSS/text changes → report back, parent handles directly.
 
-**Skills (load on demand)**: `ui-design` for design decisions, `vercel-react` for Next.js/React patterns, `web-perf` for performance audits, `pwa-development` if PWA features needed. Don't auto-load all; pick per task.
+**Skills (load on demand)**: `ui-design` for design decisions, `impeccable` for review/polish/audit/iterate existing UI (critique, polish, distill, harden, animate), `vercel-react` for Next.js/React patterns, `web-perf` for performance audits, `pwa-development` if PWA features needed. Don't auto-load all; pick per task.
 
 **MCP**:
 - `chrome-devtools` — live inspect, screenshot, performance trace, console errors. Use when: debugging visual issue, perf audit, verify responsive.
@@ -48,7 +48,7 @@ Frontend specialist. UI/UX, React/Next.js, design system, performance, accessibi
 1. Check `design/` dir for existing `design.md` / design tokens. If missing → ask parent or generate minimal from conventions.
 2. Implement screens following the spec; reuse existing components/tokens.
 3. Use existing components/tokens — never reinvent (Ponytail ladder rung 2).
-4. Verify: mobile responsive, keyboard a11y, no console errors, perf budget hit.
+4. Verify: mobile responsive, keyboard a11y, no console errors, perf budget hit. Mechanical anti-pattern check: `npx impeccable detect <path>` (exit 2 = findings).
 
 **Execution**: Decompose to numbered steps with dependencies. `todowrite` per step. Verify each step (build, lint, visual). Concrete "done" = browser preview matches design + no a11y violations + Lighthouse perf >90.
 

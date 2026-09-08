@@ -1,4 +1,11 @@
-# v0.7.0 (2026-09-05)
+# v0.8.0 (2026-09-08)
+
+## Features
+- **Impeccable skill**: added `skills/impeccable/` (review/polish/audit/iterate existing UI, mechanical anti-pattern checks via `npx impeccable detect`). Build-time design stays with `ui-design`; routing in `rules/skill-reminder.md`, boundary note in `skills/ui-design/SKILL.md`.
+- **Commands**: added `/impeccable` (routes to the impeccable skill) and `/integrate` (integration session for parallel plan branches: sequential merge, conflicts, full suite, worktree and plan cleanup).
+- **Parallel plan workflow**: `builder` and `planner` updated for worktree-per-session execution. 1 plan = 1 branch = 1 worktree; parallel branches never self-merge, integration happens via `/integrate` in the main checkout. Single sequential plans merge inline as before.
+- **Models**: `reviewer` and `tester` switched from `9router/gmicloud/MiniMaxAI/MiniMax-M3` to `9router/b.ai/qwen3.8-flash`.
+- **Docs**: SKILLS/COMMANDS/STRUCTURE tables updated (47 skills, 12 commands).
 
 ## Features
 - **Agents**: roster consolidated 7 → 6. Dropped `integrator` (Git/CI integration); `builder` now lands branches itself. Team is back to 2 primary (builder, planner) + 4 subagents (designer, tester, reviewer, documenter).

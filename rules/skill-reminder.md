@@ -12,3 +12,9 @@ Before implementing: scan skill list, load matching skill via `skill` tool -> fo
 ## Graphify Hard Gate
 
 Codebase-relation question (data flow, callers, where defined, architecture, >2 files) -> `graphify query` FIRST, before grep/read. No exceptions. graphify-out/ missing in nontrivial task -> `graphify .` once, then use it. New code missing from graph -> `graphify --update` (incremental), then query. Reject skip excuses ("project is small", "grep is quicker").
+
+## UI Routing
+
+Build new UI / design from scratch -> load `ui-design` (+ delegate `designer` for substantial work).
+Review/polish/audit/iterate existing UI (critique, polish, distill, harden, animate, typeset) -> load `impeccable`.
+Mechanical anti-pattern check (no LLM) -> `npx impeccable detect <path>` (CI-able).

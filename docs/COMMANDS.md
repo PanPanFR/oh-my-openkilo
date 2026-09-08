@@ -10,6 +10,8 @@ Slash commands. Type the name (with leading `/`) at the start of an OpenCode pro
 | `/configcheck [scope]` | Diagnose config: validate opencode.json, test MCP servers, fix, ask for credentials |
 | `/recall <query>`    | Search agentmemory for past session observations matching the query                  |
 | `/remember <note>`   | Save a decision, insight, or pattern to agentmemory's long-term storage              |
+| `/impeccable`        | Review/polish/audit/iterate existing UI via the `impeccable` skill                   |
+| `/integrate`         | Integrate verified parallel plan branches into main (merge, conflicts, cleanup)      |
 | `/caveman`           | Toggle terse caveman-mode replies                                                   |
 | `/caveman-help`      | Quick-reference card for all caveman modes, skills, and commands                     |
 | `/caveman-commit`    | Generate a compressed commit message (subject ≤ 50 chars, body only if needed)       |
