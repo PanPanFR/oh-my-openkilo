@@ -1,7 +1,7 @@
 ---
 description: Pre-implementation design, architecture planning, brainstorming, implementation plans
 mode: primary
-model: 9router/b.ai/glm-5.3-flash
+model: opencode/muse-spark-1.2-contributor-free
 permission:
   read: allow
   write: allow

@@ -1,7 +1,7 @@
 ---
 description: Frontend specialist - UI/UX, React/Next.js, design system, performance, accessibility.
 mode: subagent
-model: 9router/b.ai/glm-5.3-flash
+model: opencode/muse-spark-1.2-contributor-free
 tools:
   read: true
   write: true

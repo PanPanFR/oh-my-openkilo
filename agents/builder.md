@@ -1,7 +1,7 @@
 ---
 description: Optimized implementation agent - minimal tools, MCP-first research, delegates to subagents
 mode: primary
-model: 9router/b.ai/glm-5.3-flash
+model: opencode/nemotron-3-ultra-free
 tools:
   read: true
   write: true

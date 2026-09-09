@@ -1,11 +1,11 @@
 <div align="center">
 
-<img src="docs/images/hero.png" alt="oh-my-openkilo: 7 specialized agents, neon-on-black" width="100%">
+<img src="docs/images/hero.png" alt="oh-my-openkilo: 6 specialized agents, neon-on-black" width="100%">
 
 # oh-my-openkilo
 
 **Prompts in files. Models in config. Behavior in rules.**
-A curated OpenCode prompt + plugin source pack: 6 agents, 46 skills, 3 rules, 6 plugins, 10 commands. ~18× lighter than comparable plugin packs. Zero credentials to start.
+A curated OpenCode prompt + plugin source pack: 6 agents, 47 skills, 3 rules, 6 plugins, 12 commands. ~3× lighter than comparable plugin packs. Zero credentials to start.
 
 <sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's agentic workflow</sub>
 
@@ -16,9 +16,9 @@ A curated OpenCode prompt + plugin source pack: 6 agents, 46 skills, 3 rules, 6 
   <a href="https://github.com/PanPanFR/oh-my-openkilo/commits/main"><img src="https://img.shields.io/github/last-commit/PanPanFR/oh-my-openkilo?style=flat" alt="Last commit"></a>
   <br>
   <a href="#-meet-the-agents"><img src="https://img.shields.io/badge/agents-6-orange" alt="6 agents"></a>
-  <a href="#-skills"><img src="https://img.shields.io/badge/skills-46-green" alt="46 skills"></a>
+  <a href="#-skills"><img src="https://img.shields.io/badge/skills-47-green" alt="47 skills"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/credentials-zero-brightgreen" alt="Zero credentials"></a>
-  <img src="https://img.shields.io/badge/size-3.3_MB-blueviolet" alt="Pack size: 3.3 MB">
+  <img src="https://img.shields.io/badge/size-19_MB-blueviolet" alt="Pack size: 19 MB">
   <img src="https://img.shields.io/badge/no_build_step-brightgreen" alt="No build step">
 </p>
 
@@ -30,12 +30,12 @@ A curated OpenCode prompt + plugin source pack: 6 agents, 46 skills, 3 rules, 6 
 
 ## ✨ Highlights
 
-- **[7 specialized agents](#-meet-the-agents)** — 2 primary (`builder`, `planner`) + 5 subagents with a delegation hierarchy already designed. `builder` routes to `planner` for complex work and fans out to specialists in parallel.
-- **[46 curated skills](#-skills)** — battle-tested playbooks (TDD, systematic debugging, code review, plans, web-perf) across 10 categories. Skills are prompt-based: no runtime, no build step.
+- **[6 specialized agents](#-meet-the-agents)** — 2 primary (`builder`, `planner`) + 4 subagents with a delegation hierarchy already designed. `builder` routes to `planner` for complex work and fans out to specialists in parallel.
+- **[47 curated skills](#-skills)** — battle-tested playbooks (TDD, systematic debugging, code review, plans, web-perf) across 5 categories. Skills are prompt-based: no runtime, no build step.
 - **[3 always-on rules](#-rules)** — `skill-reminder` (skill + memory check before any task), `language` (English files), `communication-style` (Caveman terse + Ponytail minimal). Other behaviors ship as on-demand skills.
-- **[6 plugins](#-plugins)** — `agentmemory-capture` (auto-save observations), `graphify` (graph sync), `caveman` (terse mode), `ponytail` (minimal code), `superpowers` (skill loader), `checkpoint`/`recall-first` (safety nets), `prompt-polish` (opt-in `pp` prompt rewrite). All optional, all from existing tools.
-- **10 slash commands, all optional helpers** - `/update-pack` keeps the pack fresh, `/recall` and `/remember` talk to memory, the `/caveman-*` set handles terse mode. Nothing here is load-bearing; skip them and the pack still works. See [docs/COMMANDS.md](docs/COMMANDS.md).
-- **[Prompts + rules in files, plugins in source](#-what-do-you-get)** — 509 files / 3.3 MB. A comparable plugin pack is 507 files / 58.5 MB. ~18× smaller because the artifacts are markdown + a few tiny TS plugin files, not a built runtime with `node_modules` and `dist/`.
+- **[6 plugins](#-plugins)** — `agentmemory-capture` (auto-save observations), `graphify` (graph sync), `caveman` (terse mode), `checkpoint`/`recall-first` (safety nets), `prompt-polish` (opt-in `pp` prompt rewrite). All optional. `ponytail` and `superpowers` come from npm, not this pack.
+- **12 slash commands, all optional helpers** - `/update-pack` keeps the pack fresh, `/recall` and `/remember` talk to memory, the `/caveman-*` set handles terse mode, `/impeccable` routes UI review and polish, `/integrate` merges parallel plan branches, `/configcheck` verifies the install. Nothing here is load-bearing; skip them and the pack still works. See [docs/COMMANDS.md](docs/COMMANDS.md).
+- **[Prompts + rules in files, plugins in source](#-what-do-you-get)** — 558 files / 19 MB. A comparable plugin pack is 507 files / 58.5 MB. ~3× smaller because the artifacts are markdown + a few tiny plugin files, not a built runtime with `node_modules` and `dist/`. The bulk is a vendored `impeccable` Windows binary (14.6 MB) and its font index; markdown and plugins alone stay under 1 MB.
 - **[Free by default](#-default-models-are-free)** — every agent ships with a free OpenCode model. No API key required to start.
 - **[Kilo Code flow, OpenCode runtime](#-what-is-oh-my-openkilo)** — same triage-then-delegate mental model that runs in VS Code/JetBrains via Kilo Code, here against OpenCode.
 
@@ -53,7 +53,7 @@ Then, still by prompting:
 
 > **"Install the required dependencies for this pack: the graphify knowledge graph CLI and the agentmemory server + MCP, then start the memory server."**
 
-Restart OpenCode (or `/reload`) and you have 6 agents, 46 skills, 3 rules, and 6 plugins. **Zero credentials** to start; the pack ships with free OpenCode models.
+Restart OpenCode (or `/reload`) and you have 6 agents, 47 skills, 3 rules, and 6 plugins. **Zero credentials** to start; the pack ships with free OpenCode models.
 
 > [!TIP]
 > Prefer doing it yourself in a terminal? The exact clone + copy commands for Windows, macOS, and Linux are in [Installation](#️-installation). Future updates are just `/update-pack` inside OpenCode, or the same install prompt again.
@@ -65,7 +65,7 @@ Restart OpenCode (or `/reload`) and you have 6 agents, 46 skills, 3 rules, and 6
 
 ## 📦 What is oh-my-openkilo?
 
-A **prompt + plugin source pack** for [OpenCode](https://opencode.ai): plain files plus an installer that copies them into `~/.config/opencode`. The pack ships 5 small TypeScript plugins (loaded directly by OpenCode at runtime, no `dist/` or `node_modules` inside the pack) and a curated set of markdown prompts and rules. No build step on install. Designed for Windows; macOS and Linux are supported via the Unix installer but **have not been tested by the maintainer** (see [Compatibility](#-compatibility)).
+A **prompt + plugin source pack** for [OpenCode](https://opencode.ai): plain files plus an installer that copies them into `~/.config/opencode`. The pack ships 6 small plugin modules (5 TypeScript + the `caveman` JS plugin, loaded directly by OpenCode at runtime, no `dist/` or `node_modules` inside the pack) and a curated set of markdown prompts and rules. No build step on install. Designed for Windows; macOS and Linux are supported via the Unix installer but **have not been tested by the maintainer** (see [Compatibility](#-compatibility)).
 
 The pack inherits its workflow patterns from [Kilo Code](https://github.com/Kilo-Org/kilocode) (primary-agent triage, subagent delegation, skills as protocols, graphify-first navigation, caveman/ponytail style). Same mental model, different runtime.
 
@@ -81,7 +81,7 @@ The idea is simple: **prompts in files, models in config, behavior in rules.** E
 ```
 Size on disk (lower is better)
 ─────────────────────────────────────────────────────────────
-oh-my-openkilo         ████                                     3.3 MB
+oh-my-openkilo         █████████████                           19 MB
 oh-my-opencode-slim    ████████████████████████████████████████  58.5 MB
 ─────────────────────────────────────────────────────────────
                        0 MB                                  60 MB
@@ -89,14 +89,14 @@ oh-my-opencode-slim    ███████████████████
 
 | Aspect | oh-my-openkilo (prompt + plugin source pack) | Typical plugin pack |
 |--------|----------------------------------------------|---------------------|
-| **What you install** | Markdown prompts + 6 small TS plugin files (<4 KB each) + shell scripts | TypeScript source, build output, npm deps |
+| **What you install** | Markdown prompts + 6 small plugin files (<5 KB each) + a vendored `impeccable` binary | TypeScript source, build output, npm deps |
 | **Build step** | None. Files are the artifact. | `bun install && bun run build` |
 | **Install time** | Seconds | Minutes (download deps, compile TS) |
 | **Update mechanism** | `git pull` + per-file copy + backup | `git pull` + `bun install` + rebuild |
-| **Runtime overhead** | OpenCode reads markdown + executes 6 small TS plugin files (no `node_modules` to load) | Plugin loader runs on every startup with full dep tree |
+| **Runtime overhead** | OpenCode reads markdown + executes 6 small plugin files (no `node_modules` to load) | Plugin loader runs on every startup with full dep tree |
 | **What can break** | A misformed frontmatter, a typo in a path, a stale plugin hook | A version mismatch, a build error, a missing dep |
 
-The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `ponytail`, `superpowers`) and ships 6 tiny plugins (`agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, `prompt-polish`) as plain TS source rather than building a new runtime. All of them are optional: remove any line from the `plugin` array in `opencode.json` and the pack keeps working. `prompt-polish` in particular is completely passive unless you opt in by starting a prompt with `pp ` (and it is not even wired up unless you set the `POLISH_*` env vars), so if you never use it, it never runs.
+The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `ponytail`, `superpowers`) and ships 6 tiny plugins (`agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, `prompt-polish`) as plain source rather than building a new runtime. All of them are optional: remove any line from the `plugin` array in `opencode.json` and the pack keeps working. `prompt-polish` in particular is completely passive unless you opt in by starting a prompt with `pp ` (and it is not even wired up unless you set the `POLISH_*` env vars), so if you never use it, it never runs.
 
 ---
 
@@ -105,10 +105,10 @@ The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `po
 | Component | Count | What it does |
 |-----------|-------|--------------|
 | Agents    | 6     | 2 primary + 4 subagents. `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
-| Skills    | 46    | Curated playbooks across 5 categories. See [docs/SKILLS.md](docs/SKILLS.md) for the full table. |
+| Skills    | 47    | Curated playbooks across 5 categories. See [docs/SKILLS.md](docs/SKILLS.md) for the full table. |
 | Rules     | 3     | Always-on session guardrails, loaded via the `instructions` config. See [docs/RULES.md](docs/RULES.md). |
 | Plugins   | 6     | `agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, `prompt-polish` (opt-in), plus npm `ponytail` + `superpowers`. All optional. |
-| Commands  | 10    | Optional helpers: `/update-pack`, `/recall`, `/remember`, plus 6 `/caveman-*` utilities. See [docs/COMMANDS.md](docs/COMMANDS.md). |
+| Commands  | 12    | Optional helpers: `/update-pack`, `/recall`, `/remember`, `/impeccable`, `/integrate`, `/configcheck`, plus 6 `/caveman-*` utilities. See [docs/COMMANDS.md](docs/COMMANDS.md). |
 
 ```mermaid
 graph TD
@@ -130,7 +130,7 @@ graph TD
     classDef primary fill:#1f6feb,color:#fff,stroke:#1f6feb;
     classDef sub fill:#2da44e,color:#fff,stroke:#2da44e;
     class B,P primary;
-    class DS,T,R,DOC,I sub;
+    class DS,T,R,DOC sub;
 ```
 
 ---
@@ -278,7 +278,7 @@ Three real prompts, showing what the pack actually does. Three more (new feature
 
 6 agents. **Each one is a markdown file in `agents/`** that enriches a native agent with specialist protocols. Edit the prompt by editing the file. Model, variant, and permissions are configured via `opencode.json`.
 
-The pack divides the team into **2 primary agents** (you talk to them directly) and **5 subagents** (the primaries fan out work to them in parallel). Two of OpenCode's built-in agents (`build` and `plan`) are disabled to avoid duplication; this pack's `builder` and `planner` replace them.
+The pack divides the team into **2 primary agents** (you talk to them directly) and **4 subagents** (the primaries fan out work to them in parallel). Two of OpenCode's built-in agents (`build` and `plan`) are disabled to avoid duplication; this pack's `builder` and `planner` replace them.
 
 ### 01. `builder` — The Architect
 
@@ -405,17 +405,17 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 ## 🧩 Skills
 
-46 skills grouped into 9 categories. Skills are prompt-based playbooks injected into an agent's context when a task matches. They run no process; just focused instructions.
+47 skills grouped into 5 categories. Skills are prompt-based playbooks injected into an agent's context when a task matches. They run no process; just focused instructions.
 
 | Category | Count | Examples |
 |----------|-------|----------|
-| core | 18 | `clean-code`, `cloudflare`, `code-review`, `plans`, `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `web-perf` |
+| core | 19 | `clean-code`, `cloudflare`, `code-review`, `impeccable`, `plans`, `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `web-perf` |
 | agentmemory | 6 | `agentmemory-architecture`, `agentmemory-config`, `agentmemory-mcp-tools`, `agentmemory-rest-api` |
 | caveman | 6 | `caveman`, `caveman-commit`, `caveman-review` |
 | workflow & memory | 14 | `commit-context`, `delegation`, `handoff`, `lesson`, `recall`, `remember`, `recap` |
 | browser | 2 | `playwright-cli`, `graphify` |
 
-> **Full skill table (all 46, with descriptions and per-agent bindings):** [docs/SKILLS.md](docs/SKILLS.md)
+> **Full skill table (all 47, with descriptions and per-agent bindings):** [docs/SKILLS.md](docs/SKILLS.md)
 
 ---
 
@@ -437,11 +437,14 @@ Memory, graphify navigation, delegation, and Cloudflare doc-first behavior ship 
 
 ## ⌨️ Commands
 
-Ten slash commands ship with the pack. They are conveniences, not requirements: every one wraps something you could do by prompting the agent directly.
+Twelve slash commands ship with the pack. They are conveniences, not requirements: every one wraps something you could do by prompting the agent directly.
 
 - **`/update-pack`** (with `--check` / `--diff` variants) pulls the latest pack from GitHub and syncs it into your config with per-file backup. This is the one you will actually use, and rarely: once after install, then occasionally.
 - **`/recall <query>`** and **`/remember <note>`** search and save the agentmemory store.
 - **`/caveman`, `/caveman-help`, `/caveman-commit`, `/caveman-compress`, `/caveman-review`, `/caveman-stats`** terse-mode and PR utilities.
+- **`/impeccable`** routes UI review, polish, and audit work to the `impeccable` skill (or its mechanical `npx impeccable detect` check).
+- **`/integrate`** runs the integration session that merges parallel plan branches in order and runs the full suite.
+- **`/configcheck`** verifies the install: agents, skills, rules, plugins, commands, MCP wiring.
 
 If you forget these exist, just describe what you want in plain language ("update this pack", "what did we do about X") and the agent handles it. Full reference: [docs/COMMANDS.md](docs/COMMANDS.md)
 
@@ -491,7 +494,7 @@ Use this as a map: start with install, then jump to agents/skills/rules based on
 | [docs/INSTALL.md](docs/INSTALL.md) | Step-by-step install, uninstall, troubleshooting |
 | [docs/WORKFLOWS.md](docs/WORKFLOWS.md) | Full example workflows (audit, debug, new feature, arch review, knowledge graph) |
 | [docs/AGENTS.md](docs/AGENTS.md) | All 6 agents: when to use each, how to edit, model table |
-| [docs/SKILLS.md](docs/SKILLS.md) | All 46 skills grouped by category, with descriptions |
+| [docs/SKILLS.md](docs/SKILLS.md) | All 47 skills grouped by category, with descriptions |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, `/update-pack` mechanics |
 
 ### ⚙️ Config & Reference

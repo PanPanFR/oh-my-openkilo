@@ -1,7 +1,7 @@
 ---
 description: Technical writing specialist - creates and improves documentation
 mode: subagent
-model: 9router/b.ai/qwen3.8-flash
+model: opencode/muse-spark-1.2-contributor-free
 tools:
   read: true
   write: true

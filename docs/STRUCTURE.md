@@ -18,7 +18,7 @@ oh-my-openkilo/
 │   ├── reviewer.md
 │   └── documenter.md
 │
-├── skills/                            # 46 skill packs (mirror of ~/.config/opencode/skills/)
+├── skills/                            # 47 skill packs (mirror of ~/.config/opencode/skills/)
 │   └── <skill-name>/
 │       ├── SKILL.md                   # always present
 │       ├── README.md                  # optional, user-facing
@@ -30,7 +30,7 @@ oh-my-openkilo/
 │   ├── language.md                    # English-only files
 │   └── skill-reminder.md              # mandatory skill check before work
 │
-├── commands/                          # 10 slash commands
+├── commands/                          # 12 slash commands
 │   ├── caveman-commit.md              # compressed commit message generator
 │   ├── caveman-compress.md            # compress memory files
 │   ├── caveman-help.md                # caveman help card
@@ -38,11 +38,13 @@ oh-my-openkilo/
 │   ├── caveman-stats.md               # show token savings
 │   ├── caveman.md                     # toggle terse mode
 │   ├── configcheck.md                 # post-install health check
+│   ├── impeccable.md                  # route UI review/polish to the impeccable skill
+│   ├── integrate.md                   # integration session for parallel plan branches
 │   ├── recall.md                      # search agentmemory
 │   ├── remember.md                    # save to agentmemory
 │   └── update-pack.md                 # pull + sync from GitHub
 │
-├── plugins/                           # 5 small TS plugin files (no dist/, no node_modules)
+├── plugins/                           # 6 small plugin files (no dist/, no node_modules)
 │   ├── agentmemory-capture.ts         # hook for capturing session observations
 │   ├── caveman/                       # terse-mode + style pack
 │   │   ├── plugin.js
@@ -84,6 +86,8 @@ The repo is the **upstream source of truth** for the pack, but the actual runtim
 ```
 
 Edits flow one way: edit in `~/.config/opencode/`, kick the tires in a real session, then copy the changed file(s) into `oh-my-openkilo/` and commit. The repo never leads.
+
+**Model lines are the exception.** The agent files in the repo ship free OpenCode defaults (`opencode/*-free`), which is what the docs describe and what fresh installs get. The maintainer's live `~/.config/opencode/agents/` keeps its own router-backed model lines and does not mirror back into the repo; treat the repo model lines as the public default, not a copy of any one person's setup. Running `/update-pack` overwrites local agent files with the repo versions, so personal model choices belong in `opencode.json` or in a `.local.md` copy.
 
 ## What does not get mirrored (lives only in the repo)
 
