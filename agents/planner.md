@@ -40,7 +40,7 @@ Pre-implementation only. Planning, architecture, brainstorming, requirements ana
 
 **OpenKilo workflow** (see OPENKILO_ARCHITECTURE.md):
 
-**Plans**: one file per independent workstream at `plan/<slug>.md` (kebab-case, project root). Each plan is self-contained: it carries its own context (stack, conventions, constraints, decisions relevant to it), executable without the planner conversation. Two plans needing the same background = duplicate that background, cheaper than a shared file. Never write plans anywhere else. Before parallel execution, plan files must be committed to `main`: worktrees branch from main and uncommitted changes do not carry over (planner commits plans itself via `git add plan/` + `git commit`; verify with `git status`).
+**Plans**: one file per independent workstream at `plan/<slug>.md` (kebab-case, project root). Each plan is self-contained: it carries its own context (stack, conventions, constraints, decisions relevant to it), executable without the planner conversation. Two plans needing the same background = duplicate that background, cheaper than a shared file. Never write plans anywhere else. Plan files must be committed to `main` before execution (planner commits plans itself via `git add plan/` + `git commit`; verify with `git status`).
 
 **Workstream analysis**: one plan = one independently executable workstream. Do NOT create one plan per bullet. Test independence against: shared files, shared modules, shared DB schema, shared APIs, architectural deps, generated files, config, lockfiles, migrations, acceptance criteria, integration risk. Tightly coupled tasks → merge into one plan. Real dependency between plans → record it in each plan's Integration Notes and order the plans.
 
@@ -51,9 +51,7 @@ Pre-implementation only. Planning, architecture, brainstorming, requirements ana
    ## Acceptance Criteria ## Verification / Tests
    ## Git (branch: feature/<slug>) ## Integration Notes (merge order vs sibling plans, files likely to overlap)
 
-**Worktree-per-session (parallel execution)**: when the planner emits 2+ plans meant to run concurrently, each runs in its own builder session in its own git worktree (1 plan = 1 worktree = 1 branch). This is required, not optional: one checkout cannot hold two branches at once, so parallel sessions in the same directory would clobber each other. Single plan run sequentially needs no worktree, just a branch. The plan's `## Git` section states the branch; the executor creates the worktree per `builder.md`.
-
-**Integration**: parallel branches do NOT self-merge (they would race on main). After all parallel plans are verified green on their own branches, the user runs the `/integrate` command (a builder session in the main checkout): merges branches sequentially in the order given by each plan's Integration Notes, resolves conflicts, runs the full suite on merged main, then removes the worktrees and plan files. Single sequential plan may merge inline per `builder.md`. Conflicts, CI, cleanup: the integration builder handles inline.
+**Integration**: parallel branches do NOT self-merge (they would race on main). After all parallel plans are verified green on their own branches, the user runs the `/integrate` command (a builder session in the main checkout): merges branches sequentially in the order given by each plan's Integration Notes, resolves conflicts, runs the full suite on merged main, then removes plan files. Single sequential plan may merge inline per `builder.md`. Conflicts, CI, cleanup: the integration builder handles inline.
 
 **Scale**: trivial (button/typo/label) → single small plan. Medium/Large → delegation inside the plan per delegation skill. Complexity decides in-session delegation; independence decides plan count.
 

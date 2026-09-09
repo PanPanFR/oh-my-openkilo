@@ -7,7 +7,7 @@ Load plan, review critically, execute all tasks, report complete.
 ## Process
 
 ### Step 1: Load and Review Plan
-1. Ensure an isolated workspace: create a git worktree if needed, or verify the existing one
+1. Ensure a clean working tree on the plan's branch
 2. Read plan file
 3. Review critically - identify any questions or concerns about the plan
 4. If concerns: raise them with your human partner before starting
