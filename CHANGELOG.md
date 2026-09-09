@@ -1,3 +1,11 @@
+# v0.8.2 (2026-09-09)
+
+## Changed
+- **Agents default to free OpenCode models.** All six agent files now ship `opencode/*-free` defaults (builder/reviewer: `opencode/nemotron-3-ultra-free`; planner/designer/documenter: `opencode/muse-spark-1.2-contributor-free`; tester: `opencode/mimo-v2.5-free`) instead of the maintainer's `9router/b.ai` endpoints, restoring the "free by default, zero credentials" promise. The maintainer's live config keeps its own router models; the agent `model:` line is now the one deliberate divergence between the repo and any personal live install (documented in docs/STRUCTURE.md and CONTRIBUTING.md).
+
+## Fixes
+- **Docs synced to the current pack**: README.md, docs/STRUCTURE.md, CONTRIBUTING.md, root AGENTS.md. Counts corrected to 6 agents / 47 skills / 3 rules / 6 plugins / 12 commands (added `/impeccable`, `/integrate`; `/configcheck` now listed), 2 primary + 4 subagents (not 5), skill categories corrected to 5 with core 19 (README previously claimed 46 skills / 9 categories), size claims corrected from "3.3 MB / 509 files" to "19 MB / 558 files" (vendored `impeccable` Windows binary dominates), plugin wording corrected (6 modules, `caveman` ships JS not TS, no shell scripts). docs/SKILLS.md was already accurate and is unchanged.
+
 # v0.8.1 (2026-09-09)
 
 ## Changed
