@@ -1,3 +1,8 @@
+# v0.8.3 (2026-09-09)
+
+## Fixes
+- **Planner can use browser and MCP servers**: `agents/planner.md` gained a `permission.mcp` allowlist for `chrome-devtools`, `tinypuppet`, `agentmemory`, and `perplexity` with a `"*": deny` catch-all. Planner sessions previously exposed no MCP tools, which made the agent feel read-only (no browser/MCP execution); now browser, memory, and research servers are available during analysis while unlisted servers stay hidden.
+
 # v0.8.2 (2026-09-09)
 
 ## Changed
