@@ -19,6 +19,12 @@ permission:
   todowrite: allow
   task:
     "reviewer": allow
+  mcp:
+    "chrome-devtools": allow
+    "tinypuppet": allow
+    "agentmemory": allow
+    "perplexity": allow
+    "*": deny
   webfetch: allow
   websearch: allow
   lsp: allow
