@@ -8,6 +8,7 @@ permission:
   edit: allow
   bash:
     "*": "deny"
+    "*graphify*": "allow"
     "Remove-Item*": "allow"
     "rm*": "allow"
     "git status*": "allow"
