@@ -1,3 +1,8 @@
+# v0.8.5 (2026-09-13)
+
+## Docs
+- **README rewritten for beginners.** Plain words first: 3-step start with copy-paste prompts, team intro (only 2 agents to talk to), three first tasks to try, install with nothing to edit for free models. Jargon trimmed (agent card tables, size chart, and command dump moved to docs/). All facts kept: 6 agents / 47 skills / 3 rules / 6 plugins / 12 commands, free `opencode/muse-spark-1.3-contributor-free` default, zero credentials.
+
 # v0.8.4 (2026-09-13)
 
 ## Changed

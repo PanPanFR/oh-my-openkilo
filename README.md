@@ -4,10 +4,11 @@
 
 # oh-my-openkilo
 
-**Prompts in files. Models in config. Behavior in rules.**
-A curated OpenCode prompt + plugin source pack: 6 agents, 47 skills, 3 rules, 6 plugins, 12 commands. ~3× lighter than comparable plugin packs. Zero credentials to start.
+**A team of AI specialists for OpenCode. You describe the task, they do the work.**
 
-<sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's agentic workflow</sub>
+This pack gives OpenCode 6 specialist agents, 47 how-to guides, and 3 house rules. It works with free models, so there is nothing to pay and no API key to set up.
+
+<sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's team workflow</sub>
 
 <p>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
@@ -15,7 +16,7 @@ A curated OpenCode prompt + plugin source pack: 6 agents, 47 skills, 3 rules, 6 
   <a href="https://github.com/PanPanFR/oh-my-openkilo/stargazers"><img src="https://img.shields.io/github/stars/PanPanFR/oh-my-openkilo?style=flat" alt="Stars"></a>
   <a href="https://github.com/PanPanFR/oh-my-openkilo/commits/main"><img src="https://img.shields.io/github/last-commit/PanPanFR/oh-my-openkilo?style=flat" alt="Last commit"></a>
   <br>
-  <a href="#-meet-the-agents"><img src="https://img.shields.io/badge/agents-6-orange" alt="6 agents"></a>
+  <a href="#-meet-the-team"><img src="https://img.shields.io/badge/agents-6-orange" alt="6 agents"></a>
   <a href="#-skills"><img src="https://img.shields.io/badge/skills-47-green" alt="47 skills"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/credentials-zero-brightgreen" alt="Zero credentials"></a>
   <img src="https://img.shields.io/badge/size-19_MB-blueviolet" alt="Pack size: 19 MB">
@@ -28,87 +29,53 @@ A curated OpenCode prompt + plugin source pack: 6 agents, 47 skills, 3 rules, 6 
 
 ---
 
-## ✨ Highlights
+## 🚀 Start here (3 steps, no terminal needed)
 
-- **[6 specialized agents](#-meet-the-agents)** — 2 primary (`builder`, `planner`) + 4 subagents with a delegation hierarchy already designed. `builder` routes to `planner` for complex work and fans out to specialists in parallel.
-- **[47 curated skills](#-skills)** — battle-tested playbooks (TDD, systematic debugging, code review, plans, web-perf) across 5 categories. Skills are prompt-based: no runtime, no build step.
-- **[3 always-on rules](#-rules)** — `skill-reminder` (skill + memory check before any task), `language` (English files), `communication-style` (Caveman terse + Ponytail minimal). Other behaviors ship as on-demand skills.
-- **[6 plugins](#-plugins)** — `agentmemory-capture` (auto-save observations), `graphify` (graph sync), `caveman` (terse mode), `checkpoint`/`recall-first` (safety nets), `prompt-polish` (opt-in `pp` prompt rewrite). All optional. `ponytail` and `superpowers` come from npm, not this pack.
-- **12 slash commands, all optional helpers** - `/update-pack` keeps the pack fresh, `/recall` and `/remember` talk to memory, the `/caveman-*` set handles terse mode, `/impeccable` routes UI review and polish, `/integrate` merges parallel plan branches, `/configcheck` verifies the install. Nothing here is load-bearing; skip them and the pack still works. See [docs/COMMANDS.md](docs/COMMANDS.md).
-- **[Prompts + rules in files, plugins in source](#-what-do-you-get)** — 558 files / 19 MB. A comparable plugin pack is 507 files / 58.5 MB. ~3× smaller because the artifacts are markdown + a few tiny plugin files, not a built runtime with `node_modules` and `dist/`. The bulk is a vendored `impeccable` Windows binary (14.6 MB) and its font index; markdown and plugins alone stay under 1 MB.
-- **[Free by default](#-default-models-are-free)** — every agent ships with a free OpenCode model. No API key required to start.
-- **[Kilo Code flow, OpenCode runtime](#-what-is-oh-my-openkilo)** — same triage-then-delegate mental model that runs in VS Code/JetBrains via Kilo Code, here against OpenCode.
-
----
-
-## 🪄 TL;DR
-
-No terminal knowledge needed. Open OpenCode, paste this prompt, and let the AI do everything:
+**Step 1.** Open OpenCode and paste this. The AI installs everything for you:
 
 > **"Install the oh-my-openkilo config pack for OpenCode: clone https://github.com/PanPanFR/oh-my-openkilo into `~/.config/opencode/oh-my-openkilo`, copy its `agents/`, `skills/`, `rules/`, `commands/`, `plugins/` folders and `AGENTS.md` into `~/.config/opencode/`, then run `/configcheck` and tell me what's missing."**
 
-The agent runs the git clone and file copies for you (it shows each command before running it, so nothing happens in the dark). Your existing `opencode.json`, API keys, and MCP servers are never touched.
+The agent shows each command before running it, so nothing happens in the dark. Your existing settings, API keys, and extras are never touched.
 
-Then, still by prompting:
+**Step 2.** Still by prompting, install the two helper tools (a code map and a memory server), then start the memory server:
 
 > **"Install the required dependencies for this pack: the graphify knowledge graph CLI and the agentmemory server + MCP, then start the memory server."**
 
-Restart OpenCode (or `/reload`) and you have 6 agents, 47 skills, 3 rules, and 6 plugins. **Zero credentials** to start; the pack ships with free OpenCode models.
+**Step 3.** Restart OpenCode (or run `/reload`), then give it a real task:
+
+> **"Audit this repository's architecture and identify the biggest problems."**
+
+That is the whole setup. Future updates are just `/update-pack` inside OpenCode.
 
 > [!TIP]
-> Prefer doing it yourself in a terminal? The exact clone + copy commands for Windows, macOS, and Linux are in [Installation](#️-installation). Future updates are just `/update-pack` inside OpenCode, or the same install prompt again.
-
-> [!TIP]
-> `main` is the recommended install source. To pin a specific release instead, tell the agent to replace `main` with a tag (e.g. `v0.6.0`) or check the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest).
+> Prefer doing it yourself in a terminal? The exact commands for Windows, macOS, and Linux are in [Installation](#-installation).
+> To install a specific release instead of the latest, tell the agent to replace `main` with a tag (e.g. `v0.8.4`), or check the [latest release](https://github.com/PanPanFR/oh-my-openkilo/releases/latest).
 
 ---
 
-## 📦 What is oh-my-openkilo?
+## 📦 What is this?
 
-A **prompt + plugin source pack** for [OpenCode](https://opencode.ai): plain files plus an installer that copies them into `~/.config/opencode`. The pack ships 6 small plugin modules (5 TypeScript + the `caveman` JS plugin, loaded directly by OpenCode at runtime, no `dist/` or `node_modules` inside the pack) and a curated set of markdown prompts and rules. No build step on install. Designed for Windows; macOS and Linux are supported via the Unix installer but **have not been tested by the maintainer** (see [Compatibility](#-compatibility)).
+OpenCode on its own is one general assistant. This pack turns it into a small team:
 
-The pack inherits its workflow patterns from [Kilo Code](https://github.com/Kilo-Org/kilocode) (primary-agent triage, subagent delegation, skills as protocols, graphify-first navigation, caveman/ponytail style). Same mental model, different runtime.
+- **Specialists for each job.** A builder that does the coding, a planner that thinks before anyone codes, plus experts for UI, tests, code review, and docs. You talk to the builder; the builder calls in the experts when needed.
+- **How-to guides for common tasks.** 47 short playbooks (debugging, testing, code review, planning, and more). The right guide loads automatically when your task matches it. You never open them yourself.
+- **Memory + a map of your code.** The pack remembers what happened in past sessions and keeps a searchable map of your codebase, so answers are based on your actual code, not guesses.
 
-> [!NOTE]
-> The pack structure and "prompt + plugin source" sharing approach are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)**. This pack adapts the philosophy (specialized agents + delegation + skills + rules + a few tiny plugins) without shipping `dist/`, `node_modules`, or a build step.
+Technically it is just files: plain-text prompts plus a few tiny plugins. There is nothing to compile and no installer to run. It works on Windows (tested) and on macOS/Linux (same steps, not tested by the maintainer, see [Compatibility](#-compatibility)).
 
-The idea is simple: **prompts in files, models in config, behavior in rules.** Edit an agent by editing its file. Switch models via `opencode.json`. Add your own agents, skills, or rules without touching anything else.
-
----
-
-## 🥊 Why it's lightweight
-
-```
-Size on disk (lower is better)
-─────────────────────────────────────────────────────────────
-oh-my-openkilo         █████████████                           19 MB
-oh-my-opencode-slim    ████████████████████████████████████████  58.5 MB
-─────────────────────────────────────────────────────────────
-                       0 MB                                  60 MB
-```
-
-| Aspect | oh-my-openkilo (prompt + plugin source pack) | Typical plugin pack |
-|--------|----------------------------------------------|---------------------|
-| **What you install** | Markdown prompts + 6 small plugin files (<5 KB each) + a vendored `impeccable` binary | TypeScript source, build output, npm deps |
-| **Build step** | None. Files are the artifact. | `bun install && bun run build` |
-| **Install time** | Seconds | Minutes (download deps, compile TS) |
-| **Update mechanism** | `git pull` + per-file copy + backup | `git pull` + `bun install` + rebuild |
-| **Runtime overhead** | OpenCode reads markdown + executes 6 small plugin files (no `node_modules` to load) | Plugin loader runs on every startup with full dep tree |
-| **What can break** | A misformed frontmatter, a typo in a path, a stale plugin hook | A version mismatch, a build error, a missing dep |
-
-The pack **curates** well-known tools (`graphify`, `agentmemory`, `caveman`, `ponytail`, `superpowers`) and ships 6 tiny plugins (`agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, `prompt-polish`) as plain source rather than building a new runtime. All of them are optional: remove any line from the `plugin` array in `opencode.json` and the pack keeps working. `prompt-polish` in particular is completely passive unless you opt in by starting a prompt with `pp ` (and it is not even wired up unless you set the `POLISH_*` env vars), so if you never use it, it never runs.
+The workflow ideas come from [Kilo Code](https://github.com/Kilo-Org/kilocode), and the file-sharing style from **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)**.
 
 ---
 
 ## 🧰 What do you get?
 
-| Component | Count | What it does |
+| Piece | Count | Plain meaning |
 |-----------|-------|--------------|
-| Agents    | 6     | 2 primary + 4 subagents. `builder` delegates UI to `designer`, tests to `tester`, review to `reviewer`, etc. |
-| Skills    | 47    | Curated playbooks across 5 categories. See [docs/SKILLS.md](docs/SKILLS.md) for the full table. |
-| Rules     | 3     | Always-on session guardrails, loaded via the `instructions` config. See [docs/RULES.md](docs/RULES.md). |
-| Plugins   | 6     | `agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, `prompt-polish` (opt-in), plus npm `ponytail` + `superpowers`. All optional. |
-| Commands  | 12    | Optional helpers: `/update-pack`, `/recall`, `/remember`, `/impeccable`, `/integrate`, `/configcheck`, plus 6 `/caveman-*` utilities. See [docs/COMMANDS.md](docs/COMMANDS.md). |
+| Agents    | 6     | The team members (see below). |
+| Skills    | 47    | How-to guides the agents follow automatically. Full list: [docs/SKILLS.md](docs/SKILLS.md). |
+| Rules     | 3     | House rules applied to every session (check memory, write in English, keep replies short). Details: [docs/RULES.md](docs/RULES.md). |
+| Plugins   | 6     | Small extras (auto-save notes, code map sync, short-reply mode). All optional, remove any to disable. |
+| Commands  | 12    | Shortcuts like `/update-pack` and `/recall`. All optional. List: [docs/COMMANDS.md](docs/COMMANDS.md). |
 
 ```mermaid
 graph TD
@@ -135,15 +102,66 @@ graph TD
 
 ---
 
+## 🏛️ Meet the team
+
+You only ever talk to **two** of them. The rest work behind the scenes.
+
+**Talk to these directly:**
+
+- **`builder`** 🏗️, the default. Give it any coding task. It either does it or calls in the right expert.
+- **`planner`** 🔮, the thinker. Use it before big work: *"Plan a rate-limiter for our API. Don't write code yet, show me the options first."* It writes a plan for you to approve, and nothing gets built until you say so.
+
+**These join automatically when needed:**
+
+- **`designer`** 🎨, user interfaces and web design.
+- **`tester`** 🧪, writes and runs tests.
+- **`reviewer`** 🛡️, checks finished work for bugs and security holes. Never changes code.
+- **`documenter`** 📚, writes docs that match what the code actually does.
+
+Each agent is one text file in `agents/`. To change how one behaves, edit its file. To change its AI model, edit the `model:` line at the top, then restart OpenCode. Full guide: [docs/AGENTS.md](docs/AGENTS.md).
+
+> [!NOTE]
+> This pack replaces OpenCode's built-in `build` and `plan` agents with its own `builder` and `planner` to avoid having two agents for the same job.
+
+---
+
+## 🎯 Three things to try first
+
+**1. Get a plan before building** (uses `planner`):
+
+> "Plan a rate-limiter for our API. Don't write code yet, show me the options first."
+
+Result: a written plan per workstream with concrete steps. Nothing is built until you approve.
+
+**2. Audit a repository** (uses `builder` + `reviewer`):
+
+> "Audit this repository's architecture and identify the biggest problems."
+
+Result: a structured report based on your actual code.
+
+**3. Debug something** (uses `builder`):
+
+> "This test passes locally but fails in CI. Find the root cause and fix it."
+
+Result: diagnosis with evidence first, fix second, plus a regression test.
+
+Three more examples (new feature, architecture review, exploring a codebase) live in [docs/WORKFLOWS.md](docs/WORKFLOWS.md).
+
+---
+
+## 💸 Free to start
+
+Every agent uses a **free OpenCode model** (`opencode/muse-spark-1.3-contributor-free`). No API key, no payment, no setup.
+
+Want a stronger (paid) model later? Edit the `model:` line in the agent's file, then restart OpenCode. Which agent deserves the upgrade first, and the full model table, are in [docs/AGENTS.md](docs/AGENTS.md#how-to-change-a-model).
+
+---
+
 ## ⚙️ Installation
 
-No installer, no build step. The pack is a Git repo and OpenCode's agent can do the whole thing from a prompt.
+**Recommended: let the agent do it.** Paste the [3-step prompt](#-start-here-3-steps-no-terminal-needed) into OpenCode and watch.
 
-### Recommended: let the agent install it
-
-Open OpenCode and paste the [TL;DR prompt](#-tldr). The agent clones the repo, copies the files, installs the dependencies, and verifies the result. Watch each command as it runs; the agent explains every step.
-
-### Manual: run the commands yourself
+**Manual: run the commands yourself.**
 
 <details>
 <summary>Windows (PowerShell)</summary>
@@ -178,332 +196,112 @@ cp ~/.config/opencode/oh-my-openkilo/AGENTS.md ~/.config/opencode/AGENTS.md
 </details>
 
 <details>
-<summary>Required dependencies (both install paths need these)</summary>
+<summary>Helper tools both paths need (code map + memory)</summary>
 
 ```bash
-# 1. Knowledge graph (Python, `graphifyy` is the PyPI package, double y)
+# 1. Code map (Python, note the package name has a double y: graphifyy)
 uv tool install graphifyy            # or: pipx install graphifyy, or: pip install graphifyy
-# 1b. Knowledge graph (Node, older path, if you already have it)
+# 1b. Code map (Node, older path, only if you already have it)
 npm i -g graphify
 
-# 2. Persistent cross-session memory
+# 2. Memory that survives between sessions
 npm i -g @agentmemory/server
-npm i -g @agentmemory/mcp            # the MCP server OpenCode talks to
+npm i -g @agentmemory/mcp            # the piece OpenCode talks to
 
-# 3. Start the memory REST server (do this once, leave it running)
+# 3. Start the memory server (once, leave it running)
 agentmemory serve
 ```
 
-**Pin the agentmemory MCP locally, not via `npx`.** Replace the `mcp.agentmemory.command` in `opencode.json` with the absolute path to the locally installed entry point. npx re-downloads on every cold start and silently breaks when npm registry is unreachable. `/configcheck` flags the `npx` form for you; the full recipe is in [docs/INSTALL.md](docs/INSTALL.md).
+**Use a local install for the memory piece, not `npx`.** Point `mcp.agentmemory.command` in `opencode.json` at the installed file path. `npx` re-downloads on every start and breaks without internet. `/configcheck` warns you if the `npx` form is present; the full recipe is in [docs/INSTALL.md](docs/INSTALL.md).
 
 </details>
 
 ### After install
 
-1. **Edit `~/.config/opencode/opencode.json`** to set your model and provider keys. The example uses `{env:VAR}` placeholders.
+1. Nothing to edit for free models. Only if you want a paid model: set it in `~/.config/opencode/opencode.json` (the example file uses `{env:VAR}` placeholders for keys).
 2. **Restart OpenCode** or run `/reload`.
-3. **Verify:** run `/configcheck`. It will tell you what is wired up and what is missing.
+3. **Verify:** run `/configcheck`. It reports what works and what is missing.
 
 > [!IMPORTANT]
-> The install overwrites any existing `agents/`, `skills/`, `rules/`, `commands/`, `plugins/`, and `AGENTS.md` under your config dir. Your `opencode.json`, model, provider, API keys, and MCP server entries are NOT touched. If you have local edits you want to keep, read [docs/INSTALL.md](docs/INSTALL.md) for the manual recipe.
+> Installing overwrites `agents/`, `skills/`, `rules/`, `commands/`, `plugins/`, and `AGENTS.md` in your config folder. Your `opencode.json`, models, keys, and extras are NOT touched. Keeping local edits? See [docs/INSTALL.md](docs/INSTALL.md).
 
 > [!TIP]
-> After install, future updates are just `/update-pack` inside OpenCode. No terminal, no script, no version URL to remember. The command reads its own source-of-truth URL.
-
-> [!TIP]
-> The full per-step install guide, uninstall, and troubleshooting live in [docs/INSTALL.md](docs/INSTALL.md). The example config is explained block-by-block in [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
+> The full step-by-step guide, uninstall, and troubleshooting live in [docs/INSTALL.md](docs/INSTALL.md). Every setting is explained in [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
 
 ---
 
-## 💸 Default models are free
+## 🥊 Why so small?
 
-Every agent defaults to a **free model provided by OpenCode** (`opencode/muse-spark-1.3-contributor-free`). You can use the pack **without configuring any provider API key**.
-
-Want a different model? Edit the `model:` line in the agent's markdown file (YAML frontmatter at the top), then restart OpenCode or run `/reload`. The full per-agent model table, mix-and-match recommendations, and edit workflow are in [docs/AGENTS.md](docs/AGENTS.md#how-to-change-a-model).
+The whole pack is 19 MB, mostly one helper binary. A comparable pack is 58.5 MB. Why? This pack ships text files, not a compiled program: no build step, installs in seconds, updates with `git pull`. If something breaks, it is a typo in a text file, not a failed build.
 
 ---
 
-## 🔌 Required dependencies + MCPs
+## ⌨️ Commands you will actually use
 
-The pack **requires** two external tools to deliver its core value:
+You can ignore this section at first. Plain sentences work too ("update this pack", "what did we do about X last week").
 
-```bash
-npm i -g graphify              # knowledge graph (the `graphify` skill depends on this)
-npm i -g @agentmemory/server   # persistent cross-session memory (the memory skills depend on this)
-```
+- **`/update-pack`** keeps the pack fresh from GitHub. The one you will use, rarely.
+- **`/recall <query>`** searches past work ("what did we decide about auth?"). **`/remember <note>`** saves a note for later.
+- **`/configcheck`** verifies the install after setup.
 
-| MCP | What it unlocks | Required? |
-|-----|-----------------|-----------|
-| `agentmemory` | Persistent cross-session memory | yes (required dependency) |
-| `chrome-devtools` | Live browser debug | optional |
-
-Browser automation itself runs through the bundled `playwright-cli` skill, which drives Playwright from the shell: no Playwright MCP needed. Anything beyond the table (a Playwright MCP for E2E generation, `context7` for live library docs, your own servers) is opt-in: copy the shape in [docs/CONFIGURATION.md](docs/CONFIGURATION.md#mcp-servers), set `enabled: true`, fill the env vars.
-
----
-
-## 🎯 Example workflows
-
-Three real prompts, showing what the pack actually does. Three more (new feature, architecture review, knowledge graph exploration) live in [docs/WORKFLOWS.md](docs/WORKFLOWS.md).
-
-### 1. Plan before building (planner)
-
-> "Plan a rate-limiter for our API. Don't write code yet, show me the options first."
-
-- **Agent:** `planner` (invoke it directly, or `builder` hands off when the task has architecture)
-- **Skills:** `plans` (self-contained implementation plans), `codebase-design` (deep-module vocabulary)
-- **Rules:** graphify-first (evidence from the graph, not vibes), plan written to `plan/` for you to confirm
-- **Result:** one self-contained plan per workstream, each with delegation strategy and quality gates. Nothing is implemented until you approve.
-
-### 2. Repository audit
-
-> "Audit this repository's architecture and identify the biggest problems."
-
-- **Agent:** `builder` → gathers recon via `graphify query` + delegates `reviewer` (quality/security)
-- **Skills:** `clean-code`, `code-review`, `ponytail-review`
-- **Rules:** `skill-reminder` (graphify-first navigation, parallel delegation via on-demand skills)
-- **Result:** structured report backed by graph evidence and review findings, not one agent's opinion.
-
-### 3. Debugging a flaky test
-
-> "This test passes locally but fails in CI. Find the root cause and fix it."
-
-- **Agent:** `builder`
-- **Skills:** `systematic-debugging` (reproduce → isolate → bisect; no guessing)
-- **Rules + skills:** `skill-reminder` rule (memory recall + skill check first), `systematic-debugging` skill (reproduce → isolate → bisect; no guessing), `verification-before-completion` skill
-- **Result:** root-cause analysis with evidence, fix only after diagnosis, regression test added.
-
----
-
-## 🏛️ Meet the agents
-
-6 agents. **Each one is a markdown file in `agents/`** that enriches a native agent with specialist protocols. Edit the prompt by editing the file. Model, variant, and permissions are configured via `opencode.json`.
-
-The pack divides the team into **2 primary agents** (you talk to them directly) and **4 subagents** (the primaries fan out work to them in parallel). Two of OpenCode's built-in agents (`build` and `plan`) are disabled to avoid duplication; this pack's `builder` and `planner` replace them.
-
-### 01. `builder` — The Architect
-
-<table>
-  <tr>
-    <td width="30%" align="center" valign="top">
-      <h3>🏗️</h3>
-      <br><sub><b><code>builder</code></b></sub>
-      <br><sub><i>The Architect</i></sub>
-    </td>
-    <td width="70%" valign="top">
-      Default implementation agent. Triages: 1-line fix → do directly; feature with architecture → hand design to <code>planner</code>, supervise execution. Once a plan exists, fans out to <code>designer</code>, <code>tester</code>, <code>reviewer</code>, <code>documenter</code>. Lands branches itself.
-    </td>
-  </tr>
-  <tr><td colspan="2"><b>Role:</b> <code>Default entry. Triage + delegate + supervise.</code></td></tr>
-  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/builder.md"><code>agents/builder.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
-  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
-  <tr><td colspan="2"><b>Model guidance:</b> strong instruction-following matters more than raw speed. If you mix free + paid, this is the agent to upgrade first.</td></tr>
-</table>
-
-### 02. `planner` — The Oracle
-
-<table>
-  <tr>
-    <td width="30%" align="center" valign="top">
-      <h3>🔮</h3>
-      <br><sub><b><code>planner</code></b></sub>
-      <br><sub><i>The Oracle</i></sub>
-    </td>
-    <td width="70%" valign="top">
-      Pre-implementation design partner. Gathers evidence via <code>graphify</code> and native web fetch, writes self-contained plans to <code>plan/</code>, then hands you a plan you confirm before any code is touched.
-    </td>
-  </tr>
-  <tr><td colspan="2"><b>Role:</b> <code>Pre-impl design, architecture planning, plan files.</code></td></tr>
-  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/planner.md"><code>agents/planner.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
-  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
-  <tr><td colspan="2"><b>Model guidance:</b> a weak model here means a weak plan, which means wasted implementation time downstream.</td></tr>
-</table>
-
-### 03. `designer` — The Frontend Specialist
-
-<table>
-  <tr>
-    <td width="30%" align="center" valign="top">
-      <h3>🎨</h3>
-      <br><sub><b><code>designer</code></b></sub>
-      <br><sub><i>The Frontend Specialist</i></sub>
-    </td>
-    <td width="70%" valign="top">
-      UI/UX, React/Next.js, design systems, accessibility, performance. Visual reviews via screenshots when available; falls back to text-only feedback otherwise.
-    </td>
-  </tr>
-  <tr><td colspan="2"><b>Role:</b> <code>UI/UX + frontend implementation + a11y.</code></td></tr>
-  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/designer.md"><code>agents/designer.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
-  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
-  <tr><td colspan="2"><b>Requires:</b> multimodal model for visual work; text-only is fine for design review and a11y.</td></tr>
-</table>
-
-### 04. `tester` — The Quality Gate
-
-<table>
-  <tr>
-    <td width="30%" align="center" valign="top">
-      <h3>🧪</h3>
-      <br><sub><b><code>tester</code></b></sub>
-      <br><sub><i>The Quality Gate</i></sub>
-    </td>
-    <td width="70%" valign="top">
-      Writes test suites, runs them, iterates failures in isolation. Reports compact results. Never mixes "write the feature" with "test the feature".
-    </td>
-  </tr>
-  <tr><td colspan="2"><b>Role:</b> <code>TDD, test suites, flake hunting.</code></td></tr>
-  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/tester.md"><code>agents/tester.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
-  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
-  <tr><td colspan="2"><b>Model guidance:</b> fast, code-focused model. Speed matters more than deep reasoning.</td></tr>
-</table>
-
-### 05. `reviewer` — The Diff Detective
-
-<table>
-  <tr>
-    <td width="30%" align="center" valign="top">
-      <h3>🛡️</h3>
-      <br><sub><b><code>reviewer</code></b></sub>
-      <br><sub><i>The Diff Detective</i></sub>
-    </td>
-    <td width="70%" valign="top">
-      Read-only code + security review. Compares a diff against repo standards and the originating spec. Catches race conditions, missing error handling, security smells, off-by-one. Never edits.
-    </td>
-  </tr>
-  <tr><td colspan="2"><b>Role:</b> <code>Diff review, security gate before merge.</code></td></tr>
-  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/reviewer.md"><code>agents/reviewer.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
-  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
-  <tr><td colspan="2"><b>Use when:</b> finished a chunk of work, about to touch auth/data, want a sanity check before merging.</td></tr>
-</table>
-
-### 06. `documenter` — The Technical Writer
-
-<table>
-  <tr>
-    <td width="30%" align="center" valign="top">
-      <h3>📚</h3>
-      <br><sub><b><code>documenter</code></b></sub>
-      <br><sub><i>The Technical Writer</i></sub>
-    </td>
-    <td width="70%" valign="top">
-      Creates and improves documentation in <code>docs/</code>, verified against what the code actually does. Will not write docs that lie about behavior.
-    </td>
-  </tr>
-  <tr><td colspan="2"><b>Role:</b> <code>READMEs, runbooks, API docs, onboarding.</code></td></tr>
-  <tr><td colspan="2"><b>Prompt:</b> <a href="agents/documenter.md"><code>agents/documenter.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
-  <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
-</table>
-
-> **How to invoke:** let `builder` pick the right subagent (most common), or be explicit: *"Ask `tester` to write tests for the auth module"* / *"Have `designer` review this UI"*. Full agent guide with all frontmatter fields, permission maps, and edit workflows: [docs/AGENTS.md](docs/AGENTS.md).
-
----
-
-## 🧩 Skills
-
-47 skills grouped into 5 categories. Skills are prompt-based playbooks injected into an agent's context when a task matches. They run no process; just focused instructions.
-
-| Category | Count | Examples |
-|----------|-------|----------|
-| core | 19 | `clean-code`, `cloudflare`, `code-review`, `impeccable`, `plans`, `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `web-perf` |
-| agentmemory | 6 | `agentmemory-architecture`, `agentmemory-config`, `agentmemory-mcp-tools`, `agentmemory-rest-api` |
-| caveman | 6 | `caveman`, `caveman-commit`, `caveman-review` |
-| workflow & memory | 14 | `commit-context`, `delegation`, `handoff`, `lesson`, `recall`, `remember`, `recap` |
-| browser | 2 | `playwright-cli`, `graphify` |
-
-> **Full skill table (all 47, with descriptions and per-agent bindings):** [docs/SKILLS.md](docs/SKILLS.md)
-
----
-
-## 📏 Rules
-
-Three global rules loaded via `opencode.json` `instructions`. Order matters; the protocol rule comes first.
-
-| Rule | Mandate |
-|------|---------|
-| `skill-reminder` | Recall agentmemory, then load the matching skill before any implementation task |
-| `language` | All file content in English; chat can be any language |
-| `communication-style` | Caveman (terse) replies and Ponytail (minimal) code style |
-
-Memory, graphify navigation, delegation, and Cloudflare doc-first behavior ship as on-demand skills instead of rules.
-
-> **Full rule guide:** [docs/RULES.md](docs/RULES.md)
-
----
-
-## ⌨️ Commands
-
-Twelve slash commands ship with the pack. They are conveniences, not requirements: every one wraps something you could do by prompting the agent directly.
-
-- **`/update-pack`** (with `--check` / `--diff` variants) pulls the latest pack from GitHub and syncs it into your config with per-file backup. This is the one you will actually use, and rarely: once after install, then occasionally.
-- **`/recall <query>`** and **`/remember <note>`** search and save the agentmemory store.
-- **`/caveman`, `/caveman-help`, `/caveman-commit`, `/caveman-compress`, `/caveman-review`, `/caveman-stats`** terse-mode and PR utilities.
-- **`/impeccable`** routes UI review, polish, and audit work to the `impeccable` skill (or its mechanical `npx impeccable detect` check).
-- **`/integrate`** runs the integration session that merges parallel plan branches in order and runs the full suite.
-- **`/configcheck`** verifies the install: agents, skills, rules, plugins, commands, MCP wiring.
-
-If you forget these exist, just describe what you want in plain language ("update this pack", "what did we do about X") and the agent handles it. Full reference: [docs/COMMANDS.md](docs/COMMANDS.md)
+The rest (`/caveman-*` short-reply tools, `/impeccable` for UI review, `/integrate` for merging parallel work) are covered in [docs/COMMANDS.md](docs/COMMANDS.md) when you need them.
 
 ---
 
 ## 🔄 Updating the pack
 
-**Recommended: prompt the agent.** In an OpenCode session, either run `/update-pack` or just say:
+In an OpenCode session, run `/update-pack`, or say:
 
 > **"Update the oh-my-openkilo pack: pull the latest from https://github.com/PanPanFR/oh-my-openkilo and sync it into my config, backing up any file you overwrite."**
 
-**Slash command alternative:**
+Then restart OpenCode or run `/reload`. Changed files are backed up automatically, so your edits are never lost silently. Terminal-only alternative and recovery steps: [docs/COMMANDS.md](docs/COMMANDS.md#update-pack-in-detail).
 
-```
-/update-pack
-```
+---
 
-It is self-contained: it hardcodes the canonical URL, clones or pulls on its own, and syncs each file with backup. Nothing on your disk can go stale.
+## 🧩 Skills
 
-**Terminal alternative (no OpenCode session required):**
+47 how-to guides in 5 groups. They load on their own when your task matches; you never open them.
 
-```bash
-# Pull latest, then copy each file the same way the in-session command does
-cd ~/.config/opencode/oh-my-openkilo && git pull --ff-only origin main
-for d in agents skills rules commands plugins; do
-    rsync -a --backup --backup-dir=~/.config/opencode/.rsync-bak-$(date +%s) ~/.config/opencode/oh-my-openkilo/$d/ ~/.config/opencode/$d/
-done
-cp ~/.config/opencode/oh-my-openkilo/AGENTS.md ~/.config/opencode/AGENTS.md
-```
+| Group | Count | Examples |
+|----------|-------|----------|
+| core | 19 | `clean-code`, `cloudflare`, `code-review`, `impeccable`, `plans`, `systematic-debugging`, `test-driven-development`, `web-perf` |
+| agentmemory | 6 | `agentmemory-architecture`, `agentmemory-config`, `agentmemory-mcp-tools`, `agentmemory-rest-api` |
+| caveman | 6 | `caveman`, `caveman-commit`, `caveman-review` |
+| workflow & memory | 14 | `commit-context`, `delegation`, `handoff`, `lesson`, `recall`, `remember`, `recap` |
+| browser | 2 | `playwright-cli`, `graphify` |
 
-(On Windows PowerShell substitute `Copy-Item -Recurse -Force` for the loop; the in-session `/update-pack` does the same thing.)
+> **All 47 with descriptions:** [docs/SKILLS.md](docs/SKILLS.md)
 
-Restart OpenCode or run `/reload` after.
+---
 
-> **Full update mechanics, flags, and recovery if `git pull` fails:** [docs/COMMANDS.md](docs/COMMANDS.md#update-pack-in-detail)
+## 📏 Rules
+
+Three house rules, active in every session:
+
+| Rule | What it means |
+|------|---------|
+| `skill-reminder` | Before any task: check past notes, then load the matching how-to guide |
+| `language` | Files are written in English; chat can be any language |
+| `communication-style` | Replies stay short, code stays minimal |
+
+> **Full rule guide:** [docs/RULES.md](docs/RULES.md)
 
 ---
 
 ## 📚 Documentation
 
-Use this as a map: start with install, then jump to agents/skills/rules based on what you need.
-
-### ✨ Features & Workflows
+Start with install, then jump to whatever you need:
 
 | Doc | What it covers |
 |-----|----------------|
 | [docs/INSTALL.md](docs/INSTALL.md) | Step-by-step install, uninstall, troubleshooting |
-| [docs/WORKFLOWS.md](docs/WORKFLOWS.md) | Full example workflows (audit, debug, new feature, arch review, knowledge graph) |
+| [docs/WORKFLOWS.md](docs/WORKFLOWS.md) | Full worked examples (audit, debug, new feature, arch review, code map) |
 | [docs/AGENTS.md](docs/AGENTS.md) | All 6 agents: when to use each, how to edit, model table |
-| [docs/SKILLS.md](docs/SKILLS.md) | All 47 skills grouped by category, with descriptions |
+| [docs/SKILLS.md](docs/SKILLS.md) | All 47 guides grouped by category, with descriptions |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, `/update-pack` mechanics |
-
-### ⚙️ Config & Reference
-
-| Doc | What it covers |
-|-----|----------------|
-| [docs/STRUCTURE.md](docs/STRUCTURE.md) | What's in the repo (every folder and file explained) |
-| [docs/RULES.md](docs/RULES.md) | The 3 global rules in detail |
-| [docs/CONFIGURATION.md](docs/CONFIGURATION.md) | `opencode.json` block-by-block, credential handling, per-MCP setup |
+| [docs/STRUCTURE.md](docs/STRUCTURE.md) | Every folder and file in the repo, explained |
+| [docs/RULES.md](docs/RULES.md) | The 3 house rules in detail |
+| [docs/CONFIGURATION.md](docs/CONFIGURATION.md) | Settings file explained block by block, keys, per-tool setup |
 
 ---
 
@@ -515,29 +313,29 @@ Use this as a map: start with install, then jump to agents/skills/rules based on
 | Windows | tested |
 | macOS | untested by maintainer |
 | Linux | untested by maintainer |
-| `graphify` | required (degrades to plain search if missing) |
+| `graphify` | required (falls back to plain search if missing) |
 | `agentmemory` | required (falls back to in-session memory only if missing) |
 
 > [!NOTE]
-> The maintainer develops and tests on Windows only. The `git clone` + `cp -r` install recipe has been exercised on macOS and Linux paths, but the maintainer has not run a full OpenCode session on those platforms. If you hit a Unix-specific bug, please [open an issue](https://github.com/PanPanFR/oh-my-openkilo/issues) so it can be fixed.
+> The maintainer develops and tests on Windows only. The install steps above work on macOS and Linux paths, but no full session has been run there. Hit a Unix-specific bug? Please [open an issue](https://github.com/PanPanFR/oh-my-openkilo/issues).
 
 ---
 
 ## 🙏 Credits
 
-oh-my-openkilo is the OpenCode adaptation of **[oh-my-kilo](https://github.com/PanPanFR/oh-my-kilo)** (same maintainer). The structure and "prompt + plugin source" sharing are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)** by [alvinunreal](https://github.com/alvinunreal). The agentic workflow patterns (triage, delegation, skills as protocols, graphify-first) were developed in **[Kilo Code](https://github.com/Kilo-Org/kilocode)**.
+oh-my-openkilo is the OpenCode adaptation of **[oh-my-kilo](https://github.com/PanPanFR/oh-my-kilo)** (same maintainer). The structure and file-sharing style are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)** by [alvinunreal](https://github.com/alvinunreal). The team workflow ideas (triage, delegation, guides as protocols, map-first navigation) come from **[Kilo Code](https://github.com/Kilo-Org/kilocode)**.
 
-For a visual control room on top of the OpenCode runtime, **[OpenChamber](https://openchamber.dev/)** (VS Code Marketplace, [github.com/openchamber/openchamber](https://github.com/openchamber/openchamber)) composes naturally with this pack.
+For a visual control room on top of OpenCode, **[OpenChamber](https://openchamber.dev/)** (VS Code Marketplace, [github.com/openchamber/openchamber](https://github.com/openchamber/openchamber)) composes naturally with this pack.
 
 ---
 
 ## 🔒 Security
 
-The pack ships **zero credentials**, only `{env:VAR}` placeholders and an opinionated permission default you should review. See [SECURITY.md](SECURITY.md).
+The pack ships **zero credentials**, only `{env:VAR}` placeholders plus permission defaults you should review. See [SECURITY.md](SECURITY.md).
 
 ## Contributing
 
-Found a bug, an install issue, or have an agent/skill suggestion? Open an issue or PR. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Found a bug, an install issue, or have an agent/guide suggestion? Open an issue or PR. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
