@@ -1,5 +1,5 @@
 ---
-description: Global communication (Caveman) and code style (Ponytail) — applies to every agent session
+description: Global communication (Caveman) and code style (Ponytail), applies to every agent session
 alwaysApply: true
 ---
 

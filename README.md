@@ -217,7 +217,7 @@ agentmemory serve
 
 ## 💸 Default models are free
 
-Every agent defaults to a **free model provided by OpenCode** (e.g. `opencode/nemotron-3-ultra-free`, `opencode/muse-spark-1.2-contributor-free`). You can use the pack **without configuring any provider API key**.
+Every agent defaults to a **free model provided by OpenCode** (`opencode/muse-spark-1.3-contributor-free`). You can use the pack **without configuring any provider API key**.
 
 Want a different model? Edit the `model:` line in the agent's markdown file (YAML frontmatter at the top), then restart OpenCode or run `/reload`. The full per-agent model table, mix-and-match recommendations, and edit workflow are in [docs/AGENTS.md](docs/AGENTS.md#how-to-change-a-model).
 
@@ -295,7 +295,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
   </tr>
   <tr><td colspan="2"><b>Role:</b> <code>Default entry. Triage + delegate + supervise.</code></td></tr>
   <tr><td colspan="2"><b>Prompt:</b> <a href="agents/builder.md"><code>agents/builder.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/nemotron-3-ultra-free</code></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
   <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
   <tr><td colspan="2"><b>Model guidance:</b> strong instruction-following matters more than raw speed. If you mix free + paid, this is the agent to upgrade first.</td></tr>
 </table>
@@ -315,7 +315,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
   </tr>
   <tr><td colspan="2"><b>Role:</b> <code>Pre-impl design, architecture planning, plan files.</code></td></tr>
   <tr><td colspan="2"><b>Prompt:</b> <a href="agents/planner.md"><code>agents/planner.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.2-contributor-free</code></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
   <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
   <tr><td colspan="2"><b>Model guidance:</b> a weak model here means a weak plan, which means wasted implementation time downstream.</td></tr>
 </table>
@@ -335,7 +335,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
   </tr>
   <tr><td colspan="2"><b>Role:</b> <code>UI/UX + frontend implementation + a11y.</code></td></tr>
   <tr><td colspan="2"><b>Prompt:</b> <a href="agents/designer.md"><code>agents/designer.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.2-contributor-free</code></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
   <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
   <tr><td colspan="2"><b>Requires:</b> multimodal model for visual work; text-only is fine for design review and a11y.</td></tr>
 </table>
@@ -355,7 +355,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
   </tr>
   <tr><td colspan="2"><b>Role:</b> <code>TDD, test suites, flake hunting.</code></td></tr>
   <tr><td colspan="2"><b>Prompt:</b> <a href="agents/tester.md"><code>agents/tester.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/mimo-v2.5-free</code></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
   <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
   <tr><td colspan="2"><b>Model guidance:</b> fast, code-focused model. Speed matters more than deep reasoning.</td></tr>
 </table>
@@ -375,7 +375,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
   </tr>
   <tr><td colspan="2"><b>Role:</b> <code>Diff review, security gate before merge.</code></td></tr>
   <tr><td colspan="2"><b>Prompt:</b> <a href="agents/reviewer.md"><code>agents/reviewer.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/nemotron-3-ultra-free</code></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
   <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
   <tr><td colspan="2"><b>Use when:</b> finished a chunk of work, about to touch auth/data, want a sanity check before merging.</td></tr>
 </table>
@@ -395,7 +395,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
   </tr>
   <tr><td colspan="2"><b>Role:</b> <code>READMEs, runbooks, API docs, onboarding.</code></td></tr>
   <tr><td colspan="2"><b>Prompt:</b> <a href="agents/documenter.md"><code>agents/documenter.md</code></a></td></tr>
-  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.2-contributor-free</code></td></tr>
+  <tr><td colspan="2"><b>Default model:</b> <code>opencode/muse-spark-1.3-contributor-free</code></td></tr>
   <tr><td colspan="2"><b>Recommended models:</b> <em>TBD</em> · see <a href="docs/AGENTS.md#how-to-change-a-model">docs/AGENTS.md</a></td></tr>
 </table>
 

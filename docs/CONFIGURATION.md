@@ -26,7 +26,7 @@ Below is a tour of every block in that example so you know what you're editing. 
 
 The `model` and `small_model` fields above are **fallback defaults** for OpenCode's built-in agents. The agents in this pack (`builder`, `planner`, `designer`, etc.) have their own `model:` field in their frontmatter, which **overrides** the top-level default for that agent.
 
-The pack ships with all 8 named agents set to a **free model** from OpenCode (e.g. `opencode/nemotron-3-ultra-free`). You can use the pack with no provider configuration, but you can also override per agent by editing the frontmatter in `agents/<name>.md`.
+The pack ships with all 6 agents set to a **free model** from OpenCode (`opencode/muse-spark-1.3-contributor-free`). You can use the pack with no provider configuration, but you can also override per agent by editing the frontmatter in `agents/<name>.md`.
 
 See [docs/AGENTS.md](AGENTS.md#changing-the-model) for the default model table and how to switch.
 

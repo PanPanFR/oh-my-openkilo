@@ -8,12 +8,12 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 | # | Agent | Mode | Default model | When to use |
 |---|-------|------|---------------|-------------|
-| 01 | `builder` | primary | `opencode/nemotron-3-ultra-free` | Default implementation. Triage, fan-out. |
-| 02 | `planner` | primary | `opencode/muse-spark-1.2-contributor-free` | Pre-impl design, architecture, plan files. |
-| 03 | `designer` | subagent | `opencode/muse-spark-1.2-contributor-free` | UI/UX, design system, a11y. Multimodal preferred for visual work. |
-| 04 | `tester` | subagent | `opencode/mimo-v2.5-free` | Test suites: write, run, isolate failures. |
-| 05 | `reviewer` | subagent | `opencode/nemotron-3-ultra-free` | Diff + security review. Read-only. |
-| 06 | `documenter` | subagent | `opencode/muse-spark-1.2-contributor-free` | README, runbook, API docs in `docs/`. |
+| 01 | `builder` | primary | `opencode/muse-spark-1.3-contributor-free` | Default implementation. Triage, fan-out. |
+| 02 | `planner` | primary | `opencode/muse-spark-1.3-contributor-free` | Pre-impl design, architecture, plan files. |
+| 03 | `designer` | subagent | `opencode/muse-spark-1.3-contributor-free` | UI/UX, design system, a11y. Multimodal preferred for visual work. |
+| 04 | `tester` | subagent | `opencode/muse-spark-1.3-contributor-free` | Test suites: write, run, isolate failures. |
+| 05 | `reviewer` | subagent | `opencode/muse-spark-1.3-contributor-free` | Diff + security review. Read-only. |
+| 06 | `documenter` | subagent | `opencode/muse-spark-1.3-contributor-free` | README, runbook, API docs in `docs/`. |
 
 ---
 
@@ -27,7 +27,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Prompt:** [`agents/builder.md`](../agents/builder.md)
 
-**Default model:** `opencode/nemotron-3-ultra-free`
+**Default model:** `opencode/muse-spark-1.3-contributor-free`
 
 **Recommended models:** any strong instruction-following coding model. Swap to `anthropic/claude-sonnet-4-5`, `openai/gpt-5`, or `9router/Kimi-K2.6` if you have provider credentials and want higher quality on complex tasks.
 
@@ -49,7 +49,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Prompt:** [`agents/planner.md`](../agents/planner.md)
 
-**Default model:** `opencode/muse-spark-1.2-contributor-free`
+**Default model:** `opencode/muse-spark-1.3-contributor-free`
 
 **Recommended models:** strong reasoning and planning models. Worth paying for: `anthropic/claude-sonnet-4-5`, `openai/gpt-5`, `9router/Minimax-M3` (1M context, good for big repos).
 
@@ -73,7 +73,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Prompt:** [`agents/designer.md`](../agents/designer.md)
 
-**Default model:** `opencode/muse-spark-1.2-contributor-free`
+**Default model:** `opencode/muse-spark-1.3-contributor-free`
 
 **Recommended models:** strong UI/UX judgment + frontend implementation. Good fits: `anthropic/claude-sonnet-4-5`, `google/gemini-2.5-pro`, `9router/Gemini-3.6-Flash`.
 
@@ -95,7 +95,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Prompt:** [`agents/tester.md`](../agents/tester.md)
 
-**Default model:** `opencode/mimo-v2.5-free`
+**Default model:** `opencode/muse-spark-1.3-contributor-free`
 
 **Recommended models:** reliable test-running model. Good fits: any `9router/*` or `opencode/*` model with solid bash execution. No need for a frontier model.
 
@@ -115,7 +115,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Prompt:** [`agents/reviewer.md`](../agents/reviewer.md)
 
-**Default model:** `opencode/nemotron-3-ultra-free`
+**Default model:** `opencode/muse-spark-1.3-contributor-free`
 
 **Recommended models:** strong reasoning + security awareness. Worth paying for on auth/data paths: `anthropic/claude-sonnet-4-5`, `openai/gpt-5`, `9router/GLM-5.1`.
 
@@ -135,7 +135,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Prompt:** [`agents/documenter.md`](../agents/documenter.md)
 
-**Default model:** `opencode/muse-spark-1.2-contributor-free`
+**Default model:** `opencode/muse-spark-1.3-contributor-free`
 
 **Recommended models:** long-context writing model. Good fits: `9router/Minimax-M3` (1M context for big codebases), `anthropic/claude-sonnet-4-5`.
 

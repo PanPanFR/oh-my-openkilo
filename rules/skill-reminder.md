@@ -11,7 +11,7 @@ Before implementing: scan skill list, load matching skill via `skill` tool -> fo
 
 ## Graphify Hard Gate
 
-Codebase-relation question (data flow, callers, where defined, architecture, >2 files) -> `graphify query` FIRST, before grep/read. No exceptions. graphify-out/ missing in nontrivial task -> `graphify .` once, then use it. New code missing from graph -> `graphify --update` (incremental), then query. Reject skip excuses ("project is small", "grep is quicker").
+Codebase-relation question (data flow, callers, where defined, architecture, >2 files) -> `graphify query` FIRST, before grep/read. No exceptions. graphify-out/ missing in nontrivial task -> `graphify extract .` once, then use it. New code missing from graph -> `graphify update .` (incremental), then query. Reject skip excuses ("project is small", "grep is quicker").
 
 ## UI Routing
 

@@ -27,7 +27,7 @@ Hooks capture what happened automatically. What they cannot capture is judgment:
 1. Task start, before reading code for any nontrivial task: `memory_smart_search` with the task topic and the project name. Spend the first tool call here; a hit saves rediscovery, a miss costs one call.
 2. Mid-task, the moment a decision settles or a gotcha resolves: `memory_save` with the decision AND the reason, 2-5 specific concepts, real file paths. Save at the moment of resolution; end-of-session batch saves lose the reasons.
 3. On user correction of your approach: save a lesson instead of a memory (the `lesson` skill). Lessons carry confidence and resurface before similar work; memories carry facts.
-4. Before repeating a task type you have been corrected on: `memory_lesson_recall` with the task type as query.
+4. Before repeating a task type you have been corrected on: re-read the Lessons block injected at session start. (`memory_lesson_recall` exists only with `AGENTMEMORY_TOOLS=all`; the core set relies on the injected block instead.)
 5. Session end: stop. Hooks summarize and consolidate; a manual recap save duplicates them.
 
 ## What qualifies

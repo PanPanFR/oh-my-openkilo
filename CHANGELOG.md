@@ -1,3 +1,9 @@
+# v0.8.4 (2026-09-13)
+
+## Changed
+- **Agents unified on `opencode/muse-spark-1.3-contributor-free`.** All six agent files now ship the same default model (plus `variant: xhigh`) as the maintainer's live config, ending the deliberate model-line divergence introduced in v0.8.2. Docs updated to match (docs/AGENTS.md table, README cards, docs/CONFIGURATION.md, docs/STRUCTURE.md, CONTRIBUTING.md).
+- **Synced with live config**: `agents/` (all 6 bodies), `commands/recall.md`, `commands/configcheck.md`, `rules/communication-style.md`, `rules/skill-reminder.md`, `skills/memory-discipline/SKILL.md` copied verbatim from the maintainer's live install. Pack-only skills and `AGENTS.md` kept as is.
+
 # v0.8.3 (2026-09-09)
 
 ## Fixes

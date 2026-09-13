@@ -34,7 +34,7 @@ These have multi-part installs. Check every part, not just the MCP entry.
      - macOS: `["node", "/usr/local/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
      - Linux: `["node", "/usr/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
   3. Plugin `./plugins/agentmemory-capture.ts` (from `plugin` array): file must exist relative to the config dir.
-  4. Live check: call MCP tool `agentmemory_memory_diagnose` if available; report any subsystem errors it finds and offer to run `agentmemory_memory_heal`.
+  4. Live check: call MCP tool `agentmemory_memory_diagnose` if available; report any subsystem errors it finds (no auto-heal tool in the core set, fixes are manual).
   - Reference: local skills `agentmemory-config` (ports: REST 3111, streams 3112, viewer 3113, engine 49134) and `agentmemory-architecture`. Package: https://www.npmjs.com/package/@agentmemory/mcp
 
 - **graphify** (not an MCP here, a Python CLI):
