@@ -2,7 +2,8 @@
 description: Code and security review specialist - reviews diffs against repo standards, spec, and security baseline
 mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
-variant: xhigh
+variant: high
+temperature: 0.1
 tools:
   read: true
   glob: true

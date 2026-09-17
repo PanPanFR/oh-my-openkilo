@@ -171,10 +171,27 @@ Subagents are also dispatched by `builder` and `planner` via the `task` tool, in
 2. Edit the `model:` line. Use the format `<provider>/<model>` (e.g. `anthropic/claude-sonnet-4-5`, `openai/gpt-5`, `9router/Kimi-K2.6`).
 3. Save and run `/reload` (or restart OpenCode).
 
+`variant:` (reasoning effort) and `temperature:` (0.0-1.0, sampling randomness) sit in the same frontmatter block as `model:`. The pack ships them tuned per role; defaults and how to adjust are in [Reasoning effort and temperature](#reasoning-effort-and-temperature).
+
 Free models are good for everyday work but slower and less capable than paid ones. If you have provider credentials configured in `opencode.json`, a useful split is:
 
 - **Cheap/free for:** `tester`, `documenter`
 - **Pay for:** `builder`, `planner`, `designer`, `reviewer` (especially on auth/data paths)
+
+## Reasoning effort and temperature
+
+Agent frontmatter sets two more knobs per agent: `variant` (how much the model reasons before answering) and `temperature` (sampling randomness, 0.0-1.0). The pack ships them tuned per role:
+
+| Agent | `variant` | `temperature` | Why |
+|-------|-----------|---------------|-----|
+| `builder` | `xhigh` | 0.3 | Max reasoning depth for build quality; steady temp for execution. |
+| `planner` | `xhigh` | 0.1 | Deep reasoning for architecture; near-deterministic analysis. |
+| `reviewer` | `high` | 0.1 | One notch down for speed; stable, repeatable findings. |
+| `tester` | `medium` | 0.2 | Iteration speed matters in test-fix loops; low temp keeps asserts stable. |
+| `documenter` | `low` | 0.3 | Docs need fluency, not deep reasoning; cheapest and fastest. |
+| `designer` | `medium` | 0.6 | Creative temp for design work; medium reasoning for a11y and system calls. |
+
+Reasoning effort is a direct latency and cost multiplier: every notch down means fewer reasoning tokens per turn. Raise `variant` back to `xhigh` on any agent where the output quality drops. Lower `temperature` towards 0.0 for deterministic analysis and review, raise it towards 0.6-1.0 for brainstorming and design. Restart OpenCode after editing, since frontmatter is read at session start.
 
 ## Adding a new agent
 

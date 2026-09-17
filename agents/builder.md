@@ -3,6 +3,7 @@ description: Optimized implementation agent - minimal tools, MCP-first research,
 mode: primary
 model: opencode/muse-spark-1.3-contributor-free
 variant: xhigh
+temperature: 0.3
 tools:
   read: true
   write: true

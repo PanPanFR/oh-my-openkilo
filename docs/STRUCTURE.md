@@ -86,7 +86,7 @@ The repo is the **upstream source of truth** for the pack, but the actual runtim
 
 Edits flow one way: edit in `~/.config/opencode/`, kick the tires in a real session, then copy the changed file(s) into `oh-my-openkilo/` and commit. The repo never leads.
 
-**Model lines mirror the live config.** All 6 agent files ship `opencode/muse-spark-1.3-contributor-free` with `variant: xhigh`, matching the maintainer's live `~/.config/opencode/agents/`. There is no deliberate model divergence; running `/update-pack` overwrites local agent files with the repo versions, so personal model choices belong in `opencode.json` or in a `.local.md` copy.
+**Agent frontmatter mirrors the live config.** All 6 agent files ship `opencode/muse-spark-1.3-contributor-free`, with `variant` (reasoning effort) and `temperature` tuned per role: `builder` and `planner` stay at `xhigh` (temperature 0.3 and 0.1), `reviewer` drops to `high` (0.1), `tester` to `medium` (0.2), `documenter` to `low` (0.3), and `designer` to `medium` with temperature 0.6 for creative UI work. Lower effort means fewer reasoning tokens, which cuts per-turn latency on the subagent roles while the main build and planning agents keep full depth. There is no deliberate model divergence; running `/update-pack` overwrites local agent files with the repo versions, so personal model choices belong in `opencode.json` or in a `.local.md` copy.
 
 ## What does not get mirrored (lives only in the repo)
 

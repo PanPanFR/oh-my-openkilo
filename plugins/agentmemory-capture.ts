@@ -8,7 +8,7 @@ const API = process.env.AGENTMEMORY_URL || "http://localhost:3111";
 // kill file enrichment again.
 const FILE_TOOLS = new Set(["read", "write", "edit", "glob", "grep"]);
 const FILE_KEYS = ["filePath", "file_path", "path", "file", "pattern"];
-const MAX_STASHED_FILES = 20;
+const MAX_STASHED_FILES = 10;
 
 const DEBUG = process.env.OPENCODE_AGENTMEMORY_DEBUG === "1";
 const SECRET = process.env.AGENTMEMORY_SECRET || "";
@@ -346,7 +346,7 @@ export const AgentmemoryCapturePlugin: Plugin = async (ctx) => {
           await observe(sid, "post_tool_failure", {
             tool_name: "session.error",
             tool_input: "",
-            tool_output: safeSlice(props.error, 8000),
+            tool_output: safeSlice(props.error, 6000),
           });
         }
       }
@@ -435,7 +435,7 @@ export const AgentmemoryCapturePlugin: Plugin = async (ctx) => {
               tool_name: toolName,
               call_id: callId,
               tool_input: safeSlice(st.input, 4000),
-              tool_output: safeSlice(st.output, 8000),
+              tool_output: safeSlice(st.output, 6000),
               title: st.title ?? null,
               metadata: st.metadata || {},
               duration_ms: (startTime != null && endTime != null) ? endTime - startTime : null,
@@ -455,7 +455,7 @@ export const AgentmemoryCapturePlugin: Plugin = async (ctx) => {
               tool_name: toolName,
               call_id: callId,
               tool_input: safeSlice(st.input, 4000),
-              tool_output: safeSlice(st.error, 8000),
+              tool_output: safeSlice(st.error, 6000),
               duration_ms: (startTime != null && endTime != null) ? endTime - startTime : null,
             });
           }
@@ -615,7 +615,7 @@ export const AgentmemoryCapturePlugin: Plugin = async (ctx) => {
         agent: input.agent ?? null,
         model: input.model ?? null,
         variant: input.variant ?? null,
-        prompt: userText.slice(0, 8000),
+        prompt: userText.slice(0, 6000),
         files: files.slice(0, 20),
         parts_summary: parts.map((p: any) => p.type).filter(Boolean),
       });
@@ -686,7 +686,7 @@ export const AgentmemoryCapturePlugin: Plugin = async (ctx) => {
 
       const stash = stashFor(sid);
       if (stash.size === 0) return;
-      const files = [...stash].slice(0, 10);
+      const files = [...stash].slice(0, 5);
 
       const enrichResult = await postJson("/enrich", {
         sessionId: sid,

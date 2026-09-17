@@ -3,6 +3,7 @@ description: Pre-implementation design, architecture planning, brainstorming, im
 mode: primary
 model: opencode/muse-spark-1.3-contributor-free
 variant: xhigh
+temperature: 0.1
 permission:
   read: allow
   write: allow

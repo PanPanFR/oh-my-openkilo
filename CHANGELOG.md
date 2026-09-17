@@ -1,3 +1,13 @@
+# v0.8.8 (2026-09-17)
+
+## Changed
+- **Per-agent reasoning and temperature**: agent frontmatter now tunes speed per role. `builder` and `planner` keep `variant: xhigh` (temperature 0.3 and 0.1), while `reviewer` (`high`/0.1), `tester` (`medium`/0.2), `documenter` (`low`/0.3), and `designer` (`medium`/0.6) dial reasoning down. Fewer reasoning tokens per turn means lower latency on subagent work; main build and planning quality are unchanged. All agent `model:` lines stay `opencode/muse-spark-1.3-contributor-free`.
+- **Synced with live config**: `agents/` (all 6 files, frontmatter only) and `plugins/agentmemory-capture.ts` copied verbatim from the maintainer's live install.
+- **Leaner prefill in `agentmemory-capture`**: numeric caps only, no behavior change. Stashed-file cap 20 to 10, enrich batch 10 to 5, prompt and tool-output slices 8000 to 6000. Every hook, handler, and injection point is unchanged; sessions simply carry less context per turn.
+
+## Docs
+- **README, docs/AGENTS.md, docs/STRUCTURE.md**: documented the per-role reasoning effort and temperature map, plus how to tune or revert it.
+
 # v0.8.7 (2026-09-17)
 
 ## Docs

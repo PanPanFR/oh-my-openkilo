@@ -2,7 +2,8 @@
 description: Quality assurance specialist - writes and runs test suites, iterates failures in isolation
 mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
-variant: xhigh
+variant: medium
+temperature: 0.2
 tools:
   read: true
   write: true

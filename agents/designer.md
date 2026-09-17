@@ -2,7 +2,8 @@
 description: Frontend specialist - UI/UX, React/Next.js, design system, performance, accessibility.
 mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
-variant: xhigh
+variant: medium
+temperature: 0.6
 tools:
   read: true
   write: true

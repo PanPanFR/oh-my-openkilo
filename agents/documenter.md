@@ -2,7 +2,8 @@
 description: Technical writing specialist - creates and improves documentation
 mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
-variant: xhigh
+variant: low
+temperature: 0.3
 tools:
   read: true
   write: true
