@@ -24,9 +24,11 @@
   },
   "plugin": [
     "./plugins/agentmemory-capture.ts",
+    "./plugins/recall-first.ts",
     "@dietrichgebert/ponytail",
     "./plugins/caveman/plugin.js",
     "./plugins/graphify.ts",
+    "./plugins/rtk.ts",
     "superpowers@git+https://github.com/obra/superpowers.git"
   ],
   "provider": {

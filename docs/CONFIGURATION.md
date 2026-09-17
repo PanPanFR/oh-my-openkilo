@@ -75,7 +75,7 @@ A more balanced setup for security-sensitive work:
 - An npm package name: `@dietrichgebert/ponytail`
 - A git URL: `superpowers@git+https://github.com/obra/superpowers.git`
 
-The example lists the 6 plugins the pack ships: 6 small TypeScript files we own (`agentmemory-capture`, `graphify`, `caveman`, `checkpoint`, `recall-first`, `prompt-polish`) plus 2 npm packages (`ponytail`, `superpowers`). Drop any you don't want to load — the pack degrades gracefully without them, the only required one being `agentmemory-capture` if you use the memory skills. `prompt-polish` is opt-in: it only activates when the prompt starts with `pp ` and requires the `POLISH_BASE_URL`/`POLISH_API_KEY`/`POLISH_MODEL` env vars, so it is not in the example config by default.
+The example lists the 7 plugin specifiers the pack ships: 5 small files we own (`agentmemory-capture`, `recall-first`, `caveman`, `graphify`, `rtk`) plus 2 packages (`ponytail`, `superpowers`). Drop any you don't want to load — the pack degrades gracefully without them, the only required one being `agentmemory-capture` if you use the memory skills. `rtk` needs the `rtk` binary in PATH (token-saving bash rewrite); without it the plugin disables itself and commands pass through untouched. The maintainer's live install additionally wires the third-party `i-have-adhd` plugin (ADHD response structure, always-on via flag file) with an absolute local path, so it stays out of this portable example; the `communication-style` rule already carries the one-line precedence (ADHD owns structure, Caveman owns density) for installs that add it.
 
 ## Provider
 

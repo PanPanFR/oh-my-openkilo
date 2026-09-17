@@ -1,3 +1,9 @@
+# v0.8.6 (2026-09-17)
+
+## Changed
+- **Synced with live config**: `rules/communication-style.md` (one-line ADHD-vs-Caveman precedence: ADHD owns structure, Caveman owns density), new `plugins/rtk.ts` (token-saving bash rewrite via `rtk rewrite`, fail-open without the binary), `examples/opencode.example.json` gains `./plugins/recall-first.ts` and `./plugins/rtk.ts`.
+- **Removed dead plugins**: `plugins/checkpoint.ts` and `plugins/prompt-polish.ts` deleted to mirror the live install (unlisted, unloaded). Docs updated to match (`docs/CONFIGURATION.md` plugin paragraph rewritten around 7 specifiers, `docs/STRUCTURE.md` tree corrected). The live-only `i-have-adhd` plugin stays out of the portable example (absolute local path); the precedence line in the mirrored rule covers installs that add it.
+
 # v0.8.5 (2026-09-13)
 
 ## Docs

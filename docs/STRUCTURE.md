@@ -44,17 +44,16 @@ oh-my-openkilo/
 │   ├── remember.md                    # save to agentmemory
 │   └── update-pack.md                 # pull + sync from GitHub
 │
-├── plugins/                           # 6 small plugin files (no dist/, no node_modules)
+├── plugins/                           # 5 small plugin files (no dist/, no node_modules)
 │   ├── agentmemory-capture.ts         # hook for capturing session observations
 │   ├── caveman/                       # terse-mode + style pack
 │   │   ├── plugin.js
 │   │   ├── caveman-config.cjs
 │   │   ├── caveman-parse.cjs
 │   │   └── package.json
-│   ├── checkpoint.ts                  # shadow-checkpoint safety net
 │   ├── graphify.ts                    # codebase knowledge graph hook
-│   ├── prompt-polish.ts               # opt-in "pp " prompt rewrite via OpenAI-compatible API
-│   └── recall-first.ts                # one-shot recall gate for edits
+│   ├── recall-first.ts                # one-shot recall gate for edits
+│   └── rtk.ts                         # token-saving bash rewrite (needs rtk binary)
 │
 ├── examples/
 │   └── opencode.example.json          # portable config template, credentials redacted
