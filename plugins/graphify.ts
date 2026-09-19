@@ -10,7 +10,9 @@
 // backticks inside the double-quoted echo trigger bash command substitution,
 // which both corrupts tool output and silently executes the very graphify
 // command we are only suggesting. Plain words render fine in opencode's TUI.
-import type { Plugin } from "@opencode-ai/plugin";
+//
+// Dual contract: default export carries both runtimes.
+// v1 (>= 1.18.29) calls server(), v2 calls setup().
 import { existsSync, readdirSync, statSync, type Dirent } from "fs";
 import { join } from "path";
 import { spawn } from "child_process";
@@ -22,10 +24,13 @@ const CODE_EXT = /\.(ts|tsx|js|jsx|mjs|cjs|py|go|rs|java|rb|php|sh|bash|ps1|psm1
 const SKIP_DIRS = new Set(["graphify-out", "node_modules", ".git"]);
 const POLL_MS = 10000;
 
-export const GraphifyPlugin: Plugin = async ({ directory }) => {
+const REMINDER_TEXT =
+  'echo "[graphify] knowledge graph at graphify-out/. For focused questions, run graphify query with your question (scoped subgraph, usually much smaller than GRAPH_REPORT.md) instead of grepping raw files. Read GRAPH_REPORT.md only for broad architecture context." ; ';
+
+// Shared poller core: no hook registration inside, both adapters reuse it.
+function createGraphifyCore(directory: string) {
   let reminded = false;
 
-  // ── Auto-update poller ──
   // Only active where a graph already exists (same gate as the reminder), so
   // sessions in other projects without graphify-out/ stay untouched.
   let running = false;
@@ -114,7 +119,8 @@ export const GraphifyPlugin: Plugin = async ({ directory }) => {
     }
   }
 
-  if (existsSync(join(directory, "graphify-out", "graph.json"))) {
+  function startPoller(): void {
+    if (!existsSync(join(directory, "graphify-out", "graph.json"))) return;
     // Baseline immediately at init so the very first edit already compares.
     try {
       lastSnapshot = scanSnapshot();
@@ -125,27 +131,83 @@ export const GraphifyPlugin: Plugin = async ({ directory }) => {
     setInterval(() => safeCheck("poll"), POLL_MS);
   }
 
+  function hasGraph(): boolean {
+    return existsSync(join(directory, "graphify-out", "graph.json"));
+  }
+
+  // v1 after-hook: instant check after every edit/write without poll wait.
+  function afterEditTool(rawTool: unknown): void {
+    if (lastSnapshot === null) return; // baseline not taken yet
+    const t = String(rawTool ?? "").toLowerCase();
+    if (t !== "edit" && t !== "write") return;
+    safeCheck("tool");
+  }
+
+  // Prefixes the reminder to a bash command string, once per process.
+  // Returns the prefixed command, or the original when the gate is closed.
+  function prefixReminder(rawTool: unknown, command: unknown): unknown {
+    if (reminded) return command;
+    if (!hasGraph()) return command;
+    if (String(rawTool ?? "") !== "bash") return command;
+    if (typeof command !== "string") return command;
+    reminded = true;
+    return REMINDER_TEXT + command;
+  }
+
+  return { startPoller, hasGraph, afterEditTool, prefixReminder, safeCheck };
+}
+
+async function graphifyServer(input: any) {
+  const directory: string = input?.directory ?? process.cwd();
+  const core = createGraphifyCore(directory);
+  core.startPoller();
+
   return {
     // Instant path: after every edit/write tool call, check immediately so
     // agent-driven changes update the graph without waiting for the poll.
-    "tool.execute.after": async (input) => {
-      if (lastSnapshot === null) return; // baseline not taken yet
-      const t = String(input.tool ?? "").toLowerCase();
-      if (t !== "edit" && t !== "write") return;
-      safeCheck("tool");
+    "tool.execute.after": async (input: any) => {
+      core.afterEditTool(input?.tool);
     },
-    "tool.execute.before": async (input, output) => {
-      if (reminded) return;
-      if (!existsSync(join(directory, "graphify-out", "graph.json"))) return;
-
-      if (input.tool === "bash") {
-        // ';' not '&&' — Windows PowerShell 5.1 rejects '&&' as a statement
-        // separator, breaking the first bash command of the session (#1646).
-        output.args.command =
-          'echo "[graphify] knowledge graph at graphify-out/. For focused questions, run graphify query with your question (scoped subgraph, usually much smaller than GRAPH_REPORT.md) instead of grepping raw files. Read GRAPH_REPORT.md only for broad architecture context." ; ' +
-          output.args.command;
-        reminded = true;
-      }
+    "tool.execute.before": async (input: any, output: any) => {
+      if (input?.tool !== "bash") return;
+      const args = output?.args as Record<string, unknown> | undefined;
+      if (!args || typeof args !== "object") return;
+      // ';' not '&&': Windows PowerShell 5.1 rejects '&&' as a statement
+      // separator, breaking the first bash command of the session (#1646).
+      args.command = core.prefixReminder(input.tool, args.command);
     },
   };
+}
+
+async function graphifySetup(ctx: any) {
+  const hook = ctx?.tool?.hook;
+  if (typeof hook !== "function") {
+    // The mtime poller below is independent of tool hooks and keeps the
+    // graph fresh; only the first-bash reminder and instant edit/write
+    // checks are lost here.
+    console.warn(
+      "[graphify] ctx.tool.hook unavailable, instant tool-change checks and reminder disabled; mtime poller still active",
+    );
+  }
+  const directory: string = ctx?.location?.directory ?? process.cwd();
+  const core = createGraphifyCore(directory);
+  core.startPoller();
+  if (typeof hook !== "function") return;
+
+  await hook("execute.after", async (payload: any) => {
+    core.afterEditTool(payload?.tool);
+  });
+  await hook("execute.before", async (payload: any) => {
+    const t = String(payload?.tool ?? "").toLowerCase();
+    if (t !== "bash") return;
+    const target = (payload?.input ?? payload?.args) as Record<string, unknown> | undefined;
+    if (!target || typeof target !== "object") return;
+    target.command = core.prefixReminder("bash", target.command);
+  });
+}
+
+export default {
+  id: "graphify",
+  server: graphifyServer,
+  setup: graphifySetup,
 };
