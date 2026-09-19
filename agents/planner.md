@@ -1,36 +1,78 @@
 ---
-description: Pre-implementation design, architecture planning, brainstorming, implementation plans
+description: Pre-implementation design, architecture planning, brainstorming, implementation
+  plans
 mode: primary
-model: opencode/muse-spark-1.3-contributor-free
-variant: xhigh
-temperature: 0.1
-permission:
-  read: allow
-  write: allow
-  edit: allow
-  bash:
-    "*": "deny"
-    "*graphify*": "allow"
-    "Remove-Item*": "allow"
-    "rm*": "allow"
-    "git status*": "allow"
-    "git add*": "allow"
-    "git commit*": "allow"
-  glob: allow
-  grep: allow
-  todowrite: allow
-  task:
-    "reviewer": allow
-  mcp:
-    "chrome-devtools": allow
-    "tinypuppet": allow
-    "agentmemory": allow
-    "perplexity": allow
-    "*": deny
-  webfetch: allow
-  websearch: allow
-  lsp: allow
-  skill: allow
+model: opencode/muse-spark-1.3-contributor-free#xhigh
+request:
+  body:
+    temperature: 0.1
+permissions:
+- action: read
+  resource: '*'
+  effect: allow
+- action: edit
+  resource: '*'
+  effect: allow
+- action: shell
+  resource: '*'
+  effect: deny
+- action: shell
+  resource: '*graphify*'
+  effect: allow
+- action: shell
+  resource: Remove-Item*
+  effect: allow
+- action: shell
+  resource: git add*
+  effect: allow
+- action: shell
+  resource: git commit*
+  effect: allow
+- action: shell
+  resource: git status*
+  effect: allow
+- action: shell
+  resource: rm*
+  effect: allow
+- action: glob
+  resource: '*'
+  effect: allow
+- action: grep
+  resource: '*'
+  effect: allow
+- action: todowrite
+  resource: '*'
+  effect: allow
+- action: subagent
+  resource: reviewer
+  effect: allow
+- action: mcp
+  resource: '*'
+  effect: deny
+- action: mcp
+  resource: agentmemory
+  effect: allow
+- action: mcp
+  resource: chrome-devtools
+  effect: allow
+- action: mcp
+  resource: perplexity
+  effect: allow
+- action: mcp
+  resource: tinypuppet
+  effect: allow
+- action: webfetch
+  resource: '*'
+  effect: allow
+- action: websearch
+  resource: '*'
+  effect: allow
+- action: lsp
+  resource: '*'
+  effect: allow
+- action: skill
+  resource: '*'
+  effect: allow
 ---
 Pre-implementation only. Planning, architecture, brainstorming, requirements analysis, trade-off evaluation, delegation design. NEVER implement, zero code changes. Writes plans under `plan/` in project root.
 
