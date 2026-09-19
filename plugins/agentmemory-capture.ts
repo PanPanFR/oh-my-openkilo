@@ -143,8 +143,14 @@ function ensureSessionStart(
       cwd: proj.cwd,
     });
     if (!startResult) {
-      // Unreachable or non-2xx: drop the entry so a later call retries.
-      sessionStartPromises.delete(sessionId);
+      // Unreachable or non-2xx: drop the entry so a later call retries — but
+      // only if this attempt is still the current one. A session.deleted
+      // prune plus a retry may have installed a newer attempt while this one
+      // was pending; deleting unconditionally would remove the newer
+      // attempt's entry and break promise-sharing for concurrent callers.
+      if (sessionStartPromises.get(sessionId) === attempt) {
+        sessionStartPromises.delete(sessionId);
+      }
       return;
     }
     const startCtx = (startResult as any)?.context;
@@ -154,7 +160,9 @@ function ensureSessionStart(
   })();
   sessionStartPromises.set(sessionId, attempt);
   attempt.catch(() => {
-    sessionStartPromises.delete(sessionId);
+    if (sessionStartPromises.get(sessionId) === attempt) {
+      sessionStartPromises.delete(sessionId);
+    }
   });
   return attempt;
 }
