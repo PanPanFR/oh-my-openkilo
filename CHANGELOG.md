@@ -1,17 +1,12 @@
 # v0.9.0 (2026-09-19)
 
 ## Changed
-- **Plugins now dual-contract (opencode 1.x and 2.x)**. All 5 shipped plugins (`rtk`, `recall-first`, `graphify`, `agentmemory-capture`, `caveman`) `default`-export `{ id, server, setup }`: opencode v1 (>= 1.18.29) calls `server()`, v2 calls `setup()` which registers through `ctx.tool.hook` / `ctx.event.subscribe` / `ctx.session.hook`. This fixes #1 (v1 named-export style rejected on 2.x with "Plugin must export a default definition") without dropping 1.x support. Agents/commands stay on the v1 shape, which v2 reads compatibly.
-  - `rtk`: bash rewrite via `tool.hook("execute.before")`, mutating `payload.input.command` in place. Unchanged behavior.
-  - `recall-first`: same one-shot recall gate per session, still fail-open. Unchanged behavior.
-  - `graphify`: reminder + instant-change check via `execute.before`/`execute.after`; mtime poller unchanged. Unchanged behavior. If tool hooks are unavailable, the warning now says exactly that (poller keeps running) instead of claiming auto-update is off.
-  - `agentmemory-capture`: event capture via a `for await` pump over the async iterable from `ctx.event.subscribe()` (each item is the decoded event; the v1-style single handler is driven per event); file stash via `execute.before`; session-start telemetry via `ctx.session.hook("context")`; compaction context injection via `ctx.session.hook("compaction")`. A lazy `/session/start` backfill initializes any session first seen through a non-`session.created` event, so startup races cannot drop a session. Hooks with no v2 equivalent (`chat.message`, `chat.params`, `config`) degrade; one console warning names all of them.
-  - `caveman`: session-start flag assertion via the event pump; per-turn reinforcement rides `ctx.session.hook("context")` (best-effort — if the undocumented payload exposes no `system`/`context` array it silently no-ops). `chat.message` has no v2 equivalent, so in-session `/caveman` toggles degrade; one console warning names it.
-- **Event stream consumption**: on v2, `ctx.event.subscribe()` returns an async iterable rather than accepting a handler; both event-driven plugins consume it with `for await`, await each handler dispatch (no unhandled rejections), and return a cleanup function from `setup` that closes the stream.
-- **Version bump to 0.9.0 (minor)**: no breaking change — the dual contract loads on both opencode 1.x and 2.x, so existing installs upgrade directly.
+- **Works on opencode 1.x and 2.x**: all 5 plugins now load on both versions, so upgrading opencode no longer breaks the pack. Just update and keep working; nothing to change on your side.
+- **Same behavior everywhere**: token-saving rewrites, the recall reminder, the knowledge-graph watcher, memory capture, and caveman mode all work as before. On v2, two small extras stay quiet (memory prompt enrichment and in-session caveman toggles) because v2 has no slot for them; everything else is unchanged.
+- **Agents and commands untouched**: the same 6 agents, already compatible with both versions.
 
 ## Docs
-- **docs/CONFIGURATION.md**: documented the dual plugin contract (v1 `server()` + v2 `setup()`), the session-hook integrations, and which hooks degrade on v2 (with the warning that names them).
+- **docs/CONFIGURATION.md**: notes which opencode versions are supported.
 
 # v0.8.8 (2026-09-17)
 
