@@ -183,8 +183,6 @@ Free models are good for everyday work but slower and less capable than paid one
 Each agent file sets reasoning effort as a `#variant` suffix on its `model:` line and sampling randomness (0.0-1.0) under `request.body.temperature`. The pack ships both tuned per role:
 
 | Agent | `#variant` | `temperature` | Why |
-
-| Agent | `#variant` | `temperature` | Why |
 |-------|-----------|---------------|-----|
 | `builder` | `xhigh` | 0.3 | Max reasoning depth for build quality; steady temp for execution. |
 | `planner` | `xhigh` | 0.1 | Deep reasoning for architecture; near-deterministic analysis. |

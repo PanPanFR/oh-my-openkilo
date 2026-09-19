@@ -44,6 +44,9 @@ permissions:
   resource: '*'
   effect: allow
 - action: subagent
+  resource: '*'
+  effect: deny
+- action: subagent
   resource: reviewer
   effect: allow
 - action: mcp

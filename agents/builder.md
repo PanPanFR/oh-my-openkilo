@@ -26,6 +26,9 @@ permissions:
   resource: '*'
   effect: allow
 - action: subagent
+  resource: '*'
+  effect: deny
+- action: subagent
   resource: designer
   effect: allow
 - action: subagent
