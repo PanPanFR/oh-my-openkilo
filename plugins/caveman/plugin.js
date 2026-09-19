@@ -228,6 +228,7 @@ const CavemanPlugin = async (_ctx) => {
 // pump; per-turn reinforcement rides the context session hook.
 export default {
   id: "caveman",
+  server: CavemanPlugin,
   setup: async (ctx) => {
     const hooks = (await CavemanPlugin({})) || {};
 
@@ -316,14 +317,23 @@ export default {
                 stale.lastIndex = 0;
                 arr[i] = arr[i].replace(stale, line);
                 found = true;
+              } else if (arr[i] && typeof arr[i].text === "string" && stale.test(arr[i].text)) {
+                stale.lastIndex = 0;
+                arr[i].text = arr[i].text.replace(stale, line);
+                found = true;
               }
               stale.lastIndex = 0;
             }
             if (found) return;
             if (arr.length > 0) {
-              arr[arr.length - 1] += "\n\n" + line;
+              const lastIdx = arr.length - 1;
+              if (typeof arr[lastIdx] === "string") {
+                arr[lastIdx] += "\n\n" + line;
+              } else if (arr[lastIdx] && typeof arr[lastIdx].text === "string") {
+                arr[lastIdx].text += "\n\n" + line;
+              }
             } else {
-              arr.push(line);
+              arr.push(arr === input?.system ? { type: "text", text: line } : line);
             }
           } catch (e) {
             if (process.env.CAVEMAN_DEBUG === "1") {

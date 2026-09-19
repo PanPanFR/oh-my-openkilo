@@ -1,6 +1,6 @@
 # Agents
 
-oh-my-openkilo ships **6 agents** in `agents/`. Each is a single markdown file: YAML frontmatter at the top (description, mode, model, permissions) and a prompt body. Edit the file to change behavior, edit the `model:` line to swap models (append `#variant` for reasoning effort), edit `permissions:` to change tool access. No build step.
+oh-my-openkilo ships **6 agents** in `agents/`. Each is a single markdown file: YAML frontmatter at the top (name, mode, model, tools) and a prompt body. Edit the file to change behavior, edit the `model:` line to swap models, edit `tools:` to change permissions. No build step.
 
 The pack divides the team into **2 primary agents** (you talk to them directly) and **4 subagents** (primaries fan out work to them in parallel). Two of OpenCode's built-in agents are disabled to avoid duplication: `build` (replaced by `builder`) and `plan` (replaced by `planner`).
 
@@ -154,7 +154,7 @@ The pack disables two of OpenCode's built-in agents to avoid duplication:
 - `build` is replaced by `builder`
 - `plan` is replaced by `planner`
 
-To re-enable them, edit your `opencode.json` and remove the corresponding `disabled: true` entries under `agents`.
+To re-enable them, edit your `opencode.json` and remove the corresponding `disable: true` entries under `agent.`.
 
 ## How to invoke
 
@@ -163,15 +163,15 @@ In a normal OpenCode session, you can either:
 - Let `builder` pick the right subagent automatically (most common).
 - Be explicit: "Ask `tester` to write tests for the auth module", "Have `reviewer` sanity-check this diff", "Have `designer` review the UI for a11y".
 
-Subagents are also dispatched by `builder` and `planner` via the `subagent` tool, in parallel when the subtasks are independent.
+Subagents are also dispatched by `builder` and `planner` via the `task` tool, in parallel when the subtasks are independent.
 
 ## How to change a model
 
 1. Open the agent's `.md` file under `~/.config/opencode/agents/` (the file the installer copied; same as the source in `agents/`).
-2. Edit the `model:` line. Use the format `<provider>/<model>#variant` (e.g. `anthropic/claude-sonnet-4-5#high`, `openai/gpt-5`, `9router/Kimi-K2.6`).
+2. Edit the `model:` line. Use the format `<provider>/<model>` (e.g. `anthropic/claude-sonnet-4-5`, `openai/gpt-5`, `9router/Kimi-K2.6`).
 3. Save and run `/reload` (or restart OpenCode).
 
-Reasoning effort is selected by the `#variant` suffix on the model (`xhigh` thinks hardest). Sampling randomness lives under `request.body.temperature` (0.0-1.0) in the same frontmatter block. The pack ships both tuned per role; defaults and how to adjust are in [Reasoning effort and temperature](#reasoning-effort-and-temperature).
+`variant:` (reasoning effort) and `temperature:` (0.0-1.0, sampling randomness) sit in the same frontmatter block as `model:`. The pack ships them tuned per role; defaults and how to adjust are in [Reasoning effort and temperature](#reasoning-effort-and-temperature).
 
 Free models are good for everyday work but slower and less capable than paid ones. If you have provider credentials configured in `opencode.json`, a useful split is:
 
@@ -180,9 +180,9 @@ Free models are good for everyday work but slower and less capable than paid one
 
 ## Reasoning effort and temperature
 
-Each agent file sets reasoning effort as a `#variant` suffix on its `model:` line and sampling randomness (0.0-1.0) under `request.body.temperature`. The pack ships both tuned per role:
+Agent frontmatter sets two more knobs per agent: `variant` (how much the model reasons before answering) and `temperature` (sampling randomness, 0.0-1.0). The pack ships them tuned per role:
 
-| Agent | `#variant` | `temperature` | Why |
+| Agent | `variant` | `temperature` | Why |
 |-------|-----------|---------------|-----|
 | `builder` | `xhigh` | 0.3 | Max reasoning depth for build quality; steady temp for execution. |
 | `planner` | `xhigh` | 0.1 | Deep reasoning for architecture; near-deterministic analysis. |
@@ -191,7 +191,7 @@ Each agent file sets reasoning effort as a `#variant` suffix on its `model:` lin
 | `documenter` | `low` | 0.3 | Docs need fluency, not deep reasoning; cheapest and fastest. |
 | `designer` | `medium` | 0.6 | Creative temp for design work; medium reasoning for a11y and system calls. |
 
-Reasoning effort is a direct latency and cost multiplier: every notch down means fewer reasoning tokens per turn. Raise the `#variant` back to `xhigh` on any agent where the output quality drops. Lower `temperature` towards 0.0 for deterministic analysis and review, raise it towards 0.6-1.0 for brainstorming and design. Restart OpenCode after editing, since frontmatter is read at session start.
+Reasoning effort is a direct latency and cost multiplier: every notch down means fewer reasoning tokens per turn. Raise `variant` back to `xhigh` on any agent where the output quality drops. Lower `temperature` towards 0.0 for deterministic analysis and review, raise it towards 0.6-1.0 for brainstorming and design. Restart OpenCode after editing, since frontmatter is read at session start.
 
 ## Adding a new agent
 

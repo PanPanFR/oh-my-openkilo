@@ -803,6 +803,7 @@ const AgentmemoryCapturePlugin = async (ctx: any) => {
 // driven from the v2 registrations, so all capture logic stays in one place.
 export default {
   id: "agentmemory-capture",
+  server: AgentmemoryCapturePlugin,
   setup: async (ctx: any) => {
     const directory: string = ctx?.location?.directory ?? process.cwd();
     const v1 = await AgentmemoryCapturePlugin({
@@ -894,7 +895,11 @@ export default {
               const arr = Array.isArray(input?.context) ? input.context : Array.isArray(input?.system) ? input.system : null;
               const cached = startContextCache.get(sid);
               if (arr && typeof cached === "string" && cached.length > 0) {
-                arr.push(cached);
+                if (arr === input?.system || (arr.length > 0 && typeof arr[0] === "object" && arr[0] !== null)) {
+                  arr.push({ type: "text", text: cached });
+                } else {
+                  arr.push(cached);
+                }
                 startContextCache.delete(sid);
               }
             }
@@ -915,7 +920,11 @@ export default {
               const ctxText = (result as any)?.context;
               const arr = Array.isArray(output?.context) ? output.context : null;
               if (typeof ctxText === "string" && ctxText.length > 0 && arr) {
-                arr.push(ctxText);
+                if (arr === output?.system || (arr.length > 0 && typeof arr[0] === "object" && arr[0] !== null)) {
+                  arr.push({ type: "text", text: ctxText });
+                } else {
+                  arr.push(ctxText);
+                }
               }
             }
           } catch (e) {
