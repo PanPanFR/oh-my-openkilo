@@ -25,16 +25,23 @@ const REMINDER =
   "If the memory server is unavailable or the task is trivial, proceed without recall " +
   "and mention that in one line.";
 
-export const RecallFirstPlugin = async () => {
-  // Sets keyed by sessionID; empty string bucket when the hook input
-  // carries no sessionID (degrades to one warning per process, still fine).
-  const recalled = new Set<string>();
-  const warned = new Set<string>();
-
-  return {
-    "tool.execute.before": async (input: { tool?: string; sessionID?: string }) => {
-      const tool = input?.tool ?? "";
-      const session = input?.sessionID ?? "";
+// v2 plugin contract (opencode >= 2.0): default export with id + setup.
+// The recall gate registers through ctx.tool.hook("execute.before") — the
+// same before-execution position v1 used — and stays fail-open: the thrown
+// REMINDER surfaces as the tool result once per session, never again.
+export default {
+  id: "recall-first",
+  setup: async (ctx: any) => {
+    const hook = ctx?.tool?.hook;
+    if (typeof hook !== "function") {
+      console.warn("[recall-first] ctx.tool.hook unavailable — plugin disabled");
+      return;
+    }
+    const recalled = new Set<string>();
+    const warned = new Set<string>();
+    await hook("execute.before", async (payload: any) => {
+      const tool = String(payload?.tool ?? "").toLowerCase();
+      const session = String(payload?.sessionID ?? "");
       if (isRecallTool(tool)) {
         recalled.add(session);
         return;
@@ -43,6 +50,6 @@ export const RecallFirstPlugin = async () => {
         warned.add(session);
         throw new Error(REMINDER);
       }
-    },
-  };
+    });
+  },
 };

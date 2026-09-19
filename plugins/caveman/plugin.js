@@ -142,7 +142,10 @@ function handleSessionCreated() {
   safeWriteFlag(flagPath, mode);
 }
 
-export const CavemanPlugin = async (_ctx) => {
+// Internal hook factory — the v2 default export below instantiates it and
+// drives the returned hooks from v2 registrations. Not exported: v1-style
+// named plugin exports are dead in the opencode >= 2.0 loader.
+const CavemanPlugin = async (_ctx) => {
   // Assert the flag at plugin load as well: in one-shot `opencode run` the
   // first session.created publishes before plugin event dispatch is wired,
   // so the event handler alone misses it. The factory-time write covers that
@@ -211,4 +214,46 @@ export const CavemanPlugin = async (_ctx) => {
   };
 };
 
-export default CavemanPlugin;
+// v2 plugin contract (opencode >= 2.0): default export with id + setup.
+// The v1 factory above is instantiated and its hooks driven from v2
+// registrations. Mapping:
+//   event                                  → ctx.event.subscribe
+//   chat.message (/caveman toggle parsing)  → no v2 equivalent; warned once
+//   experimental.chat.system.transform      → no v2 equivalent; warned once
+// The mode flag file is still asserted on every session.created event, but
+// in-session /caveman toggles and per-turn reinforcement are degraded until
+// opencode v2 exposes chat/system hooks to plugins.
+export default {
+  id: "caveman",
+  setup: async (ctx) => {
+    const hooks = (await CavemanPlugin({})) || {};
+
+    let warnedUnsupported = false;
+    const warnUnsupported = (name) => {
+      if (warnedUnsupported) return;
+      warnedUnsupported = true;
+      console.error(
+        `[caveman] v2 runtime: hook "${name}" has no v2 equivalent — ` +
+          "in-session /caveman toggles and per-turn reinforcement are degraded. " +
+          "Session-start flag assertion remains active.",
+      );
+    };
+
+    if (typeof ctx?.event?.subscribe === "function") {
+      await ctx.event.subscribe((event) => {
+        try {
+          void hooks.event?.({ event });
+        } catch (e) {
+          if (process.env.CAVEMAN_DEBUG === "1") {
+            console.error(`caveman: event handler failed: ${e.message}`);
+          }
+        }
+      });
+    } else {
+      console.error("caveman: ctx.event.subscribe unavailable — plugin disabled");
+    }
+
+    if (hooks["chat.message"]) warnUnsupported("chat.message");
+    if (hooks["experimental.chat.system.transform"]) warnUnsupported("experimental.chat.system.transform");
+  },
+};

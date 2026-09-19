@@ -1,3 +1,17 @@
+# v0.9.0 (2026-09-19)
+
+## Changed
+- **Plugins migrated to the opencode v2 contract** (requires opencode >= 2.0). OpenCode 2.x loads only plugins whose module `default`-exports `{ id, setup }` and registers hooks through `ctx.tool.hook` / `ctx.event.subscribe`; the previous named-export style fails with "Plugin must export a default definition with an id and an effect or setup function". All 5 shipped plugins (`rtk`, `recall-first`, `graphify`, `agentmemory-capture`, `caveman`) now default-export the v2 shape.
+  - `rtk`: bash rewrite via `tool.hook("execute.before")`, mutating `payload.input.command` in place. Unchanged behavior.
+  - `recall-first`: same one-shot recall gate per session, still fail-open. Unchanged behavior.
+  - `graphify`: reminder + instant-change check via `execute.before`/`execute.after`; mtime poller unchanged. Unchanged behavior.
+  - `agentmemory-capture`: full event capture via `ctx.event.subscribe`, file stash via `execute.before`. Degraded on v2: `chat.message`, `chat.params`, `config`, and the two `experimental.chat/session` transforms have no v2 equivalent, so prompt/tool-output enrichment is off; a one-time console warning lists what is skipped. Event and file-observation capture are unaffected.
+  - `caveman`: session-start flag assertion via `ctx.event.subscribe`. Degraded on v2: in-session `/caveman` toggles (`chat.message`) and per-turn reinforcement (system transform) have no v2 equivalent; a one-time console warning notes it. Flag-file writes on new sessions still work.
+- **Version bump to 0.9.0 (minor)**: plugins no longer load on opencode 1.x (v1 loaders expect named function exports). If you are still on opencode 1.x, stay on pack v0.8.8.
+
+## Docs
+- **docs/CONFIGURATION.md**: documented the v2 plugin contract, the opencode >= 2.0 requirement, and the degradation warnings.
+
 # v0.8.8 (2026-09-17)
 
 ## Changed

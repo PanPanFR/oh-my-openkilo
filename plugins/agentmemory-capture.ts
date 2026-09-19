@@ -1,4 +1,3 @@
-import type { Plugin } from "@opencode-ai/plugin";
 import { execFileSync } from "node:child_process";
 import { basename } from "node:path";
 
@@ -213,7 +212,10 @@ function extractErrorMessage(err: unknown): string {
   return String(err ?? "");
 }
 
-export const AgentmemoryCapturePlugin: Plugin = async (ctx) => {
+// Internal hook factory — the v2 default export below instantiates it and
+// drives the returned hooks from v2 registrations. Not exported: v1-style
+// named plugin exports are dead in the opencode >= 2.0 loader.
+const AgentmemoryCapturePlugin = async (ctx: any) => {
   defaultProjectCwd = ctx.worktree || ctx.project?.id || process.cwd();
   defaultProjectName = resolveProjectName(defaultProjectCwd);
 
@@ -744,4 +746,74 @@ export const AgentmemoryCapturePlugin: Plugin = async (ctx) => {
       }
     },
   };
+};
+
+// ── v2 runtime (opencode >= 2.0) ─────────────────────────────────────────────
+// Default export with id + setup, as required by the v2 plugin loader.
+// Mapping from the v1 hooks above:
+//   event                                  → ctx.event.subscribe (all bus events)
+//   tool.execute.before (file stash)       → ctx.tool.hook("execute.before")
+//   chat.message / chat.params / config /
+//   experimental.chat.system.transform /
+//   experimental.session.compacting        → no v2 equivalent; warned once
+// The v1 factory is instantiated with a shim ctx and its returned hooks are
+// driven from the v2 registrations, so all capture logic stays in one place.
+export default {
+  id: "agentmemory-capture",
+  setup: async (ctx: any) => {
+    const directory: string = ctx?.location?.directory ?? process.cwd();
+    const v1 = await AgentmemoryCapturePlugin({
+      worktree: directory,
+      directory,
+      project: { id: directory },
+    } as any);
+    const hooks = v1 ?? {};
+
+    let warnedUnsupported = false;
+    const warnUnsupported = (name: string) => {
+      if (warnedUnsupported) return;
+      warnedUnsupported = true;
+      console.error(
+        `[agentmemory] v2 runtime: hook "${name}" has no v2 equivalent — ` +
+          "memory capture for prompt/tool-output enrichment is degraded. " +
+          "Event + file-stash capture remains active.",
+      );
+    };
+
+    if (typeof ctx?.event?.subscribe === "function") {
+      await ctx.event.subscribe((event: any) => {
+        try {
+          void hooks.event?.({ event });
+        } catch (e) {
+          if (DEBUG) console.error("[agentmemory] event handler failed:", (e as Error).message);
+        }
+      });
+    } else {
+      console.error("[agentmemory] ctx.event.subscribe unavailable — capture disabled");
+    }
+
+    const toolHook = ctx?.tool?.hook;
+    if (typeof toolHook === "function") {
+      await toolHook("execute.before", async (payload: any) => {
+        if (!FILE_TOOLS.has(String(payload?.tool ?? "").toLowerCase())) return;
+        const sid = payload?.sessionID || activeSessionId;
+        if (!sid) return;
+        const args = (payload?.input ?? payload?.args) as Record<string, unknown> | undefined;
+        if (!args) return;
+        const stash = stashFor(sid);
+        for (const fp of extractFilePaths(args)) {
+          stash.add(fp);
+        }
+        if (stash.size > MAX_STASHED_FILES) {
+          const keep = [...stash].slice(-MAX_STASHED_FILES);
+          stash.clear();
+          for (const f of keep) stash.add(f);
+        }
+      });
+    }
+
+    for (const name of ["chat.message", "chat.params", "config", "experimental.chat.system.transform", "experimental.session.compacting"]) {
+      if (hooks[name as keyof typeof hooks]) warnUnsupported(name);
+    }
+  },
 };

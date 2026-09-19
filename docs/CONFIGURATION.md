@@ -77,6 +77,8 @@ A more balanced setup for security-sensitive work:
 
 The example lists the 7 plugin specifiers the pack ships: 5 small files we own (`agentmemory-capture`, `recall-first`, `caveman`, `graphify`, `rtk`) plus 2 packages (`ponytail`, `superpowers`). Drop any you don't want to load — the pack degrades gracefully without them, the only required one being `agentmemory-capture` if you use the memory skills. `rtk` needs the `rtk` binary in PATH (token-saving bash rewrite); without it the plugin disables itself and commands pass through untouched. The maintainer's live install additionally wires the third-party `i-have-adhd` plugin (ADHD response structure, always-on via flag file) with an absolute local path, so it stays out of this portable example; the `communication-style` rule already carries the one-line precedence (ADHD owns structure, Caveman owns density) for installs that add it.
 
+All five shipped plugins target the **opencode v2 plugin contract** (a `default` export of `{ id, setup }` registering through `ctx.tool.hook` / `ctx.event.subscribe`) and require **opencode >= 2.0**. On opencode 1.x they will not load; stay on pack v0.8.8 if you are still on v1. Hooks with no v2 equivalent (`chat.message`, `chat.params`, system-transform) degrade with a one-time console warning instead of failing the plugin.
+
 ## Provider
 
 External LLM providers. Each provider has:
