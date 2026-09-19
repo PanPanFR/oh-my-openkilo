@@ -1,30 +1,48 @@
 ---
-description: Code and security review specialist - reviews diffs against repo standards, spec, and security baseline
+description: Code and security review specialist - reviews diffs against repo standards,
+  spec, and security baseline
 mode: subagent
-model: opencode/muse-spark-1.3-contributor-free
-variant: high
-temperature: 0.1
-tools:
-  read: true
-  glob: true
-  grep: true
-  bash: true
-  mcp: true
-permission:
-  read: allow
-  write: deny
-  edit: deny
-  bash: allow
-  glob: allow
-  grep: allow
-  todowrite: deny
-  task: deny
-  mcp:
-    "*": deny
-  webfetch: allow
-  websearch: allow
-  lsp: allow
-  skill: allow
+model: opencode/muse-spark-1.3-contributor-free#high
+request:
+  body:
+    temperature: 0.1
+permissions:
+- action: read
+  resource: '*'
+  effect: allow
+- action: edit
+  resource: '*'
+  effect: deny
+- action: shell
+  resource: '*'
+  effect: allow
+- action: glob
+  resource: '*'
+  effect: allow
+- action: grep
+  resource: '*'
+  effect: allow
+- action: todowrite
+  resource: '*'
+  effect: deny
+- action: subagent
+  resource: '*'
+  effect: deny
+- action: mcp
+  resource: '*'
+  effect: deny
+- action: webfetch
+  resource: '*'
+  effect: allow
+- action: websearch
+  resource: '*'
+  effect: allow
+- action: lsp
+  resource: '*'
+  effect: allow
+- action: skill
+  resource: '*'
+  effect: allow
 ---
 Review specialist. Review diffs, report findings. Read-only.
 
