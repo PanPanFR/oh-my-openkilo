@@ -55,7 +55,7 @@ async function observe(
   // Lazy backfill: if session.created was missed (e.g. emitted before the
   // v2 event pump was wired), the first observation initializes the session.
   // Fire-and-forget: a slow or failed start must never block capture.
-  if (!startedSessions.has(sessionId)) {
+  if (!sessionStartPromises.has(sessionId)) {
     void ensureSessionStart(sessionId, null, { name: proj.name, cwd: proj.cwd }).catch(() => {});
   }
   await post("/observe", {
@@ -120,31 +120,43 @@ const contextInjectedSessions = new Set<string>();
 // the first prompt_submit (fallback for older OpenCode builds that
 // don't implement experimental.chat.system.transform).
 const startContextCache = new Map<string, string>();
-// Sessions for which /session/start has been sent. Guards the lazy-start
-// backfill: if session.created fired before the v2 event pump was wired,
-// the first session-bearing event still initializes the session.
-const startedSessions = new Set<string>();
+// /session/start attempts, keyed by session. The in-flight promise is shared
+// by concurrent callers (a context hook can await it before reading
+// startContextCache) and cleared on failure so a later event retries a start
+// that failed while the memory server was unavailable.
+const sessionStartPromises = new Map<string, Promise<void>>();
 
-async function ensureSessionStart(
+function ensureSessionStart(
   sessionId: string,
   info: Record<string, unknown> | null,
   proj: { name: string | null; cwd: string | null },
 ): Promise<void> {
-  if (startedSessions.has(sessionId)) return;
-  // Mark before the first await so concurrent callers cannot double-start.
-  startedSessions.add(sessionId);
-  const startResult = await postJson("/session/start", {
-    sessionId,
-    title: info?.title ?? null,
-    parentID: info?.parentID ?? null,
-    version: info?.version ?? null,
-    project: proj.name,
-    cwd: proj.cwd,
+  const existing = sessionStartPromises.get(sessionId);
+  if (existing) return existing;
+  const attempt = (async () => {
+    const startResult = await postJson("/session/start", {
+      sessionId,
+      title: info?.title ?? null,
+      parentID: info?.parentID ?? null,
+      version: info?.version ?? null,
+      project: proj.name,
+      cwd: proj.cwd,
+    });
+    if (!startResult) {
+      // Unreachable or non-2xx: drop the entry so a later call retries.
+      sessionStartPromises.delete(sessionId);
+      return;
+    }
+    const startCtx = (startResult as any)?.context;
+    if (typeof startCtx === "string" && startCtx.length > 0) {
+      startContextCache.set(sessionId, startCtx);
+    }
+  })();
+  sessionStartPromises.set(sessionId, attempt);
+  attempt.catch(() => {
+    sessionStartPromises.delete(sessionId);
   });
-  const startCtx = (startResult as any)?.context;
-  if (typeof startCtx === "string" && startCtx.length > 0) {
-    startContextCache.set(sessionId, startCtx);
-  }
+  return attempt;
 }
 
 function stashFor(sid: string): Set<string> {
@@ -170,7 +182,7 @@ function pruneSessionMaps(sid: string): void {
   seenSubtaskIds.delete(sid);
   seenToolCallIds.delete(sid);
   sessionProjects.delete(sid);
-  startedSessions.delete(sid);
+  sessionStartPromises.delete(sid);
 }
 
 function safeSlice(v: unknown, max: number): string {
@@ -862,7 +874,13 @@ export default {
           try {
             const sid = input?.sessionID ?? input?.session?.id ?? null;
             if (sid && typeof sid === "string") {
-              void ensureSessionStart(sid, null, projectFor(sid)).catch(() => {});
+              // Await the in-flight /session/start (shared promise) so the
+              // cache below can see its context; bounded so a dead memory
+              // server delays prompt assembly by at most ~1.5s.
+              await Promise.race([
+                ensureSessionStart(sid, null, projectFor(sid)).catch(() => {}),
+                new Promise((r) => setTimeout(r, 1500)),
+              ]);
               await observe(sid, "session_context", { keys: Object.keys(input ?? {}) });
               // Best-effort injection: same cache the v1 system.transform used.
               const arr = Array.isArray(input?.context) ? input.context : Array.isArray(input?.system) ? input.system : null;
