@@ -13,6 +13,9 @@
 // opencode prefixes MCP tool names with the server name, e.g.
 // "agentmemory_memory_smart_search". Match on suffix so both bare and
 // prefixed names register a recall.
+//
+// Dual contract: default export carries both runtimes.
+// v1 (>= 1.18.29) calls server(), v2 calls setup().
 const RECALL_SUFFIXES = ["memory_smart_search", "memory_recall"];
 const WRITE_TOOLS = new Set(["edit", "write", "patch", "apply_patch", "multiedit"]);
 
@@ -25,24 +28,49 @@ const REMINDER =
   "If the memory server is unavailable or the task is trivial, proceed without recall " +
   "and mention that in one line.";
 
-export const RecallFirstPlugin = async () => {
+// Shared gate core: one instance per runtime entrypoint call.
+function createGate() {
   // Sets keyed by sessionID; empty string bucket when the hook input
   // carries no sessionID (degrades to one warning per process, still fine).
   const recalled = new Set<string>();
   const warned = new Set<string>();
+  return async (rawTool: unknown, rawSession: unknown) => {
+    const tool = String(rawTool ?? "");
+    const session = String(rawSession ?? "");
+    if (isRecallTool(tool)) {
+      recalled.add(session);
+      return;
+    }
+    if (WRITE_TOOLS.has(tool as string) && !recalled.has(session) && !warned.has(session)) {
+      warned.add(session);
+      throw new Error(REMINDER);
+    }
+  };
+}
 
+async function recallServer(_input: any) {
+  const check = createGate();
   return {
     "tool.execute.before": async (input: { tool?: string; sessionID?: string }) => {
-      const tool = input?.tool ?? "";
-      const session = input?.sessionID ?? "";
-      if (isRecallTool(tool)) {
-        recalled.add(session);
-        return;
-      }
-      if (WRITE_TOOLS.has(tool) && !recalled.has(session) && !warned.has(session)) {
-        warned.add(session);
-        throw new Error(REMINDER);
-      }
+      await check(input?.tool, input?.sessionID);
     },
   };
+}
+
+async function recallSetup(ctx: any) {
+  const hook = ctx?.tool?.hook;
+  if (typeof hook !== "function") {
+    console.warn("[recall-first] ctx.tool.hook unavailable, plugin disabled");
+    return;
+  }
+  const check = createGate();
+  await hook("execute.before", async (payload: any) => {
+    await check(String(payload?.tool ?? "").toLowerCase(), payload?.sessionID);
+  });
+}
+
+export default {
+  id: "recall-first",
+  server: recallServer,
+  setup: recallSetup,
 };
