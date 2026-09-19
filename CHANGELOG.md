@@ -1,3 +1,15 @@
+# Unreleased: dual v1+v2 plugin support
+
+## Added
+- **Dual-contract plugins**: all 5 owned plugins (`agentmemory-capture`, `recall-first`, `caveman`, `graphify`, `rtk`) now export `{ id, server, setup }`. OpenCode v1 (>= 1.18.29 object entrypoints) calls `server()`, OpenCode v2 calls `setup()`, one file serves both hosts. V1 hook behavior is unchanged; v2 wiring reuses the same capture logic (event pump, session context/compaction hooks, file stash, rtk rewrite, recall gate, graph poller).
+- **Resilient session start in `agentmemory-capture`**: shared in-flight `/session/start` promise with lazy backfill on first observation and retry after failure, so a missed `session.created` or a down memory server no longer loses session attribution.
+
+## Changed
+- **Agents stay v1-shaped on purpose**: OpenCode v2 normalizes v1 agent frontmatter (`model` + `variant`, `permission` map) in memory, so the pack keeps the v1 shape to remain loadable on both hosts. The native-v2 frontmatter migration stays on hold until v1 support is dropped.
+
+## Docs
+- **docs/CONFIGURATION.md**: plugin paragraph documents the dual contract and the v1 floor.
+
 # v0.8.8 (2026-09-17)
 
 ## Changed
