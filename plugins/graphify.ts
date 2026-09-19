@@ -30,7 +30,10 @@ export default {
   setup: async (ctx: any) => {
     const hook = ctx?.tool?.hook;
     if (typeof hook !== "function") {
-      console.warn("[graphify] ctx.tool.hook unavailable — auto-update disabled");
+      // The mtime poller below is independent of tool hooks and keeps the
+      // graph fresh; only the first-bash reminder and instant edit/write
+      // checks are lost here.
+      console.warn("[graphify] ctx.tool.hook unavailable — instant tool-change checks and reminder disabled; mtime poller still active");
     }
     const directory: string = ctx?.location?.directory ?? process.cwd();
 

@@ -217,43 +217,125 @@ const CavemanPlugin = async (_ctx) => {
 // v2 plugin contract (opencode >= 2.0): default export with id + setup.
 // The v1 factory above is instantiated and its hooks driven from v2
 // registrations. Mapping:
-//   event                                  → ctx.event.subscribe
-//   chat.message (/caveman toggle parsing)  → no v2 equivalent; warned once
-//   experimental.chat.system.transform      → no v2 equivalent; warned once
-// The mode flag file is still asserted on every session.created event, but
-// in-session /caveman toggles and per-turn reinforcement are degraded until
-// opencode v2 exposes chat/system hooks to plugins.
+//   event                                  → for-await pump over the async
+//                                            iterable from ctx.event.subscribe
+//   experimental.chat.system.transform     → ctx.session.hook("context"),
+//                                            best-effort (payload shape is
+//                                            undocumented; no array → no-op)
+//   chat.message (/caveman toggle parsing) → no v2 equivalent; name reported
+//                                            in the single skipped warning
+// The mode flag file is still asserted on every session.created event via the
+// pump; per-turn reinforcement rides the context session hook.
 export default {
   id: "caveman",
   setup: async (ctx) => {
     const hooks = (await CavemanPlugin({})) || {};
 
-    let warnedUnsupported = false;
-    const warnUnsupported = (name) => {
-      if (warnedUnsupported) return;
-      warnedUnsupported = true;
+    const skipped = [];
+    if (hooks["chat.message"]) skipped.push("chat.message");
+    if (skipped.length > 0) {
       console.error(
-        `[caveman] v2 runtime: hook "${name}" has no v2 equivalent — ` +
-          "in-session /caveman toggles and per-turn reinforcement are degraded. " +
-          "Session-start flag assertion remains active.",
+        "[caveman] v2 runtime: hook(s) with no v2 equivalent: " + skipped.join(", ") +
+          " — in-session /caveman toggles are degraded. Session-start flag " +
+          "assertion and best-effort reinforcement (context session hook) remain active.",
       );
-    };
+    }
 
+    // ── event pump ──
+    // ctx.event.subscribe() returns an async-iterable stream (each yielded
+    // item is a decoded event), not a callback API. Callback passing is kept
+    // only as a fallback for older runtime shapes.
+    let cleanup = null;
     if (typeof ctx?.event?.subscribe === "function") {
-      await ctx.event.subscribe((event) => {
-        try {
-          void hooks.event?.({ event });
-        } catch (e) {
-          if (process.env.CAVEMAN_DEBUG === "1") {
-            console.error(`caveman: event handler failed: ${e.message}`);
+      let stream = null;
+      try {
+        stream = ctx.event.subscribe();
+      } catch (e) {
+        console.error(`caveman: event subscribe failed: ${e.message}`);
+      }
+      if (stream && typeof stream[Symbol.asyncIterator] === "function") {
+        const pump = (async () => {
+          try {
+            for await (const event of stream) {
+              try {
+                await hooks.event?.({ event });
+              } catch (e) {
+                if (process.env.CAVEMAN_DEBUG === "1") {
+                  console.error(`caveman: event handler failed: ${e.message}`);
+                }
+              }
+            }
+          } catch (e) {
+            if (process.env.CAVEMAN_DEBUG === "1") {
+              console.error(`caveman: event stream ended: ${e.message}`);
+            }
           }
-        }
-      });
+        })();
+        cleanup = async () => {
+          try { await stream.return?.(); } catch { /* already closed */ }
+          try { await pump; } catch { /* settled above */ }
+        };
+      } else if (typeof stream === "function") {
+        // Fallback: subscribe(handler) — handler receives the event directly.
+        const sub = stream((event) => {
+          void Promise.resolve()
+            .then(() => hooks.event?.({ event }))
+            .catch((e) => {
+              if (process.env.CAVEMAN_DEBUG === "1") {
+                console.error(`caveman: event handler failed: ${e.message}`);
+              }
+            });
+        });
+        cleanup = async () => {
+          try { await sub?.return?.(); } catch { /* noop */ }
+        };
+      } else {
+        console.error("caveman: ctx.event.subscribe returned no async iterable — plugin disabled");
+      }
     } else {
       console.error("caveman: ctx.event.subscribe unavailable — plugin disabled");
     }
 
-    if (hooks["chat.message"]) warnUnsupported("chat.message");
-    if (hooks["experimental.chat.system.transform"]) warnUnsupported("experimental.chat.system.transform");
+    // ── best-effort reinforcement via the context session hook ──
+    // The v2 payload shape is undocumented: if it exposes a `system` or
+    // `context` string array we apply the same idempotent line injection as
+    // the v1 system.transform; otherwise this silently no-ops.
+    if (typeof ctx?.session?.hook === "function") {
+      try {
+        await ctx.session.hook("context", async (input) => {
+          try {
+            const active = readFlag(flagPath);
+            if (!active || INDEPENDENT_MODES.has(active)) return;
+            const arr = Array.isArray(input?.system) ? input.system : Array.isArray(input?.context) ? input.context : null;
+            if (!arr) return;
+            const line = reinforcementLine(active);
+            const stale = /CAVEMAN MODE ACTIVE \([a-z-]+\) — session ruleset applies\./g;
+            let found = false;
+            for (let i = 0; i < arr.length; i++) {
+              if (typeof arr[i] === "string" && stale.test(arr[i])) {
+                stale.lastIndex = 0;
+                arr[i] = arr[i].replace(stale, line);
+                found = true;
+              }
+              stale.lastIndex = 0;
+            }
+            if (found) return;
+            if (arr.length > 0) {
+              arr[arr.length - 1] += "\n\n" + line;
+            } else {
+              arr.push(line);
+            }
+          } catch (e) {
+            if (process.env.CAVEMAN_DEBUG === "1") {
+              console.error(`caveman: context hook failed: ${e.message}`);
+            }
+          }
+        });
+      } catch (e) {
+        console.error(`caveman: session.hook("context") failed: ${e.message}`);
+      }
+    }
+
+    return cleanup;
   },
 };

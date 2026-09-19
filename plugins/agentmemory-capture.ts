@@ -52,6 +52,12 @@ async function observe(
   data: Record<string, unknown>,
 ): Promise<void> {
   const proj = projectFor(sessionId);
+  // Lazy backfill: if session.created was missed (e.g. emitted before the
+  // v2 event pump was wired), the first observation initializes the session.
+  // Fire-and-forget: a slow or failed start must never block capture.
+  if (!startedSessions.has(sessionId)) {
+    void ensureSessionStart(sessionId, null, { name: proj.name, cwd: proj.cwd }).catch(() => {});
+  }
   await post("/observe", {
     hookType,
     sessionId,
@@ -114,6 +120,32 @@ const contextInjectedSessions = new Set<string>();
 // the first prompt_submit (fallback for older OpenCode builds that
 // don't implement experimental.chat.system.transform).
 const startContextCache = new Map<string, string>();
+// Sessions for which /session/start has been sent. Guards the lazy-start
+// backfill: if session.created fired before the v2 event pump was wired,
+// the first session-bearing event still initializes the session.
+const startedSessions = new Set<string>();
+
+async function ensureSessionStart(
+  sessionId: string,
+  info: Record<string, unknown> | null,
+  proj: { name: string | null; cwd: string | null },
+): Promise<void> {
+  if (startedSessions.has(sessionId)) return;
+  // Mark before the first await so concurrent callers cannot double-start.
+  startedSessions.add(sessionId);
+  const startResult = await postJson("/session/start", {
+    sessionId,
+    title: info?.title ?? null,
+    parentID: info?.parentID ?? null,
+    version: info?.version ?? null,
+    project: proj.name,
+    cwd: proj.cwd,
+  });
+  const startCtx = (startResult as any)?.context;
+  if (typeof startCtx === "string" && startCtx.length > 0) {
+    startContextCache.set(sessionId, startCtx);
+  }
+}
 
 function stashFor(sid: string): Set<string> {
   let s = stashedFiles.get(sid);
@@ -138,6 +170,7 @@ function pruneSessionMaps(sid: string): void {
   seenSubtaskIds.delete(sid);
   seenToolCallIds.delete(sid);
   sessionProjects.delete(sid);
+  startedSessions.delete(sid);
 }
 
 function safeSlice(v: unknown, max: number): string {
@@ -252,20 +285,7 @@ const AgentmemoryCapturePlugin = async (ctx: any) => {
         } else {
           proj = projectFor(sessionId);
         }
-        const startResult = await postJson("/session/start", {
-          sessionId,
-          title: info?.title ?? null,
-          parentID: info?.parentID ?? null,
-          version: info?.version ?? null,
-          project: proj.name,
-          cwd: proj.cwd,
-        });
-        // cache the context returned at session/start so the
-        // chat.system.transform hook injects it without a second fetch.
-        const startCtx = (startResult as any)?.context;
-        if (typeof startCtx === "string" && startCtx.length > 0) {
-          startContextCache.set(sessionId, startCtx);
-        }
+        await ensureSessionStart(sessionId, (info ?? null) as Record<string, unknown> | null, proj);
         if (pendingConfig) {
           await observe(sessionId, "config_loaded", pendingConfig);
           pendingConfig = null;
@@ -751,11 +771,14 @@ const AgentmemoryCapturePlugin = async (ctx: any) => {
 // ── v2 runtime (opencode >= 2.0) ─────────────────────────────────────────────
 // Default export with id + setup, as required by the v2 plugin loader.
 // Mapping from the v1 hooks above:
-//   event                                  → ctx.event.subscribe (all bus events)
+//   event                                  → for-await pump over the async
+//                                            iterable from ctx.event.subscribe
 //   tool.execute.before (file stash)       → ctx.tool.hook("execute.before")
-//   chat.message / chat.params / config /
-//   experimental.chat.system.transform /
-//   experimental.session.compacting        → no v2 equivalent; warned once
+//   experimental.chat.system.transform     → ctx.session.hook("context")
+//                                            (best-effort injection)
+//   experimental.session.compacting        → ctx.session.hook("compaction")
+//   chat.message / chat.params / config    → no v2 equivalent; skipped names
+//                                            reported in one warning
 // The v1 factory is instantiated with a shim ctx and its returned hooks are
 // driven from the v2 registrations, so all capture logic stays in one place.
 export default {
@@ -769,29 +792,116 @@ export default {
     } as any);
     const hooks = v1 ?? {};
 
-    let warnedUnsupported = false;
-    const warnUnsupported = (name: string) => {
-      if (warnedUnsupported) return;
-      warnedUnsupported = true;
+    // Hooks with no v2 equivalent — all names collected and reported once.
+    const skipped: string[] = [];
+    for (const name of ["chat.message", "chat.params", "config"]) {
+      if (hooks[name as keyof typeof hooks]) skipped.push(name);
+    }
+    if (skipped.length > 0) {
       console.error(
-        `[agentmemory] v2 runtime: hook "${name}" has no v2 equivalent — ` +
-          "memory capture for prompt/tool-output enrichment is degraded. " +
-          "Event + file-stash capture remains active.",
+        `[agentmemory] v2 runtime: hook(s) with no v2 equivalent: ${skipped.join(", ")} — ` +
+          "prompt/params/config capture is degraded. Event capture, file stash, " +
+          "session_context telemetry, and compaction context injection remain active.",
       );
-    };
-
-    if (typeof ctx?.event?.subscribe === "function") {
-      await ctx.event.subscribe((event: any) => {
-        try {
-          void hooks.event?.({ event });
-        } catch (e) {
-          if (DEBUG) console.error("[agentmemory] event handler failed:", (e as Error).message);
-        }
-      });
-    } else {
-      console.error("[agentmemory] ctx.event.subscribe unavailable — capture disabled");
     }
 
+    // ── event pump ──
+    // ctx.event.subscribe() returns an async-iterable stream (each yielded
+    // item is a decoded event), not a callback API. A callback argument lands
+    // in the stream factory's ignored options slot, so callback passing is
+    // only kept as a fallback for older runtime shapes.
+    let cleanup: (() => Promise<void>) | null = null;
+    if (typeof ctx?.event?.subscribe === "function") {
+      let stream: any = null;
+      try {
+        stream = ctx.event.subscribe();
+      } catch (e) {
+        console.error(`[agentmemory] event subscribe failed: ${(e as Error).message}`);
+      }
+      if (stream && typeof stream[Symbol.asyncIterator] === "function") {
+        const pump = (async () => {
+          try {
+            for await (const event of stream) {
+              try {
+                await hooks.event?.({ event });
+              } catch (e) {
+                if (DEBUG) console.error("[agentmemory] event handler failed:", (e as Error).message);
+              }
+            }
+          } catch (e) {
+            if (DEBUG) console.error("[agentmemory] event stream ended:", (e as Error).message);
+          }
+        })();
+        cleanup = async () => {
+          try { await stream.return?.(); } catch { /* already closed */ }
+          try { await pump; } catch { /* settled above */ }
+        };
+      } else if (typeof stream === "function") {
+        // Fallback: subscribe(handler) — handler receives the event directly.
+        const sub = stream((event: any) => {
+          void Promise.resolve()
+            .then(() => hooks.event?.({ event }))
+            .catch((e: Error) => {
+              if (DEBUG) console.error("[agentmemory] event handler failed:", e.message);
+            });
+        });
+        cleanup = async () => {
+          try { await (sub as any)?.return?.(); } catch { /* noop */ }
+        };
+      } else {
+        console.error("[agentmemory] ctx.event.subscribe returned no async iterable — event capture disabled");
+      }
+    } else {
+      console.error("[agentmemory] ctx.event.subscribe unavailable — event capture disabled");
+    }
+
+    // ── session hooks (v2 replacements) ──
+    if (typeof ctx?.session?.hook === "function") {
+      try {
+        await ctx.session.hook("context", async (input: any) => {
+          try {
+            const sid = input?.sessionID ?? input?.session?.id ?? null;
+            if (sid && typeof sid === "string") {
+              void ensureSessionStart(sid, null, projectFor(sid)).catch(() => {});
+              await observe(sid, "session_context", { keys: Object.keys(input ?? {}) });
+              // Best-effort injection: same cache the v1 system.transform used.
+              const arr = Array.isArray(input?.context) ? input.context : Array.isArray(input?.system) ? input.system : null;
+              const cached = startContextCache.get(sid);
+              if (arr && typeof cached === "string" && cached.length > 0) {
+                arr.push(cached);
+                startContextCache.delete(sid);
+              }
+            }
+          } catch (e) {
+            if (DEBUG) console.error("[agentmemory] context hook failed:", (e as Error).message);
+          }
+        });
+      } catch (e) {
+        console.error(`[agentmemory] session.hook("context") failed: ${(e as Error).message}`);
+      }
+      try {
+        await ctx.session.hook("compaction", async (input: any, output: any) => {
+          try {
+            const sid = input?.sessionID ?? input?.session?.id ?? null;
+            if (sid && typeof sid === "string") {
+              await observe(sid, "compaction_event", { auto: false });
+              const result = await postJson("/context", { sessionId: sid, project: projectFor(sid).name });
+              const ctxText = (result as any)?.context;
+              const arr = Array.isArray(output?.context) ? output.context : null;
+              if (typeof ctxText === "string" && ctxText.length > 0 && arr) {
+                arr.push(ctxText);
+              }
+            }
+          } catch (e) {
+            if (DEBUG) console.error("[agentmemory] compaction hook failed:", (e as Error).message);
+          }
+        });
+      } catch (e) {
+        console.error(`[agentmemory] session.hook("compaction") failed: ${(e as Error).message}`);
+      }
+    }
+
+    // ── file stash ──
     const toolHook = ctx?.tool?.hook;
     if (typeof toolHook === "function") {
       await toolHook("execute.before", async (payload: any) => {
@@ -812,8 +922,6 @@ export default {
       });
     }
 
-    for (const name of ["chat.message", "chat.params", "config", "experimental.chat.system.transform", "experimental.session.compacting"]) {
-      if (hooks[name as keyof typeof hooks]) warnUnsupported(name);
-    }
+    return cleanup ?? undefined;
   },
 };
