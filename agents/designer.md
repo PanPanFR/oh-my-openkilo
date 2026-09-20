@@ -3,35 +3,46 @@ description: Frontend specialist - UI/UX, React/Next.js, design system, performa
 mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
 variant: medium
-temperature: 0.6
-tools:
-  read: true
-  write: true
-  edit: true
-  bash: true
-  glob: true
-  grep: true
-  todowrite: true
-  mcp: true
-  webfetch: true
-  websearch: true
-permission:
-  read: allow
-  write: allow
-  edit: allow
-  bash: allow
-  glob: allow
-  grep: allow
-  todowrite: allow
-  task: deny
-  mcp:
-    "chrome-devtools": allow
-    "agentmemory": allow
-    "*": deny
-  webfetch: allow
-  websearch: allow
-  lsp: allow
-  skill: allow
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: todowrite
+    resource: "*"
+    effect: allow
+  - action: chrome-devtools_*
+    resource: "*"
+    effect: allow
+  - action: agentmemory_*
+    resource: "*"
+    effect: allow
+  - action: webfetch
+    resource: "*"
+    effect: allow
+  - action: websearch
+    resource: "*"
+    effect: allow
+  - action: lsp
+    resource: "*"
+    effect: allow
+  - action: skill
+    resource: "*"
+    effect: allow
 ---
 Frontend specialist. UI/UX, React/Next.js, design system, performance, accessibility.
 

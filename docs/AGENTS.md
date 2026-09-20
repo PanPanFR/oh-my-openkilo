@@ -1,6 +1,6 @@
 # Agents
 
-oh-my-openkilo ships **6 agents** in `agents/`. Each is a single markdown file: YAML frontmatter at the top (name, mode, model, tools) and a prompt body. Edit the file to change behavior, edit the `model:` line to swap models, edit `tools:` to change permissions. No build step.
+oh-my-openkilo ships **6 agents** in `agents/`. Each is a single markdown file: YAML frontmatter at the top (name, mode, model, variant, permissions) and a prompt body. Edit the file to change behavior, edit the `model:` line to swap models, edit `permissions:` to change the allowlist. No build step.
 
 The pack divides the team into **2 primary agents** (you talk to them directly) and **4 subagents** (primaries fan out work to them in parallel). Two of OpenCode's built-in agents are disabled to avoid duplication: `build` (replaced by `builder`) and `plan` (replaced by `planner`).
 
@@ -33,7 +33,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Model guidance:** `builder` is a generalist that delegates. It does not need your strongest reasoning model; it needs a model that's good at following delegation rules and not jumping to code before the design is settled. Free models are fine for everyday work.
 
-**Tools:** `read`, `write`, `edit`, `bash`, `glob`, `grep`, `todowrite`, `task`, `mcp`, `webfetch`, `websearch`
+**Permissions:** allowlist in frontmatter — `read`, `edit`, `shell`, `glob`, `grep`, `todowrite`, `subagent` (designer/tester/reviewer/documenter), `agentmemory_*`, `webfetch`, `websearch`, `lsp`, `skill`, `question`; everything else denied.
 
 **Dispatched by:** you, directly. `builder` is the default agent when you start a session.
 
@@ -55,7 +55,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Model guidance:** `planner` does the high-leverage work — it decides what to build and how. A weak model here means a weak plan, which means wasted implementation time downstream. If you mix free + paid, this is the agent to upgrade first.
 
-**Tools:** `read`, `write`, `edit`, `glob`, `grep`, `todowrite`, `task`, `mcp`, `webfetch`, `websearch` (no direct `bash`; planning happens in markdown files)
+**Permissions:** allowlist in frontmatter — `read`, `edit`, `glob`, `grep`, `todowrite`, `subagent` (reviewer only), `chrome-devtools_*`, `tinypuppet_*`, `agentmemory_*`, `perplexity_*`, `webfetch`, `websearch`, `lsp`, `skill`, `question`; `shell` limited to graphify/git/rm commands, everything else denied (no direct `shell`; planning happens in markdown files)
 
 **Dispatched by:** you, directly, or by `builder` when it judges a task is too complex to implement without design.
 
@@ -79,7 +79,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Model guidance:** Choose a model that is strong at UI/UX judgment, frontend implementation, and visual polish. Multimodal is a plus because the agent reviews screenshots and mockups.
 
-**Tools:** `read`, `write`, `edit`, `bash`, `glob`, `grep`, `todowrite`, `mcp`, `webfetch`, `websearch`
+**Permissions:** allowlist in frontmatter — `read`, `edit`, `shell`, `glob`, `grep`, `todowrite`, `chrome-devtools_*`, `agentmemory_*`, `webfetch`, `websearch`, `lsp`, `skill`; no subagents, everything else denied.
 
 **Required MCP:** none. Multimodal model recommended for visual work; text-only is fine for design review and a11y.
 
@@ -101,7 +101,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Model guidance:** `tester` runs shell commands a lot (test runners, fixtures, isolation). Pick a model that handles `bash` reliably and is comfortable reading test output, not one that's good at "creative" reasoning.
 
-**Tools:** `read`, `write`, `bash`, `glob`, `grep`, `todowrite`, `mcp`
+**Permissions:** allowlist in frontmatter — `read`, `edit`, `shell`, `glob`, `grep`, `todowrite`, `agentmemory_*`, `skill`; no subagents, no web, everything else denied.
 
 **Dispatched by:** `builder` after implementation, or by you when a test fails.
 
@@ -121,7 +121,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Model guidance:** `reviewer` reads code and produces a verdict, not a fix. It benefits from a model that's good at finding edge cases and security smells, not from raw code generation speed. For security-sensitive work (auth, crypto, payments), upgrade to your strongest model.
 
-**Tools:** `read`, `glob`, `grep`, `bash`, `mcp` (read-only by design; no `write`/`edit`)
+**Permissions:** allowlist in frontmatter — `read`, `glob`, `grep`, `shell`, `webfetch`, `websearch`, `lsp`, `skill`; read-only by design (no `edit`, no subagents, no MCP tools)
 
 **Dispatched by:** `builder` and `planner` for sanity checks, or by you via "Ask `reviewer` to look at this diff".
 
@@ -141,7 +141,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Model guidance:** Documentation work rewards context. The agent reads code, summarizes it, and produces prose. A 1M-context model means it can hold a whole repo in mind while writing; a small-context model means it makes things up.
 
-**Tools:** `read`, `write`, `edit`, `glob`, `grep`, `mcp` (no `bash`)
+**Permissions:** allowlist in frontmatter — `read`, `edit`, `glob`, `grep`, `agentmemory_*`, `webfetch`, `websearch`, `skill`; no `shell`, no subagents, everything else denied
 
 **Dispatched by:** `builder` when implementation touches user-facing surfaces, or by you directly.
 
@@ -154,7 +154,7 @@ The pack disables two of OpenCode's built-in agents to avoid duplication:
 - `build` is replaced by `builder`
 - `plan` is replaced by `planner`
 
-To re-enable them, edit your `opencode.json` and remove the corresponding `disable: true` entries under `agent.`.
+To re-enable them, edit your `opencode.json` and remove the corresponding `disabled: true` entries under `agents`.
 
 ## How to invoke
 
@@ -163,7 +163,7 @@ In a normal OpenCode session, you can either:
 - Let `builder` pick the right subagent automatically (most common).
 - Be explicit: "Ask `tester` to write tests for the auth module", "Have `reviewer` sanity-check this diff", "Have `designer` review the UI for a11y".
 
-Subagents are also dispatched by `builder` and `planner` via the `task` tool, in parallel when the subtasks are independent.
+Subagents are also dispatched by `builder` and `planner` via the `subagent` tool, in parallel when the subtasks are independent.
 
 ## How to change a model
 
@@ -171,27 +171,27 @@ Subagents are also dispatched by `builder` and `planner` via the `task` tool, in
 2. Edit the `model:` line. Use the format `<provider>/<model>` (e.g. `anthropic/claude-sonnet-4-5`, `openai/gpt-5`, `9router/Kimi-K2.6`).
 3. Save and run `/reload` (or restart OpenCode).
 
-`variant:` (reasoning effort) and `temperature:` (0.0-1.0, sampling randomness) sit in the same frontmatter block as `model:`. The pack ships them tuned per role; defaults and how to adjust are in [Reasoning effort and temperature](#reasoning-effort-and-temperature).
+`variant:` (reasoning effort) sits in the same frontmatter block as `model:`. The pack ships it tuned per role; defaults and how to adjust are in [Reasoning effort](#reasoning-effort). (`temperature:` was dropped: OpenCode V2 ignores the legacy key.)
 
 Free models are good for everyday work but slower and less capable than paid ones. If you have provider credentials configured in `opencode.json`, a useful split is:
 
 - **Cheap/free for:** `tester`, `documenter`
 - **Pay for:** `builder`, `planner`, `designer`, `reviewer` (especially on auth/data paths)
 
-## Reasoning effort and temperature
+## Reasoning effort
 
-Agent frontmatter sets two more knobs per agent: `variant` (how much the model reasons before answering) and `temperature` (sampling randomness, 0.0-1.0). The pack ships them tuned per role:
+Agent frontmatter sets `variant` (how much the model reasons before answering) per agent. The pack ships it tuned per role:
 
-| Agent | `variant` | `temperature` | Why |
-|-------|-----------|---------------|-----|
-| `builder` | `xhigh` | 0.3 | Max reasoning depth for build quality; steady temp for execution. |
-| `planner` | `xhigh` | 0.1 | Deep reasoning for architecture; near-deterministic analysis. |
-| `reviewer` | `high` | 0.1 | One notch down for speed; stable, repeatable findings. |
-| `tester` | `medium` | 0.2 | Iteration speed matters in test-fix loops; low temp keeps asserts stable. |
-| `documenter` | `low` | 0.3 | Docs need fluency, not deep reasoning; cheapest and fastest. |
-| `designer` | `medium` | 0.6 | Creative temp for design work; medium reasoning for a11y and system calls. |
+| Agent | `variant` | Why |
+|-------|-----------|-----|
+| `builder` | `xhigh` | Max reasoning depth for build quality. |
+| `planner` | `xhigh` | Deep reasoning for architecture. |
+| `reviewer` | `high` | One notch down for speed; stable, repeatable findings. |
+| `tester` | `medium` | Iteration speed matters in test-fix loops. |
+| `documenter` | `low` | Docs need fluency, not deep reasoning; cheapest and fastest. |
+| `designer` | `medium` | Medium reasoning for a11y and system calls. |
 
-Reasoning effort is a direct latency and cost multiplier: every notch down means fewer reasoning tokens per turn. Raise `variant` back to `xhigh` on any agent where the output quality drops. Lower `temperature` towards 0.0 for deterministic analysis and review, raise it towards 0.6-1.0 for brainstorming and design. Restart OpenCode after editing, since frontmatter is read at session start.
+Reasoning effort is a direct latency and cost multiplier: every notch down means fewer reasoning tokens per turn. Raise `variant` back to `xhigh` on any agent where the output quality drops. Restart OpenCode after editing, since frontmatter is read at session start.
 
 ## Adding a new agent
 

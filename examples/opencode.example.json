@@ -2,27 +2,62 @@
   "$schema": "https://opencode.ai/config.json",
   "model": "<YOUR_DEFAULT_MODEL>",
   "small_model": "<YOUR_SMALL_MODEL>",
-  "permission": {
-    "read": "allow",
-    "write": "allow",
-    "edit": "allow",
-    "bash": "allow",
-    "glob": "allow",
-    "grep": "allow",
-    "task": "allow",
-    "mcp": "allow",
-    "webfetch": "allow",
-    "websearch": "allow",
-    "lsp": "allow",
-    "skill": "allow",
-    "todowrite": "allow"
+  "permissions": [
+    {
+      "action": "read",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "edit",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "glob",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "grep",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "subagent",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "webfetch",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "websearch",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "skill",
+      "resource": "*",
+      "effect": "allow"
+    }
+  ],
+  "agents": {
+    "build": {
+      "disabled": true
+    },
+    "plan": {
+      "disabled": true
+    }
   },
-  "disabled_providers": [],
-  "agent": {
-    "build": { "disable": true },
-    "plan": { "disable": true }
-  },
-  "plugin": [
+  "plugins": [
     "./plugins/agentmemory-capture.ts",
     "./plugins/recall-first.ts",
     "@dietrichgebert/ponytail",
@@ -31,11 +66,10 @@
     "./plugins/rtk.ts",
     "superpowers@git+https://github.com/obra/superpowers.git"
   ],
-  "provider": {
-    "opencode": {},
+  "providers": {
     "9router": {
-      "npm": "@ai-sdk/openai-compatible",
-      "options": {
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
         "baseURL": "https://<YOUR_ROUTER_BASE_URL>/v1",
         "apiKey": "{env:NINE_ROUTER_API_KEY}"
       },
@@ -43,38 +77,33 @@
     }
   },
   "mcp": {
-    "agentmemory": {
-      "type": "local",
-      "command": ["npx", "-y", "@agentmemory/mcp"],
-      "environment": {
-        "AGENTMEMORY_SERVER_URL": "http://127.0.0.1:3111",
-        "AGENTMEMORY_TOOLS": "core"
+    "servers": {
+      "agentmemory": {
+        "type": "local",
+        "command": ["npx", "-y", "@agentmemory/mcp"],
+        "environment": {
+          "AGENTMEMORY_SERVER_URL": "http://127.0.0.1:3111",
+          "AGENTMEMORY_TOOLS": "core"
+        }
       },
-      "enabled": true
-    },
-    "chrome-devtools": {
-      "type": "local",
-      "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
-      "enabled": true
-    },
-    "context7": {
-      "type": "remote",
-      "url": "https://mcp.context7.com/mcp",
-      "headers": {
-        "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+      "chrome-devtools": {
+        "type": "local",
+        "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
       },
-      "enabled": false
-    },
-    "playwright": {
-      "type": "local",
-      "command": ["npx", "@playwright/mcp@latest"],
-      "enabled": false
+      "context7": {
+        "type": "remote",
+        "url": "https://mcp.context7.com/mcp",
+        "headers": {
+          "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+        },
+        "disabled": true
+      },
+      "playwright": {
+        "type": "local",
+        "command": ["npx", "@playwright/mcp@latest"],
+        "disabled": true
+      }
     }
   },
-  "instructions": [
-    "rules/skill-reminder.md",
-    "rules/language.md",
-    "rules/communication-style.md"
-  ],
   "lsp": true
 }

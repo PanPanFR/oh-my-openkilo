@@ -1,3 +1,12 @@
+# v0.10.0 (2026-09-20)
+
+## Changed
+- **OpenCode V2 config shape**: `agents/` frontmatter (all 6 files) drops the ignored V1 keys (`temperature`, `tools`, `permission`) for the V2 `permissions` allowlist (`shell` not `bash`, `subagent` not `task`, MCP rules as `<server>_*`). Agent `model:` + `variant:` lines unchanged (`opencode/muse-spark-1.3-contributor-free`, per-role reasoning map kept). Synced with the maintainer's live install (shape only; live uses a personal gateway model, the pack keeps the public free default).
+- **V2 example config**: `examples/opencode.example.json` rewritten (`permissions` array, `agents` + `disabled`, `plugins`, `providers` with `package`/`settings`, `mcp.servers` with `disabled`). The V1 `instructions` key is gone (V2 ignores it; rules auto-load from global `AGENTS.md`).
+
+## Docs
+- **docs/AGENTS.md, README, docs/CONFIGURATION.md, commands/configcheck.md, AGENTS.md**: V1 terms replaced (`task` tool to `subagent`, `disable` to `disabled`, `enabled` to `disabled`, `options` to `settings`). The reasoning-effort table keeps `variant` only; `temperature` removed (V2 ignores the legacy key).
+
 # v0.9.0 (2026-09-19)
 
 ## Changed

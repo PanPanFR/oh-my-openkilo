@@ -1,6 +1,6 @@
 # OpenCode Global Instructions
 
-## Always-loaded (via `instructions` in opencode.json)
+## Always-loaded (global AGENTS.md, auto-loaded by OpenCode)
 
 Single source of truth. This file only indexes them; do not duplicate content here.
 
@@ -25,7 +25,7 @@ Agents: 6 (builder, planner = primary; designer, tester, reviewer, documenter = 
 
 Skills: 47 total = 19 core (clean-code, cloudflare, code-review, codebase-design, documentation, git-commit, grilling, impeccable, plans, ponytail-review, pwa-development, resolving-merge-conflicts, systematic-debugging, test-driven-development, ui-design, vercel-react, verification-before-completion, web-perf, writing-skills) + 6 agentmemory suite (agentmemory-agents, agentmemory-architecture, agentmemory-config, agentmemory-hooks, agentmemory-mcp-tools, agentmemory-rest-api) + 6 caveman (caveman, caveman-commit, caveman-compress, caveman-help, caveman-review, caveman-stats) + 14 workflow & memory (commit-context, commit-history, delegation, forget, handoff, handoff-compact, lesson, memory-discipline, recall, recap, remember, session-history, workers, write-agentmemory-skill) + 2 browser (playwright-cli, graphify). Skills provided by npm or the superpowers plugin (ponytail*, brainstorming, writing-plans, executing-plans, using-git-worktrees, and friends) load at runtime but are not counted; the count is `ls skills/`. Consolidated 2026-08-30: rules/agentmemory.md, rules/graphify.md, rules/delegation.md, rules/workers.md moved on-demand (agentmemory+graphify covered by existing skills, delegation+workers became skills). Earlier: writing-plans+executing-plans -> `plans`, ponytail-audit merged into `ponytail-review`. Impeccable added 2026-09-08 (UI review/polish flow; build-time design stays with `ui-design`, routing in rules/skill-reminder.md).
 
-Instructions order: skill-reminder first (routes all on-demand loading) as configured in `opencode.json: instructions`.
+Instructions order: skill-reminder first (routes all on-demand loading) as listed in this AGENTS.md. (OpenCode V2 ignores the `instructions` config key; the global AGENTS.md auto-loads.)
 
 Progressive disclosure: 8 skills use graphify-style SKILL.md + references/ structure (pwa-development, vercel-react, systematic-debugging, test-driven-development, ui-design, web-perf, plans, writing-skills). Core = decision map with hard gates ("MUST read reference before coding that category"); details load on demand.
 

@@ -118,7 +118,7 @@ You only ever talk to **two** of them. The rest work behind the scenes.
 - **`reviewer`** 🛡️, checks finished work for bugs and security holes. Never changes code.
 - **`documenter`** 📚, writes docs that match what the code actually does.
 
-Each agent is one text file in `agents/`. To change how one behaves, edit its file. To change its AI model, edit the `model:` line at the top, then restart OpenCode. The same header also carries `variant:` (how hard the model thinks) and `temperature:` (how creative it is), shipped tuned per role: the builder and planner think at full depth, while the faster, cheaper jobs (tests, docs, UI) dial it down so they answer sooner. Full guide: [docs/AGENTS.md](docs/AGENTS.md).
+Each agent is one text file in `agents/`. To change how one behaves, edit its file. To change its AI model, edit the `model:` line at the top, then restart OpenCode. The same header also carries `variant:` (how hard the model thinks), shipped tuned per role: the builder and planner think at full depth, while the faster, cheaper jobs (tests, docs, UI) dial it down so they answer sooner. Full guide: [docs/AGENTS.md](docs/AGENTS.md).
 
 > [!NOTE]
 > This pack replaces OpenCode's built-in `build` and `plan` agents with its own `builder` and `planner` to avoid having two agents for the same job.

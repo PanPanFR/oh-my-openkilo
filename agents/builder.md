@@ -3,39 +3,58 @@ description: Optimized implementation agent - minimal tools, MCP-first research,
 mode: primary
 model: opencode/muse-spark-1.3-contributor-free
 variant: xhigh
-temperature: 0.3
-tools:
-  read: true
-  write: true
-  edit: true
-  bash: true
-  glob: true
-  grep: true
-  todowrite: true
-  task: true
-  mcp: true
-  webfetch: true
-  websearch: true
-permission:
-  read: allow
-  write: allow
-  edit: allow
-  bash: allow
-  glob: allow
-  grep: allow
-  todowrite: allow
-  task:
-    "designer": allow
-    "tester": allow
-    "reviewer": allow
-    "documenter": allow
-  mcp:
-    "agentmemory": allow
-    "*": deny
-  webfetch: allow
-  websearch: allow
-  lsp: allow
-  skill: allow
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: todowrite
+    resource: "*"
+    effect: allow
+  - action: subagent
+    resource: designer
+    effect: allow
+  - action: subagent
+    resource: tester
+    effect: allow
+  - action: subagent
+    resource: reviewer
+    effect: allow
+  - action: subagent
+    resource: documenter
+    effect: allow
+  - action: agentmemory_*
+    resource: "*"
+    effect: allow
+  - action: webfetch
+    resource: "*"
+    effect: allow
+  - action: websearch
+    resource: "*"
+    effect: allow
+  - action: lsp
+    resource: "*"
+    effect: allow
+  - action: skill
+    resource: "*"
+    effect: allow
+  - action: question
+    resource: "*"
+    effect: allow
 ---
 Senior software engineer. Expert in programming languages, design patterns, best practices.
 

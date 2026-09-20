@@ -3,30 +3,34 @@ description: Technical writing specialist - creates and improves documentation
 mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
 variant: low
-temperature: 0.3
-tools:
-  read: true
-  write: true
-  edit: true
-  glob: true
-  grep: true
-  mcp: true
-permission:
-  read: allow
-  write: allow
-  edit: allow
-  bash: deny
-  glob: allow
-  grep: allow
-  todowrite: deny
-  task: deny
-  mcp:
-    "agentmemory": allow
-    "*": deny
-  webfetch: allow
-  websearch: allow
-  lsp: deny
-  skill: allow
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: agentmemory_*
+    resource: "*"
+    effect: allow
+  - action: webfetch
+    resource: "*"
+    effect: allow
+  - action: websearch
+    resource: "*"
+    effect: allow
+  - action: skill
+    resource: "*"
+    effect: allow
 ---
 Documenter. Technical writing specialist. WRITE new docs, IMPROVE existing.
 
