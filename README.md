@@ -147,6 +147,47 @@ Result: diagnosis with evidence first, fix second, plus a regression test.
 
 Three more examples (new feature, architecture review, exploring a codebase) live in [docs/WORKFLOWS.md](docs/WORKFLOWS.md).
 
+### With and without the pack
+
+Same model, different discipline. The pack splits the one model into roles with rules:
+
+| Plain OpenCode | With this pack |
+|---|---|
+| One session, no roles: you prompt, it codes whatever comes first | Same model, split into roles: planner designs, builder builds, tester/reviewer/documenter check |
+| Every session starts from zero | `recall` finds past decisions, `remember` saves new ones |
+| Full-length replies every turn | Caveman mode: short replies, same meaning |
+| Broad reads to understand code | Graphify: scoped subgraph first, then read |
+| Verbose shell output eats context | RTK rewrites commands to compact form (~half the bytes) |
+| Code first, plan never | Planner writes a self-contained plan you approve before code |
+| Reviews and tests when you remember | Built-in reviewer (security + spec) and tester (isolated loops) |
+
+A typical task, both ways. Say you need to fix a login bug:
+
+<table>
+<tr><th>😶 Plain OpenCode</th><th>😎 With this pack</th></tr>
+<tr><td>
+
+1. You describe the bug
+2. Model reads half the repo, edits 3 files
+3. Says done. You ask: sure nothing broke?
+4. Finds a second bug it introduced → back to step 2
+5. Three sessions later, nobody remembers why the table has a new column
+
+</td><td>
+
+1. Planner writes a 1-page plan
+2. You approve it
+3. Builder executes
+4. Tester: login suite green
+5. Reviewer: no auth holes
+6. `remember` saves the lesson → next month, `recall` brings it back in 1 query
+
+</td></tr>
+</table>
+
+> [!TIP]
+> Same model, different discipline: plan first, verify after, remember forever.
+
 ---
 
 ## 💸 Free to start
@@ -258,47 +299,6 @@ Both give OpenCode a team of agents. Different philosophy:
 | Debugging | Read the text file, fix the typo | Rebuild the bundle |
 
 Pick this pack if you want free models, zero build, and files you can read and edit directly. Pick slim if you want background orchestration with tmux panes, council answers, and paid-model presets.
-
-### With this pack vs plain OpenCode
-
-Same model, different discipline. The pack splits the one model into roles with rules:
-
-| Plain OpenCode | With this pack |
-|---|---|
-| One session, no roles: you prompt, it codes whatever comes first | Same model, split into roles: planner designs, builder builds, tester/reviewer/documenter check |
-| Every session starts from zero | `recall` finds past decisions, `remember` saves new ones |
-| Full-length replies every turn | Caveman mode: short replies, same meaning |
-| Broad reads to understand code | Graphify: scoped subgraph first, then read |
-| Verbose shell output eats context | RTK rewrites commands to compact form (~half the bytes) |
-| Code first, plan never | Planner writes a self-contained plan you approve before code |
-| Reviews and tests when you remember | Built-in reviewer (security + spec) and tester (isolated loops) |
-
-A typical task, both ways. Say you need to fix a login bug:
-
-<table>
-<tr><th>😶 Plain OpenCode</th><th>😎 With this pack</th></tr>
-<tr><td>
-
-1. You describe the bug
-2. Model reads half the repo, edits 3 files
-3. Says done. You ask: sure nothing broke?
-4. Finds a second bug it introduced → back to step 2
-5. Three sessions later, nobody remembers why the table has a new column
-
-</td><td>
-
-1. Planner writes a 1-page plan
-2. You approve it
-3. Builder executes
-4. Tester: login suite green
-5. Reviewer: no auth holes
-6. `remember` saves the lesson → next month, `recall` brings it back in 1 query
-
-</td></tr>
-</table>
-
-> [!TIP]
-> Same model, different discipline: plan first, verify after, remember forever.
 
 ---
 
