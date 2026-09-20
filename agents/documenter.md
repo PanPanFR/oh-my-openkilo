@@ -4,21 +4,27 @@ mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
 variant: low
 permissions:
-  - action: "*"
-    resource: "*"
-    effect: deny
   - action: read
     resource: "*"
     effect: allow
   - action: edit
     resource: "*"
     effect: allow
+  - action: shell
+    resource: "*"
+    effect: deny
   - action: glob
     resource: "*"
     effect: allow
   - action: grep
     resource: "*"
     effect: allow
+  - action: todowrite
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: "*"
+    effect: deny
   - action: agentmemory_*
     resource: "*"
     effect: allow
@@ -28,6 +34,9 @@ permissions:
   - action: websearch
     resource: "*"
     effect: allow
+  - action: lsp
+    resource: "*"
+    effect: deny
   - action: skill
     resource: "*"
     effect: allow

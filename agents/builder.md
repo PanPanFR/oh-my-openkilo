@@ -4,9 +4,6 @@ mode: primary
 model: opencode/muse-spark-1.3-contributor-free
 variant: xhigh
 permissions:
-  - action: "*"
-    resource: "*"
-    effect: deny
   - action: read
     resource: "*"
     effect: allow
@@ -26,16 +23,19 @@ permissions:
     resource: "*"
     effect: allow
   - action: subagent
+    resource: "*"
+    effect: deny
+  - action: subagent
     resource: designer
     effect: allow
   - action: subagent
-    resource: tester
+    resource: documenter
     effect: allow
   - action: subagent
     resource: reviewer
     effect: allow
   - action: subagent
-    resource: documenter
+    resource: tester
     effect: allow
   - action: agentmemory_*
     resource: "*"
@@ -50,9 +50,6 @@ permissions:
     resource: "*"
     effect: allow
   - action: skill
-    resource: "*"
-    effect: allow
-  - action: question
     resource: "*"
     effect: allow
 ---

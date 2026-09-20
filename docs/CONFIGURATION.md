@@ -102,7 +102,7 @@ Each MCP server is one of two types:
 - `"type": "local"`: runs a command on your machine via `npx` or `python`
 - `"type": "remote"`: connects to a remote URL
 
-The example ships a small starter set: `agentmemory` (always on, you need it for the memory skills) and `chrome-devtools` (always on, for the `chrome-devtools` skill). Other MCPs you might want (perplexity search, tinypuppet, custom ones) you add yourself by following the same shape.
+The example ships a small starter set: `agentmemory` (always on, you need it for the memory skills) and `chrome-devtools` (on by default, for quick browser screenshots and inspection). Anything else (`playwright`, `context7`, your own) you add yourself by following the same shape.
 
 To enable:
 
@@ -116,15 +116,15 @@ To enable:
 | MCP                    | Required env / file                                | Free? | Used by                                |
 |------------------------|----------------------------------------------------|-------|----------------------------------------|
 | `agentmemory`          | `AGENTMEMORY_SERVER_URL` (default: local server)    | yes (npm global) | memory skills, `recall`/`remember` |
-| `chrome-devtools`      | none (uses installed Chrome)                       | yes   | `chrome-devtools` skill                |
+| `chrome-devtools`      | none (uses installed Chrome)                       | yes   | quick screenshots, page inspection     |
 
-Anything beyond the two above (playwright, context7, perplexity, tinypuppet, your own) is something you wire up yourself; the example just shows you the shape.
+Anything beyond the rows above (`playwright`, `context7`, your own) is something you wire up yourself; the example just shows you the shape.
 
 `/configcheck` validates your config (parses the JSON, lists connected MCPs, checks each MCP can launch, and warns if any connected MCP has a missing env var). Run it after changing `opencode.json` to re-validate.
 
 ## Installing MCP servers
 
-Two MCPs ship enabled in the example: `agentmemory` (memory skills) and `chrome-devtools` (browser automation). Both are listed below. Everything else (`playwright`, `context7`, perplexity, tinypuppet, your own) is opt-in — copy the shape, set the env var, drop `"disabled": true`.
+Two MCPs ship enabled in the example: `agentmemory` (memory skills) and `chrome-devtools` (quick browser screenshots and inspection). Everything else (`playwright`, `context7`, your own) is opt-in — copy the shape, set the env var, drop `"disabled": true`.
 
 Most MCPs in this pack are `npx`-based; OpenCode downloads the package on first use. None of them require a separate install step before enabling in `opencode.json`, but several need a one-time setup after the first run.
 
@@ -160,7 +160,7 @@ The `mcp.agentmemory` entry in `opencode.json` already points to `http://localho
 
 Get a free API key at [context7.com](https://context7.com), set `CONTEXT7_API_KEY` in your shell or `.env`, then enable. No local install.
 
-### `chrome-devtools` (already enabled, npm, no setup)
+### `chrome-devtools` (enabled by default, npm, no setup)
 
 ```jsonc
 {
@@ -176,6 +176,26 @@ Get a free API key at [context7.com](https://context7.com), set `CONTEXT7_API_KE
 ```
 
 `npx` downloads it on first invocation. Requires Chrome/Chromium installed on the system.
+
+#### Turn it off when you don't need it
+
+Every enabled MCP adds its tools to every session, which eats context even on days you never touch a browser. If you rarely inspect web pages, turn it off:
+
+```jsonc
+{
+  "mcp": {
+    "servers": {
+      "chrome-devtools": {
+        "type": "local",
+        "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
+        "disabled": true
+      }
+    }
+  }
+}
+```
+
+Add `"disabled": true`, then restart OpenCode or run `/reload`. For heavy browser automation (many pages, form filling, scraping), use the `playwright-cli` skill instead: it runs through the shell only when you ask, so it costs nothing when idle. Re-enable by removing the `"disabled": true` line.
 
 ### `playwright` (opt-in, npm + one-time browser download)
 

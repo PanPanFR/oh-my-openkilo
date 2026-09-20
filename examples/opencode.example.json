@@ -60,7 +60,6 @@
   "plugins": [
     "./plugins/agentmemory-capture.ts",
     "./plugins/recall-first.ts",
-    "@dietrichgebert/ponytail",
     "./plugins/caveman/plugin.js",
     "./plugins/graphify.ts",
     "./plugins/rtk.ts",

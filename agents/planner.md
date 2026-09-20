@@ -4,9 +4,6 @@ mode: primary
 model: opencode/muse-spark-1.3-contributor-free
 variant: xhigh
 permissions:
-  - action: "*"
-    resource: "*"
-    effect: deny
   - action: read
     resource: "*"
     effect: allow
@@ -14,22 +11,25 @@ permissions:
     resource: "*"
     effect: allow
   - action: shell
+    resource: "*"
+    effect: deny
+  - action: shell
     resource: "*graphify*"
     effect: allow
   - action: shell
     resource: "Remove-Item*"
     effect: allow
   - action: shell
-    resource: "rm*"
+    resource: "git add*"
+    effect: allow
+  - action: shell
+    resource: "git commit*"
     effect: allow
   - action: shell
     resource: "git status*"
     effect: allow
   - action: shell
-    resource: "git add*"
-    effect: allow
-  - action: shell
-    resource: "git commit*"
+    resource: "rm*"
     effect: allow
   - action: glob
     resource: "*"
@@ -41,15 +41,12 @@ permissions:
     resource: "*"
     effect: allow
   - action: subagent
+    resource: "*"
+    effect: deny
+  - action: subagent
     resource: reviewer
     effect: allow
-  - action: chrome-devtools_*
-    resource: "*"
-    effect: allow
   - action: agentmemory_*
-    resource: "*"
-    effect: allow
-  - action: perplexity_*
     resource: "*"
     effect: allow
   - action: webfetch
@@ -62,9 +59,6 @@ permissions:
     resource: "*"
     effect: allow
   - action: skill
-    resource: "*"
-    effect: allow
-  - action: question
     resource: "*"
     effect: allow
 ---

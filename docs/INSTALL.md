@@ -78,14 +78,14 @@ After `npm i -g @agentmemory/mcp`, replace the `mcp.agentmemory.command` in your
 
 ### MCPs (enable per-need, not all auto-on)
 
-The example config ships two MCPs enabled: `agentmemory` (required for the memory skills) and `chrome-devtools` (for the `chrome-devtools` skill). Anything else you want — `playwright` for the `playwright-cli` skill, `context7` for live library docs, your own — you add yourself by following the same shape: drop the entry into `mcp` in `opencode.json`, set `enabled: true`, and provide any env vars the server needs.
+The example config ships two MCPs enabled: `agentmemory` (required for the memory skills) and `chrome-devtools` (quick browser screenshots and inspection). Anything else you want — `playwright` for the `playwright-cli` skill, `context7` for live library docs, your own — you add yourself by following the same shape: drop the entry into `mcp` in `opencode.json`, remove `"disabled": true`, and provide any env vars the server needs. Don't need the browser tools? Add `"disabled": true` to the `chrome-devtools` entry (see [CONFIGURATION.md](CONFIGURATION.md#turn-it-off-when-you-dont-need-it)) — every enabled MCP costs context in every session.
 
 | MCP                    | Capability                                          | Required env / key                      | Risk if disabled |
 |------------------------|-----------------------------------------------------|-----------------------------------------|------------------|
 | `agentmemory`          | Persistent cross-session memory (**required**)      | `AGENTMEMORY_SERVER_URL` (default `http://127.0.0.1:3111`) | No memory. Every session starts from zero. |
 | `chrome-devtools`      | Live browser debug (DOM, network, console, perf)    | none (uses installed Chrome)            | No live browser inspection; static fetch only |
 
-To enable any others, edit `opencode.json` to set `enabled: true` and fill in the required env vars. `/configcheck` validates your config and warns if any enabled MCP has a missing env var.
+To enable any others, edit `opencode.json` to remove `"disabled": true` and fill in the required env vars. `/configcheck` validates your config and warns if any enabled MCP has a missing env var.
 
 ## Verify the install
 

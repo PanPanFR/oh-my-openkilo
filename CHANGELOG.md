@@ -1,3 +1,13 @@
+# v0.10.3 (2026-09-20)
+
+## Changed
+- **Pack now matches the live install**: all 6 agent permission blocks, `rules/communication-style.md`, `commands/configcheck.md`, and `commands/impeccable.md` mirrored from the live config (the pack keeps its public free model plus the reasoning level per agent). The missing `plugins/caveman.ts` loader shim is in the pack too, so v2 installs load the caveman plugin.
+- **Docs show how to turn off the browser tools**: `docs/CONFIGURATION.md` gained a short "Turn it off when you don't need it" section (`"disabled": true` on `chrome-devtools`, plus the `playwright-cli` skill for heavy automation instead). `docs/INSTALL.md` links to it.
+- **Example config without ponytail**: the npm `ponytail` plugin entry is gone from `examples/opencode.example.json` (that style already lives in `rules/communication-style.md`).
+
+## Fixed
+- **Stale docs corrected**: `tinypuppet`/`perplexity` mentions removed from the MCP docs, the nonexistent "`chrome-devtools` skill" name fixed, and the old V1 `enabled: true` wording replaced with the V2 `"disabled": true` shape.
+
 # v0.10.2 (2026-09-20)
 
 ## Changed

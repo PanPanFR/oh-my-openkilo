@@ -4,10 +4,13 @@ mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
 variant: high
 permissions:
-  - action: "*"
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: edit
     resource: "*"
     effect: deny
-  - action: read
+  - action: shell
     resource: "*"
     effect: allow
   - action: glob
@@ -16,9 +19,18 @@ permissions:
   - action: grep
     resource: "*"
     effect: allow
-  - action: shell
+  - action: todowrite
     resource: "*"
-    effect: allow
+    effect: deny
+  - action: subagent
+    resource: "*"
+    effect: deny
+  - action: agentmemory_*
+    resource: "*"
+    effect: deny
+  - action: chrome-devtools_*
+    resource: "*"
+    effect: deny
   - action: webfetch
     resource: "*"
     effect: allow

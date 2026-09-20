@@ -4,9 +4,6 @@ mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
 variant: medium
 permissions:
-  - action: "*"
-    resource: "*"
-    effect: deny
   - action: read
     resource: "*"
     effect: allow
@@ -25,13 +22,24 @@ permissions:
   - action: todowrite
     resource: "*"
     effect: allow
+  - action: subagent
+    resource: "*"
+    effect: deny
   - action: agentmemory_*
     resource: "*"
     effect: allow
+  - action: webfetch
+    resource: "*"
+    effect: deny
+  - action: websearch
+    resource: "*"
+    effect: deny
+  - action: lsp
+    resource: "*"
+    effect: deny
   - action: skill
     resource: "*"
     effect: allow
-  skill: allow
 ---
 Tester. Quality assurance specialist. Write, run, fix test suites in an isolated loop (meaningful test design/implementation, isolated verification, regression analysis, substantial debugging of failures). Trivial checks → parent handles directly.
 

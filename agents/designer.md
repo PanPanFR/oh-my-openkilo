@@ -4,9 +4,6 @@ mode: subagent
 model: opencode/muse-spark-1.3-contributor-free
 variant: medium
 permissions:
-  - action: "*"
-    resource: "*"
-    effect: deny
   - action: read
     resource: "*"
     effect: allow
@@ -25,9 +22,9 @@ permissions:
   - action: todowrite
     resource: "*"
     effect: allow
-  - action: chrome-devtools_*
+  - action: subagent
     resource: "*"
-    effect: allow
+    effect: deny
   - action: agentmemory_*
     resource: "*"
     effect: allow
