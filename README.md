@@ -238,6 +238,10 @@ The whole pack is 19 MB, mostly one helper binary. A comparable pack is 58.5 MB.
 
 ## 🆚 How it compares
 
+![free models](https://img.shields.io/badge/models-free_by_default-brightgreen)
+![no build step](https://img.shields.io/badge/install-text_files_no_build-blue)
+![opencode v1 + v2](https://img.shields.io/badge/opencode-v1_%2B_v2-purple)
+
 ### This pack vs oh-my-opencode-slim
 
 Both give OpenCode a team of agents. Different philosophy:
@@ -271,9 +275,29 @@ Same model, different discipline. The pack splits the one model into roles with 
 
 A typical task, both ways. Say you need to fix a login bug:
 
-**Plain:** you describe the bug, the model reads half the repo, edits three files, says done. You ask "are you sure nothing else broke?", it reads more files, finds a second bug it introduced, fixes that too. Three sessions later nobody remembers why the session table has a new column.
+```mermaid
+flowchart TB
+    subgraph Plain["😶 Plain OpenCode"]
+        direction TB
+        P1["You describe the bug"] --> P2["Model reads half the repo, edits 3 files"]
+        P2 --> P3["Says done. You ask: sure nothing broke?"]
+        P3 --> P4["Finds a second bug it introduced"]
+        P4 --> P2
+        P2 -.-> P5["3 sessions later, nobody remembers why the table has a new column"]
+    end
+    subgraph Pack["😎 With this pack"]
+        direction TB
+        Q1["Planner writes a 1-page plan"] --> Q2["You approve it"]
+        Q2 --> Q3["Builder executes"]
+        Q3 --> Q4["Tester: login suite green"]
+        Q4 --> Q5["Reviewer: no auth holes"]
+        Q5 --> Q6["remember saves the lesson"]
+        Q6 -.-> Q7["Next month, recall brings it back in 1 query"]
+    end
+```
 
-**With pack:** planner writes a one-page plan (root cause, files, test steps) and you approve it. Builder executes it. Tester runs the login suite in isolation until green. Reviewer checks the diff for auth holes. `remember` saves "session table needs index on user_id" for next time. Next month, `recall` brings it back in one query.
+> [!TIP]
+> Same model, different discipline: plan first, verify after, remember forever.
 
 ---
 
