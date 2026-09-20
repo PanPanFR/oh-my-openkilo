@@ -26,7 +26,7 @@
 # v0.10.0 (2026-09-20)
 
 ## Changed
-- **OpenCode V2 config shape**: `agents/` frontmatter (all 6 files) drops the ignored V1 keys (`temperature`, `tools`, `permission`) for the V2 `permissions` allowlist (`shell` not `bash`, `subagent` not `task`, MCP rules as `<server>_*`). Agent `model:` + `variant:` lines unchanged (`opencode/muse-spark-1.3-contributor-free`, per-role reasoning map kept). Synced with the maintainer's live install (shape only; live uses a personal gateway model, the pack keeps the public free default).
+- **OpenCode V2 config shape**: `agents/` frontmatter (all 6 files) drops the ignored V1 keys (`temperature`, `tools`, `permission`) for the V2 `permissions` allowlist (`shell` not `bash`, `subagent` not `task`, MCP rules as `<server>_*`). Agent `model:` + `variant:` lines unchanged (`opencode/muse-spark-1.3-contributor-free`, per-role reasoning map kept). Synced with the maintainer's live install (shape only; personal installs use their own gateway model, the pack keeps the public free default).
 - **V2 example config**: `examples/opencode.example.json` rewritten (`permissions` array, `agents` + `disabled`, `plugins`, `providers` with `package`/`settings`, `mcp.servers` with `disabled`). The V1 `instructions` key is gone (V2 ignores it; rules auto-load from global `AGENTS.md`).
 
 ## Docs
@@ -46,7 +46,7 @@
 
 ## Changed
 - **Per-agent reasoning and temperature**: agent frontmatter now tunes speed per role. `builder` and `planner` keep `variant: xhigh` (temperature 0.3 and 0.1), while `reviewer` (`high`/0.1), `tester` (`medium`/0.2), `documenter` (`low`/0.3), and `designer` (`medium`/0.6) dial reasoning down. Reasoning tokens dominate subagent cost, so each notch down means roughly 30-70% fewer thinking tokens on that role; routine tester/documenter calls cost a fraction of a full-depth run while main build and planning quality are unchanged. All agent `model:` lines stay `opencode/muse-spark-1.3-contributor-free`.
-- **Synced with live config**: `agents/` (all 6 files, frontmatter only) and `plugins/agentmemory-capture.ts` copied verbatim from the maintainer's live install.
+- **Agent + plugin refresh**: `agents/` (all 6 files, frontmatter only) and `plugins/agentmemory-capture.ts` updated in one pass.
 - **Leaner prefill in `agentmemory-capture`**: numeric caps only, no behavior change. Stashed-file cap 20 to 10, enrich batch 10 to 5, prompt and tool-output slices 8000 to 6000. Stash batch halved (20 to 10), enrich batch halved (10 to 5), slices trimmed 25%: roughly 25-50% less injected memory context per turn. Every hook, handler, and injection point is unchanged; sessions simply carry less context per turn.
 
 ## Docs
@@ -64,7 +64,7 @@
 - **ADHD precedence rule**: `rules/communication-style.md` gains one line resolving ADHD vs Caveman output style (ADHD owns structure, Caveman owns density) for installs that add the live-only `i-have-adhd` plugin, which stays out of the portable example (absolute local path).
 
 ## Removed
-- **Dead plugins**: `plugins/checkpoint.ts` and `plugins/prompt-polish.ts` deleted to mirror the live install (unlisted, unloaded). Docs updated to match (`docs/CONFIGURATION.md` plugin paragraph rewritten around 7 specifiers, `docs/STRUCTURE.md` tree corrected).
+- **Dead plugins**: `plugins/checkpoint.ts` and `plugins/prompt-polish.ts` deleted (unlisted, unloaded). Docs updated to match (`docs/CONFIGURATION.md` plugin paragraph rewritten around 7 specifiers, `docs/STRUCTURE.md` tree corrected).
 
 # v0.8.5 (2026-09-13)
 
@@ -75,7 +75,7 @@
 
 ## Changed
 - **Agents unified on `opencode/muse-spark-1.3-contributor-free`.** All six agent files now ship the same default model (plus `variant: xhigh`), ending the deliberate model-line divergence introduced in v0.8.2. Docs updated to match (docs/AGENTS.md table, README cards, docs/CONFIGURATION.md, docs/STRUCTURE.md, CONTRIBUTING.md).
-- **Synced with live config**: `agents/` (all 6 bodies), `commands/recall.md`, `commands/configcheck.md`, `rules/communication-style.md`, `rules/skill-reminder.md`, `skills/memory-discipline/SKILL.md` refreshed in one pass. Pack-only skills and `AGENTS.md` kept as is.
+- **Refresh pass**: `agents/` (all 6 bodies), `commands/recall.md`, `commands/configcheck.md`, `rules/communication-style.md`, `rules/skill-reminder.md`, `skills/memory-discipline/SKILL.md` updated in one pass. Pack-only skills and `AGENTS.md` kept as is.
 
 # v0.8.3 (2026-09-09)
 
