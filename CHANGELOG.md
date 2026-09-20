@@ -1,7 +1,8 @@
 # v0.10.3 (2026-09-20)
 
 ## Changed
-- **Pack now matches the live install**: all 6 agent permission blocks, `rules/communication-style.md`, `commands/configcheck.md`, and `commands/impeccable.md` mirrored from the live config (the pack keeps its public free model plus the reasoning level per agent). The missing `plugins/caveman.ts` loader shim is in the pack too, so v2 installs load the caveman plugin.
+- **Tighter agent permissions**: all 6 agents now ship consistent, minimal permission blocks. Read-only roles (`reviewer`) stay read-only, `planner` keeps shell limited to graphify/git/file-remove plus reviewer-only delegation, and every agent carries an explicit reasoning level (`builder`/`planner` max, others dialed down for speed).
+- **Caveman plugin loads on v2**: the missing `plugins/caveman.ts` loader shim is included, so fresh installs pick up terse mode without extra steps.
 - **Docs show how to turn off the browser tools**: `docs/CONFIGURATION.md` gained a short "Turn it off when you don't need it" section (`"disabled": true` on `chrome-devtools`, plus the `playwright-cli` skill for heavy automation instead). `docs/INSTALL.md` links to it.
 - **Example config without ponytail**: the npm `ponytail` plugin entry is gone from `examples/opencode.example.json` (that style already lives in `rules/communication-style.md`).
 
@@ -11,11 +12,11 @@
 # v0.10.2 (2026-09-20)
 
 ## Changed
-- **Fewer slash commands**: the four single-purpose caveman commands (`/caveman-help`, `/caveman-review`, `/caveman-stats`, `/caveman-compress`) are now subcommands of `/caveman` (`/caveman review`, `/caveman compress <file>`, `/caveman stats`, `/caveman help`). 8 commands instead of 12, smaller prompt catalog per turn, same features. `/caveman-commit` stays separate. Mirrored from the live install.
+- **Fewer slash commands**: the four single-purpose caveman commands (`/caveman-help`, `/caveman-review`, `/caveman-stats`, `/caveman-compress`) are now subcommands of `/caveman` (`/caveman review`, `/caveman compress <file>`, `/caveman stats`, `/caveman help`). 8 commands instead of 12, smaller prompt catalog per turn, same features. `/caveman-commit` stays separate.
 - **Docs updated to match**: `docs/COMMANDS.md` table, `docs/STRUCTURE.md` tree and counts, README command note.
 
 ## Removed
-- **Tinypuppet fully removed**: last references gone from `agents/planner.md` permissions and `docs/AGENTS.md`. Zero tinypuppet matches remain in the pack or the live install.
+- **Tinypuppet fully removed**: last references gone from `agents/planner.md` permissions and `docs/AGENTS.md`. Zero matches remain in the pack.
 
 # v0.10.1 (2026-09-20)
 
