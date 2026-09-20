@@ -7,7 +7,7 @@
 - **Example config without ponytail**: the npm `ponytail` plugin entry is gone from `examples/opencode.example.json` (that style already lives in `rules/communication-style.md`).
 
 ## Fixed
-- **Stale docs corrected**: `tinypuppet`/`perplexity` mentions removed from the MCP docs, the nonexistent "`chrome-devtools` skill" name fixed, and the old V1 `enabled: true` wording replaced with the V2 `"disabled": true` shape.
+- **Stale docs corrected**: private-server mentions removed from the MCP docs, the nonexistent "`chrome-devtools` skill" name fixed, and the old V1 `enabled: true` wording replaced with the V2 `"disabled": true` shape.
 
 # v0.10.2 (2026-09-20)
 
@@ -16,7 +16,7 @@
 - **Docs updated to match**: `docs/COMMANDS.md` table, `docs/STRUCTURE.md` tree and counts, README command note.
 
 ## Removed
-- **Tinypuppet fully removed**: last references gone from `agents/planner.md` permissions and `docs/AGENTS.md`. Zero matches remain in the pack.
+- **Private tooling fully removed**: last private-server references gone from `agents/planner.md` permissions and `docs/AGENTS.md`. No private-server references remain in the pack.
 
 # v0.10.1 (2026-09-20)
 
@@ -80,7 +80,7 @@
 # v0.8.3 (2026-09-09)
 
 ## Fixes
-- **Planner can use browser and MCP servers**: `agents/planner.md` gained a `permission.mcp` allowlist for `chrome-devtools`, `tinypuppet`, `agentmemory`, and `perplexity` with a `"*": deny` catch-all. Planner sessions previously exposed no MCP tools, which made the agent feel read-only (no browser/MCP execution); now browser, memory, and research servers are available during analysis while unlisted servers stay hidden.
+- **Planner can use browser and MCP servers**: `agents/planner.md` gained a `permission.mcp` allowlist for `chrome-devtools`, `agentmemory`, and `perplexity` with a `"*": deny` catch-all. Planner sessions previously exposed no MCP tools, which made the agent feel read-only (no browser/MCP execution); now browser, memory, and research servers are available during analysis while unlisted servers stay hidden.
 
 # v0.8.2 (2026-09-09)
 
@@ -168,7 +168,7 @@
 - **Auto-commit plugin**: removed in favour of the regular `/commit` flow.
 - **Graphify plugin**: renamed `plugins/graphify.js` to `plugins/graphify.ts` to match live.
 - **Public docs**: counts and listings updated to 8 agents / 46 skills / 3 rules / 6 plugins / 10 commands across `README.md`, `docs/SKILLS.md`, `docs/STRUCTURE.md`, `docs/AGENTS.md`, `docs/INSTALL.md`, `CONTRIBUTING.md`, `examples/opencode.example.json`, and root `AGENTS.md`.
-- **Example config**: `graphify.ts` path, `AGENTMEMORY_TOOLS: "core"` env, `chrome-devtools` on by default, personal MCPs `perplexity` and `tinypuppet` stay out.
+- **Example config**: `graphify.ts` path, `AGENTMEMORY_TOOLS: "core"` env, `chrome-devtools` on by default, personal MCPs stay out.
 - **Root AGENTS.md**: counts updated to 8 agents / 46 skills, personal graphify path replaced with a placeholder.
 
 # v0.4.0 (2026-08-28)
@@ -189,7 +189,7 @@
 - **CONTRIBUTING.md**: skill count 44 -> 46, rules 6 -> 7, agents 11 -> 8.
 - **README**: plugin count claim fixed (4 -> 2 bundled + 2 npm), skill table corrected, TL;DR box added at the top, plugin count wording clarified.
 - **docs/SKILLS.md**: rebuilt so it matches the actual folder contents.
-- **Private MCP sync**: dropped `tinypuppet` and `perplexity` from the public pack after a runtime sync re-added them as personal tools.
+- **Private MCP sync**: dropped private-only servers from the public pack after a runtime sync re-added them as personal tools.
 
 # v0.3.0 (2026-08-28)
 
@@ -217,7 +217,7 @@
 - **macOS / Linux disclosure**: the maintainer only develops and tests on Windows. `install.sh` is provided but **has not been tested on macOS or Linux**. README gets a "macOS / Linux support" section with disclosure, manual fallback, and an issue link. The compatibility table now lists macOS and Linux as "Untested by maintainer".
 
 ## Internal
-- **Removed private MCPs**: `perplexity` and `tinypuppet` dropped from the public pack. References removed from several agents, rules, and skills. Runtime config keeps them for personal use.
+- **Removed private MCPs**: personal-only servers dropped from the public pack. References removed from several agents, rules, and skills.
 
 # v0.1.0 (2026-08-28)
 
