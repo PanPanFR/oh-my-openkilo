@@ -161,29 +161,31 @@ Same model, different discipline. The pack splits the one model into roles with 
 | Code first, plan never | Planner writes a self-contained plan you approve before code |
 | Reviews and tests when you remember | Built-in reviewer (security + spec) and tester (isolated loops) |
 
-A typical task, both ways. Say you need to fix a login bug:
+### A real case: planner + builder flow
 
-<table>
-<tr><th>😶 Plain OpenCode</th><th>😎 With this pack</th></tr>
-<tr><td>
+Say you need a rate limiter on your API. Here is exactly what happens:
 
-1. You describe the bug
-2. Model reads half the repo, edits 3 files
-3. Says done. You ask: sure nothing broke?
-4. Finds a second bug it introduced → back to step 2
-5. Three sessions later, nobody remembers why the table has a new column
+**1. You ask for a plan, not code:**
 
-</td><td>
+> "Plan a rate-limiter for our API. Don't write code yet, show me the options first."
 
-1. Planner writes a 1-page plan
-2. You approve it
-3. Builder executes
-4. Tester: login suite green
-5. Reviewer: no auth holes
-6. `remember` saves the lesson → next month, `recall` brings it back in 1 query
+`planner` reads your codebase (graphify first, not blind grep), compares two or three approaches with trade-offs, and writes `plan/rate-limiter.md`: goal, files to touch, test steps, and what it deliberately leaves out. Then it stops. Nothing is built yet.
 
-</td></tr>
-</table>
+**2. You approve, then hand the plan over:**
+
+> "Looks good, build `plan/rate-limiter.md`."
+
+`builder` executes the plan step by step. Mid-way it fans out on its own: `tester` writes the limit-exceeded test and runs it until green, `reviewer` checks the final diff for bypass holes (spoofed headers, missing keys). You get one report: what changed, test result, review verdict.
+
+**3. The decision sticks around:**
+
+> "remember rate limit is 100 req/min per key, fixed window, sliding window rejected as overkill"
+
+Next month a teammate asks why limits behave that way:
+
+> "recall rate limiter decision"
+
+One query, full context back. No re-reading the code, no re-arguing the trade-off.
 
 > [!TIP]
 > Same model, different discipline: plan first, verify after, remember forever.
