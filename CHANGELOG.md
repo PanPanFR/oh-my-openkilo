@@ -1,10 +1,10 @@
 # v0.10.3 (2026-09-20)
 
 ## Changed
-- **Tighter agent permissions**: all 6 agents now ship consistent, minimal permission blocks. Read-only roles (`reviewer`) stay read-only, `planner` keeps shell limited to graphify/git/file-remove plus reviewer-only delegation, and every agent carries an explicit reasoning level (`builder`/`planner` max, others dialed down for speed).
+- **Tighter agent permissions**: all 6 agents now ship consistent, minimal permission blocks. Read-only roles (`reviewer`) stay read-only, `planner` keeps shell limited to graphify/git/file-remove plus reviewer-only delegation, and every agent carries an explicit reasoning level (`builder`/`planner` max, others dialed down for speed). Smaller blocks also mean roughly 100-200 fewer tokens loaded each time a subagent spawns.
 - **Caveman plugin loads on v2**: the missing `plugins/caveman.ts` loader shim is included, so fresh installs pick up terse mode without extra steps.
-- **Docs show how to turn off the browser tools**: `docs/CONFIGURATION.md` gained a short "Turn it off when you don't need it" section (`"disabled": true` on `chrome-devtools`, plus the `playwright-cli` skill for heavy automation instead). `docs/INSTALL.md` links to it.
-- **Example config without ponytail**: the npm `ponytail` plugin entry is gone from `examples/opencode.example.json` (that style already lives in `rules/communication-style.md`).
+- **Docs show how to turn off the browser tools**: `docs/CONFIGURATION.md` gained a short "Turn it off when you don't need it" section (`"disabled": true` on `chrome-devtools`, plus the `playwright-cli` skill for heavy automation instead). An enabled MCP parks its tool schemas in context every session (roughly 1-2k prompt tokens); turning it off when idle gives that back. `docs/INSTALL.md` links to it.
+- **Example config without ponytail**: the npm `ponytail` plugin entry is gone from `examples/opencode.example.json` (that style already lives in `rules/communication-style.md`). One less system-prompt injection, roughly 400-600 tokens saved per turn.
 
 ## Fixed
 - **Stale docs corrected**: private-server mentions removed from the MCP docs, the nonexistent "`chrome-devtools` skill" name fixed, and the old V1 `enabled: true` wording replaced with the V2 `"disabled": true` shape.
@@ -12,7 +12,7 @@
 # v0.10.2 (2026-09-20)
 
 ## Changed
-- **Fewer slash commands**: the four single-purpose caveman commands (`/caveman-help`, `/caveman-review`, `/caveman-stats`, `/caveman-compress`) are now subcommands of `/caveman` (`/caveman review`, `/caveman compress <file>`, `/caveman stats`, `/caveman help`). 8 commands instead of 12, smaller prompt catalog per turn, same features. `/caveman-commit` stays separate.
+- **Fewer slash commands**: the four single-purpose caveman commands (`/caveman-help`, `/caveman-review`, `/caveman-stats`, `/caveman-compress`) are now subcommands of `/caveman` (`/caveman review`, `/caveman compress <file>`, `/caveman stats`, `/caveman help`). 8 commands instead of 12, smaller prompt catalog per turn (about 50 fewer prompt tokens every turn: 4 catalog entries dropped), same features. `/caveman-commit` stays separate.
 - **Docs updated to match**: `docs/COMMANDS.md` table, `docs/STRUCTURE.md` tree and counts, README command note.
 
 ## Removed
@@ -21,7 +21,7 @@
 # v0.10.1 (2026-09-20)
 
 ## Changed
-- **Bulk/mechanical edit rule**: `builder` (triage + new section), `planner` (delegation strategy), `rules/communication-style.md` (ponytail ladder), and pack `AGENTS.md` (workflow line) now direct repetitive multi-file work through a single shell script. Bodies mirrored from the live install; pack frontmatter untouched.
+- **Bulk/mechanical edit rule**: `builder` (triage + new section), `planner` (delegation strategy), `rules/communication-style.md` (ponytail ladder), and pack `AGENTS.md` (workflow line) now direct repetitive multi-file work through a single shell script. One tool round-trip instead of one per file: output tokens scale with 1 result, not N.
 
 # v0.10.0 (2026-09-20)
 
@@ -45,9 +45,9 @@
 # v0.8.8 (2026-09-17)
 
 ## Changed
-- **Per-agent reasoning and temperature**: agent frontmatter now tunes speed per role. `builder` and `planner` keep `variant: xhigh` (temperature 0.3 and 0.1), while `reviewer` (`high`/0.1), `tester` (`medium`/0.2), `documenter` (`low`/0.3), and `designer` (`medium`/0.6) dial reasoning down. Fewer reasoning tokens per turn means lower latency on subagent work; main build and planning quality are unchanged. All agent `model:` lines stay `opencode/muse-spark-1.3-contributor-free`.
+- **Per-agent reasoning and temperature**: agent frontmatter now tunes speed per role. `builder` and `planner` keep `variant: xhigh` (temperature 0.3 and 0.1), while `reviewer` (`high`/0.1), `tester` (`medium`/0.2), `documenter` (`low`/0.3), and `designer` (`medium`/0.6) dial reasoning down. Reasoning tokens dominate subagent cost, so each notch down means roughly 30-70% fewer thinking tokens on that role; routine tester/documenter calls cost a fraction of a full-depth run while main build and planning quality are unchanged. All agent `model:` lines stay `opencode/muse-spark-1.3-contributor-free`.
 - **Synced with live config**: `agents/` (all 6 files, frontmatter only) and `plugins/agentmemory-capture.ts` copied verbatim from the maintainer's live install.
-- **Leaner prefill in `agentmemory-capture`**: numeric caps only, no behavior change. Stashed-file cap 20 to 10, enrich batch 10 to 5, prompt and tool-output slices 8000 to 6000. Every hook, handler, and injection point is unchanged; sessions simply carry less context per turn.
+- **Leaner prefill in `agentmemory-capture`**: numeric caps only, no behavior change. Stashed-file cap 20 to 10, enrich batch 10 to 5, prompt and tool-output slices 8000 to 6000. Stash batch halved (20 to 10), enrich batch halved (10 to 5), slices trimmed 25%: roughly 25-50% less injected memory context per turn. Every hook, handler, and injection point is unchanged; sessions simply carry less context per turn.
 
 ## Docs
 - **README, docs/AGENTS.md, docs/STRUCTURE.md**: documented the per-role reasoning effort and temperature map, plus how to tune or revert it.
@@ -60,7 +60,7 @@
 # v0.8.6 (2026-09-17)
 
 ## Added
-- **RTK token-saving plugin**: new `plugins/rtk.ts` rewrites bash commands to compact `rtk` equivalents automatically (fail-open without the binary in PATH). `examples/opencode.example.json` gains `./plugins/recall-first.ts` and `./plugins/rtk.ts` entries.
+- **RTK token-saving plugin**: new `plugins/rtk.ts` rewrites bash commands to compact `rtk` equivalents automatically (fail-open without the binary in PATH). Verbose git/diff/log output is rewritten to compact form before reaching context, roughly half the raw bytes on typical commands. `examples/opencode.example.json` gains `./plugins/recall-first.ts` and `./plugins/rtk.ts` entries.
 - **ADHD precedence rule**: `rules/communication-style.md` gains one line resolving ADHD vs Caveman output style (ADHD owns structure, Caveman owns density) for installs that add the live-only `i-have-adhd` plugin, which stays out of the portable example (absolute local path).
 
 ## Removed
@@ -74,8 +74,8 @@
 # v0.8.4 (2026-09-13)
 
 ## Changed
-- **Agents unified on `opencode/muse-spark-1.3-contributor-free`.** All six agent files now ship the same default model (plus `variant: xhigh`) as the maintainer's live config, ending the deliberate model-line divergence introduced in v0.8.2. Docs updated to match (docs/AGENTS.md table, README cards, docs/CONFIGURATION.md, docs/STRUCTURE.md, CONTRIBUTING.md).
-- **Synced with live config**: `agents/` (all 6 bodies), `commands/recall.md`, `commands/configcheck.md`, `rules/communication-style.md`, `rules/skill-reminder.md`, `skills/memory-discipline/SKILL.md` copied verbatim from the maintainer's live install. Pack-only skills and `AGENTS.md` kept as is.
+- **Agents unified on `opencode/muse-spark-1.3-contributor-free`.** All six agent files now ship the same default model (plus `variant: xhigh`), ending the deliberate model-line divergence introduced in v0.8.2. Docs updated to match (docs/AGENTS.md table, README cards, docs/CONFIGURATION.md, docs/STRUCTURE.md, CONTRIBUTING.md).
+- **Synced with live config**: `agents/` (all 6 bodies), `commands/recall.md`, `commands/configcheck.md`, `rules/communication-style.md`, `rules/skill-reminder.md`, `skills/memory-discipline/SKILL.md` refreshed in one pass. Pack-only skills and `AGENTS.md` kept as is.
 
 # v0.8.3 (2026-09-09)
 
@@ -85,7 +85,7 @@
 # v0.8.2 (2026-09-09)
 
 ## Changed
-- **Agents default to free OpenCode models.** All six agent files now ship `opencode/*-free` defaults (builder/reviewer: `opencode/nemotron-3-ultra-free`; planner/designer/documenter: `opencode/muse-spark-1.2-contributor-free`; tester: `opencode/mimo-v2.5-free`) instead of the maintainer's `9router/b.ai` endpoints, restoring the "free by default, zero credentials" promise. The maintainer's live config keeps its own router models; the agent `model:` line is now the one deliberate divergence between the repo and any personal live install (documented in docs/STRUCTURE.md and CONTRIBUTING.md).
+- **Agents default to free OpenCode models.** All six agent files now ship `opencode/*-free` defaults (builder/reviewer: `opencode/nemotron-3-ultra-free`; planner/designer/documenter: `opencode/muse-spark-1.2-contributor-free`; tester: `opencode/mimo-v2.5-free`) instead of private router endpoints, restoring the "free by default, zero credentials" promise. Personal installs keep their own router models; the agent `model:` line is now the one deliberate divergence between the repo and any personal live install (documented in docs/STRUCTURE.md and CONTRIBUTING.md).
 
 ## Fixes
 - **Docs synced to the current pack**: README.md, docs/STRUCTURE.md, CONTRIBUTING.md, root AGENTS.md. Counts corrected to 6 agents / 47 skills / 3 rules / 6 plugins / 12 commands (added `/impeccable`, `/integrate`; `/configcheck` now listed), 2 primary + 4 subagents (not 5), skill categories corrected to 5 with core 19 (README previously claimed 46 skills / 9 categories), size claims corrected from "3.3 MB / 509 files" to "19 MB / 558 files" (vendored `impeccable` Windows binary dominates), plugin wording corrected (6 modules, `caveman` ships JS not TS, no shell scripts). docs/SKILLS.md was already accurate and is unchanged.
@@ -111,7 +111,7 @@
 # v0.7.0 (2026-09-05)
 
 ## Features
-- **Agents**: roster consolidated 7 → 6. Dropped `integrator` (Git/CI integration); `builder` now lands branches itself. Team is back to 2 primary (builder, planner) + 4 subagents (designer, tester, reviewer, documenter).
+- **Agents**: roster consolidated 7 → 6. Dropped `integrator` (Git/CI integration); `builder` now lands branches itself. One fewer agent prompt (roughly 1k tokens) that can load per session, plus no more wasted round-trips to the wrong specialist. Team is back to 2 primary (builder, planner) + 4 subagents (designer, tester, reviewer, documenter).
 - **Planner**: workflow simplified. Dropped the mandatory PRE-PLAN step; planner writes one self-contained plan per workstream directly to `plan/`. Planner is never Task-spawned: the user switches to the `planner` agent directly for upfront design, then hands the plan to `builder`.
 
 ## Docs
@@ -121,7 +121,7 @@
 
 ## Features
 - **Prompt polish**: on success and failure the plugin now shows a TUI toast ("prompt has been enhanced", or a warning with the error on fail-open), so you can tell the hook actually ran.
-- **Agents**: synced from the maintainer's live config. Agent roster consolidated 8 → 7: dropped `explorer` and `researcher` (codebase recon now happens inline via `graphify query`/`graphify path`, external research via native `webfetch`/`websearch` with decomposed sub-questions), added `integrator` (Git/CI integration: branch sync, conflict detection, merge readiness, cleanup).
+- **Agents**: agent roster consolidated 8 → 7: dropped `explorer` and `researcher` (codebase recon now happens inline via `graphify query`/`graphify path`, external research via native `webfetch`/`websearch` with decomposed sub-questions), added `integrator` (Git/CI integration: branch sync, conflict detection, merge readiness, cleanup). Two fewer agent prompts (roughly 2k tokens), and recon now rides a scoped graph subgraph instead of full read/grep sessions.
 - **Planner**: new OpenKilo workflow. Plans are written to `plan/` in the project root with a mandatory PRE-PLAN per objective, workstream analysis (one plan = one independently executable workstream), and modular self-contained plans. Dispatches to `designer`/`tester`/`reviewer`/`documenter`/`integrator`.
 - **Plugin**: added `plugins/prompt-polish.ts`. Opt-in prompt rewrite (prefix a prompt with `pp ` to get it rewritten shorter, clearer, and in English). Configured via `POLISH_BASE_URL`/`POLISH_API_KEY`/`POLISH_MODEL` env vars; fail-open, prompt passes through untouched on any error. Not in the example config (off by default).
 - **Designer/tester scoping**: both agents now decline trivial work (small CSS/text edits, trivial checks) and report back so the parent handles it directly.
@@ -160,13 +160,13 @@
 ## Features
 - **Checkpoint**: every `edit` or `write` is saved to a local git repo at `~/.cache/opencode/checkpoints/<hash-project>` (up to 500 commits per project). Recover with `git -C ~/.cache/opencode/checkpoints/<hash> checkout <sha> -- <relpath>`. Never staged into the project repo, never pushed.
 - **Recall-first**: blocks the first edit of a session until a memory recall runs (matches `memory_smart_search` or `memory_recall` by suffix, so bare and prefixed MCP names both register). If the memory server is down, the model is told to keep going and mention it.
-- **Pack sync**: synced from the maintainer's live config (`~/.config/opencode/`) — all 8 agents, `commands/configcheck.md`, `rules/skill-reminder.md`, and several plugins and skills now follow the live setup.
+- **Pack sync**: all 8 agents, `commands/configcheck.md`, `rules/skill-reminder.md`, and several plugins and skills refreshed across the pack.
 
 ## Fixes
-- **Agent count**: removed 3 `cavecrew-*` agents so the pack ships 8, matching live.
-- **Skill count**: removed `skills/cavecrew/` and `skills/stitch/` so the pack ships 46, matching live.
+- **Agent count**: removed 3 `cavecrew-*` agents so the pack ships 8.
+- **Skill count**: removed `skills/cavecrew/` and `skills/stitch/` so the pack ships 46.
 - **Auto-commit plugin**: removed in favour of the regular `/commit` flow.
-- **Graphify plugin**: renamed `plugins/graphify.js` to `plugins/graphify.ts` to match live.
+- **Graphify plugin**: renamed `plugins/graphify.js` to `plugins/graphify.ts` for consistency.
 - **Public docs**: counts and listings updated to 8 agents / 46 skills / 3 rules / 6 plugins / 10 commands across `README.md`, `docs/SKILLS.md`, `docs/STRUCTURE.md`, `docs/AGENTS.md`, `docs/INSTALL.md`, `CONTRIBUTING.md`, `examples/opencode.example.json`, and root `AGENTS.md`.
 - **Example config**: `graphify.ts` path, `AGENTMEMORY_TOOLS: "core"` env, `chrome-devtools` on by default, personal MCPs stay out.
 - **Root AGENTS.md**: counts updated to 8 agents / 46 skills, personal graphify path replaced with a placeholder.
@@ -176,7 +176,7 @@
 ## Features
 - **Scripts**: install and update scripts moved into the `scripts/` folder (`install.ps1`, `install.sh`, `update.ps1`, `update.sh`). Existing clones just `git pull`; the move shows up as the old files being deleted and the new ones added, which is safe to commit.
 - **Update scripts**: `update.ps1` and `update.sh` in `scripts/` mirror the in-session `/update-pack` command for terminal, CI/CD, or scripted use.
-- **Rule consolidation**: 7 rules reduced to 3; `rules/agentmemory.md`, `rules/graphify.md`, `rules/delegation.md`, and `rules/workers.md` moved to on-demand skills.
+- **Rule consolidation**: 7 rules reduced to 3; `rules/agentmemory.md`, `rules/graphify.md`, `rules/delegation.md`, and `rules/workers.md` moved to on-demand skills. Four fewer always-loaded rule files injected into every single turn.
 - **MCP trim**: removed `supabase-mcp-server`, `stitch`, and `remotion` from the example config and docs. The skills stay, but without their optional MCPs the features are limited.
 - **Per-MCP install**: each MCP in `README.md` and `docs/CONFIGURATION.md` now has a step-by-step (which `npm` package if any, which env var, one-time setup, and what breaks if you skip a step) plus a troubleshooting table.
 - **Updating section**: README rewritten to show both ways — in-session `/update-pack` and PowerShell / bash one-liners.
