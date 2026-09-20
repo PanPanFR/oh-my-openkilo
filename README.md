@@ -244,7 +244,7 @@ You can ignore this section at first. Plain sentences work too ("update this pac
 - **`/recall <query>`** searches past work ("what did we decide about auth?"). **`/remember <note>`** saves a note for later.
 - **`/configcheck`** verifies the install after setup.
 
-The rest (`/caveman-*` short-reply tools, `/impeccable` for UI review, `/integrate` for merging parallel work) are covered in [docs/COMMANDS.md](docs/COMMANDS.md) when you need them.
+The rest (`/caveman` subcommands for short replies, `/impeccable` for UI review, `/integrate` for merging parallel work) are covered in [docs/COMMANDS.md](docs/COMMANDS.md) when you need them.
 
 ---
 

@@ -30,13 +30,9 @@ oh-my-openkilo/
 │   ├── language.md                    # English-only files
 │   └── skill-reminder.md              # mandatory skill check before work
 │
-├── commands/                          # 12 slash commands
+├── commands/                          # 8 slash commands
+│   ├── caveman.md                     # terse mode + commit/review/compress/stats/help subcommands
 │   ├── caveman-commit.md              # compressed commit message generator
-│   ├── caveman-compress.md            # compress memory files
-│   ├── caveman-help.md                # caveman help card
-│   ├── caveman-review.md              # compressed code review
-│   ├── caveman-stats.md               # show token savings
-│   ├── caveman.md                     # toggle terse mode
 │   ├── configcheck.md                 # post-install health check
 │   ├── impeccable.md                  # route UI review/polish to the impeccable skill
 │   ├── integrate.md                   # integration session for parallel plan branches
@@ -107,4 +103,4 @@ Once an agent/skill/rule/command is published in the repo, the corresponding fil
 2. `git commit` and `git push`.
 3. Run `/update-pack` in OpenCode to pull the new version locally.
 
-This applies to **all 6 agents, 47 skills, 3 rules, 12 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); `/update-pack` will not touch local files.
+This applies to **all 6 agents, 47 skills, 3 rules, 8 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); `/update-pack` will not touch local files.

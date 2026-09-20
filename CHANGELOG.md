@@ -1,3 +1,12 @@
+# v0.10.2 (2026-09-20)
+
+## Changed
+- **Fewer slash commands**: the four single-purpose caveman commands (`/caveman-help`, `/caveman-review`, `/caveman-stats`, `/caveman-compress`) are now subcommands of `/caveman` (`/caveman review`, `/caveman compress <file>`, `/caveman stats`, `/caveman help`). 8 commands instead of 12, smaller prompt catalog per turn, same features. `/caveman-commit` stays separate. Mirrored from the live install.
+- **Docs updated to match**: `docs/COMMANDS.md` table, `docs/STRUCTURE.md` tree and counts, README command note.
+
+## Removed
+- **Tinypuppet fully removed**: last references gone from `agents/planner.md` permissions and `docs/AGENTS.md`. Zero tinypuppet matches remain in the pack or the live install.
+
 # v0.10.1 (2026-09-20)
 
 ## Changed

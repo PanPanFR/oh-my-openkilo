@@ -46,9 +46,6 @@ permissions:
   - action: chrome-devtools_*
     resource: "*"
     effect: allow
-  - action: tinypuppet_*
-    resource: "*"
-    effect: allow
   - action: agentmemory_*
     resource: "*"
     effect: allow

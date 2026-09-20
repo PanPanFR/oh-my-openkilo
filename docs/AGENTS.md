@@ -55,7 +55,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Model guidance:** `planner` does the high-leverage work — it decides what to build and how. A weak model here means a weak plan, which means wasted implementation time downstream. If you mix free + paid, this is the agent to upgrade first.
 
-**Permissions:** allowlist in frontmatter — `read`, `edit`, `glob`, `grep`, `todowrite`, `subagent` (reviewer only), `chrome-devtools_*`, `tinypuppet_*`, `agentmemory_*`, `perplexity_*`, `webfetch`, `websearch`, `lsp`, `skill`, `question`; `shell` limited to graphify/git/rm commands, everything else denied (no direct `shell`; planning happens in markdown files)
+**Permissions:** allowlist in frontmatter — `read`, `edit`, `glob`, `grep`, `todowrite`, `subagent` (reviewer only), `chrome-devtools_*`, `agentmemory_*`, `perplexity_*`, `webfetch`, `websearch`, `lsp`, `skill`, `question`; `shell` limited to graphify/git/rm commands, everything else denied (no direct `shell`; planning happens in markdown files)
 
 **Dispatched by:** you, directly, or by `builder` when it judges a task is too complex to implement without design.
 
