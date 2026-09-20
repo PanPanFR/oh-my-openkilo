@@ -236,6 +236,39 @@ The whole pack is 19 MB, mostly one helper binary. A comparable pack is 58.5 MB.
 
 ---
 
+## 🆚 How it compares
+
+### This pack vs oh-my-opencode-slim
+
+Both give OpenCode a team of agents. Different philosophy:
+
+| | oh-my-openkilo (this pack) | oh-my-opencode-slim |
+|---|---|---|
+| What it is | Plain text files (agents, skills, rules, commands) | Compiled TypeScript plugin (`dist/` bundle) |
+| Install | `git clone` + copy files, seconds | Installer + build step (`bun install`, `bun run build`) |
+| Models out of the box | Free (`opencode/*` defaults, zero credentials) | Paid presets by default (OpenAI; free preset exists) |
+| Team | 6 agents: you talk to builder/planner, they fan out to 4 specialists | 7 agents under one orchestrator, background dispatch |
+| Memory | Built-in: `recall`/`remember` across sessions via agentmemory | Workflow skills (deepwork, codemap, reflect) |
+| Replies | Caveman terse mode (~65% fewer output tokens) | Standard replies + council multi-model answers |
+| Update | `git pull` (or `/update-pack` in-session) | `git pull` + reinstall + rebuild |
+| Debugging | Read the text file, fix the typo | Rebuild the bundle |
+
+Pick this pack if you want free models, zero build, and files you can read and edit directly. Pick slim if you want background orchestration with tmux panes, council answers, and paid-model presets.
+
+### With this pack vs plain OpenCode
+
+| Plain OpenCode | With this pack |
+|---|---|
+| One model does everything: plan, code, test, review, docs | Each job goes to the right agent (planner designs, tester tests, reviewer reviews) |
+| Every session starts from zero | `recall` finds past decisions, `remember` saves new ones |
+| Full-length replies every turn | Caveman mode: short replies, same meaning |
+| Broad reads to understand code | Graphify: scoped subgraph first, then read |
+| Verbose shell output eats context | RTK rewrites commands to compact form (~half the bytes) |
+| No plan discipline | Planner writes a self-contained plan you approve before code |
+| Reviews and tests when you remember | Built-in reviewer (security + spec) and tester (isolated loops) |
+
+---
+
 ## ⌨️ Commands you will actually use
 
 You can ignore this section at first. Plain sentences work too ("update this pack", "what did we do about X last week").
