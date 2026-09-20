@@ -257,15 +257,23 @@ Pick this pack if you want free models, zero build, and files you can read and e
 
 ### With this pack vs plain OpenCode
 
+Same model, different discipline. The pack splits the one model into roles with rules:
+
 | Plain OpenCode | With this pack |
 |---|---|
-| One model does everything: plan, code, test, review, docs | Each job goes to the right agent (planner designs, tester tests, reviewer reviews) |
+| One session, no roles: you prompt, it codes whatever comes first | Same model, split into roles: planner designs, builder builds, tester/reviewer/documenter check |
 | Every session starts from zero | `recall` finds past decisions, `remember` saves new ones |
 | Full-length replies every turn | Caveman mode: short replies, same meaning |
 | Broad reads to understand code | Graphify: scoped subgraph first, then read |
 | Verbose shell output eats context | RTK rewrites commands to compact form (~half the bytes) |
-| No plan discipline | Planner writes a self-contained plan you approve before code |
+| Code first, plan never | Planner writes a self-contained plan you approve before code |
 | Reviews and tests when you remember | Built-in reviewer (security + spec) and tester (isolated loops) |
+
+A typical task, both ways. Say you need to fix a login bug:
+
+**Plain:** you describe the bug, the model reads half the repo, edits three files, says done. You ask "are you sure nothing else broke?", it reads more files, finds a second bug it introduced, fixes that too. Three sessions later nobody remembers why the session table has a new column.
+
+**With pack:** planner writes a one-page plan (root cause, files, test steps) and you approve it. Builder executes it. Tester runs the login suite in isolation until green. Reviewer checks the diff for auth holes. `remember` saves "session table needs index on user_id" for next time. Next month, `recall` brings it back in one query.
 
 ---
 
