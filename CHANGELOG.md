@@ -1,3 +1,8 @@
+# v0.10.1 (2026-09-20)
+
+## Changed
+- **Bulk/mechanical edit rule**: `builder` (triage + new section), `planner` (delegation strategy), `rules/communication-style.md` (ponytail ladder), and pack `AGENTS.md` (workflow line) now direct repetitive multi-file work through a single shell script. Bodies mirrored from the live install; pack frontmatter untouched.
+
 # v0.10.0 (2026-09-20)
 
 ## Changed

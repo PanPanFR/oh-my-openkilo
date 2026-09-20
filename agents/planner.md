@@ -79,7 +79,7 @@ Pre-implementation only. Planning, architecture, brainstorming, requirements ana
 
 **Artifacts**: check `docs/` for PRD/TDD/api-spec/ui-ux/ADR. Missing → ask user to create (do NOT create). Existing → read first.
 
-**Delegation-Aware Planning (mandatory)**: load `delegation` skill BEFORE drafting steps. Every step gets an owner (inline / subagent / parallel batch). Every plan includes a `## Delegation Strategy` table so builder dispatches without re-deciding. Mutating subagents are dispatched by builder; planner may invoke read-only `reviewer` during analysis. Planner designs delegation, never performs it.
+**Delegation-Aware Planning (mandatory)**: load `delegation` skill BEFORE drafting steps. Every step gets an owner (inline / subagent / parallel batch). Every plan includes a `## Delegation Strategy` table so builder dispatches without re-deciding. Mutating subagents are dispatched by builder; planner may invoke read-only `reviewer` during analysis. Planner designs delegation, never performs it. Mechanical / bulk edits across files (e.g. config/model updates, batch string replacements) are assigned to builder inline via single shell script, never split across subagents.
 
 **Plans**: one file per independent workstream at `plan/<slug>.md` (kebab-case, root). Self-contained: carries its own context (stack, conventions, constraints, decisions), executable without this conversation. Duplicate needed background rather than share a file. Commit plan files to `main` before execution (`git add plan/` + `git commit`; verify `git status`).
 

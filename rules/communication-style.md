@@ -27,6 +27,7 @@ alwaysApply: true
 
 - YAGNI: Only write what's needed
 - Ladder: stdlib -> native -> installed -> one-liner -> minimal code
+- Bulk edits: use shell one-liner or script (ladder rung 3-6: OS/shell handles repetitive edits) instead of sequential LLM tool calls or subagent dispatch.
 - Never cut: validation, error handling, security, accessibility
 - **ACTIVE EVERY RESPONSE. No drift back to over-building. Still active if unsure.**
 - Off only: "stop ponytail" / "normal mode"
