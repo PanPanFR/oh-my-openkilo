@@ -1,18 +1,20 @@
 # Skills
 
-47 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
+53 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
 
 The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-gain`, `ponytail-help`) and the superpowers plugin skills (`brainstorming`, `using-superpowers`, `writing-plans`, `executing-plans`, `dispatching-parallel-agents`, `subagent-driven-development`, `receiving-code-review`, `requesting-code-review`, `finishing-a-development-branch`, `using-git-worktrees`, `orchestration`) install via the plugin system. They are not counted below; the count is `ls skills/`, the filesystem is the source of truth.
 
-## Core (19)
+## Core (25)
 
 | Skill                              | When it loads                                                              |
 |------------------------------------|----------------------------------------------------------------------------|
+| `antislop`                       | Anti-slop negative design filter, 3 dials (energy, rhythm, motion), delivery gate |
 | `clean-code`                       | Writing new code, reviewing PRs, refactoring legacy code                   |
 | `cloudflare`                       | Any Cloudflare task: Workers, DO, Wrangler, KV, D1, R2, AI, Turnstile      |
 | `code-review`                      | Reviewing a branch, PR, or work-in-progress since a fixed point            |
 | `codebase-design`                  | Designing or improving a module's interface, seam placement, testability   |
 | `documentation`                    | Writing README, CHANGELOG, runbooks, API docs                              |
+| `frontend-design`                 | Distinctive, intentional visual design & 2-pass workflow (eliminate AI tropes) |
 | `git-commit`                       | User says commit, /commit, generate commit                                 |
 | `grilling`                         | Stress-test a plan, decision, or idea                                      |
 | `impeccable`                       | Review/polish/audit/iterate existing UI (build-time design stays `ui-design`) |
@@ -23,8 +25,12 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `systematic-debugging`             | Any bug, test failure, or unexpected behavior before proposing a fix       |
 | `test-driven-development`          | Any feature or bugfix, before writing implementation code                  |
 | `ui-design`                        | Designing pages or UI components, colors/typography, a11y                  |
+| `ui-ux-pro-max`                    | Searchable design intelligence: 79 styles, 192 palettes, 119 UX rules, 22 stacks |
 | `vercel-react`                     | Writing, reviewing, or refactoring React or Next.js code                   |
 | `verification-before-completion`   | Before claiming work is complete, fixed, or passing                        |
+| `vite`                             | Vite build tool, config, plugins, SSR, Vite 8 Rolldown migration           |
+| `vitest`                           | Vitest fast unit testing, vi mocking, snapshots, typed test contexts      |
+| `web-design-guidelines`            | Web interface code compliance review (Vercel standard: forms, a11y, motion)|
 | `web-perf`                         | Performance audits, Core Web Vitals, page speed                            |
 | `writing-skills`                   | Creating new skills, editing existing skills, or verifying skills          |
 
@@ -84,7 +90,7 @@ Skills with `references/` use progressive disclosure: `SKILL.md` is short and de
 
 ## Total count
 
-The numbers above add to **47** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
+The numbers above add to **53** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
 
 ## Editing a skill
 

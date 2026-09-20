@@ -23,6 +23,15 @@ alwaysApply: true
 - Code symbol `—` inside source (string literal, comment) → still avoid. If unavoidable, justify in one short line.
 - Self-check before sending any prose or UI string: count `—`. If > 0, rewrite.
 
+## Copywriting & UI Strings (Anti-Slop)
+
+- **Ban AI buzzwords:** *unlock, elevate, empower, seamless, cutting-edge, revolutionary, robust, game-changer, delve, tapestry*.
+- **Ban significance inflation:** *"the future of X", "marking a pivotal moment", "a new era of"*.
+- **Ban unverified claims:** no unsourced metrics (*"10k+ users", "99.9% uptime"*) or weasel attributions (*"Trusted by thousands", "Experts say"*). Real verifiable facts only.
+- **Ban conversational filler:** no chatbot closers (*"I hope this helps!", "Let me know..."*), no fake-candid openers (*"Honestly?", "Here's the thing"*), no all-caps shouting in prose.
+- **Actor-driven:** name the real subject; avoid default actorless passive (*"decisions were made"*) or human verbs on inanimate objects (*"the dashboard understands"*).
+- **Specific CTAs:** context-driven action verbs (*"Create Free Account"*, *"Watch Live Demo"*), never generic *"Get Started"* or *"Learn More"*.
+
 # Code Style (Ponytail)
 
 - YAGNI: Only write what's needed

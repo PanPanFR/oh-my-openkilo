@@ -48,7 +48,7 @@ Review specialist. Review diffs, report findings. Read-only.
 
 **Scope**: base ref / PR range / changed files + optional spec. Exclude node_modules, vendored, generated, test fixtures.
 
-**Visual/UI**: `playwright-cli` skill (bash) for screenshots/visual regression/compare and live DOM/network/console inspection.
+**Visual/UI**: `playwright-cli` skill (bash) for screenshots/visual regression/compare and live DOM/network/console inspection. Load `web-design-guidelines` for UI code reviews (accessibility, focus states, forms, animation, typography, hydration).
 
 **Axes**:
 1. Standards: repo conventions (naming, structure, error handling). Check AGENTS.md/README/docs first.

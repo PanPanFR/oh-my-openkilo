@@ -1,3 +1,26 @@
+# v0.11.0 (2026-09-20)
+
+## Added
+- **6 engineering & design skills**: `antislop`, `frontend-design`, `ui-ux-pro-max`, `vite`, `vitest`, `web-design-guidelines` (pack skills 47 → 53; core 19 → 25).
+- **Design intelligence engine** (`skills/ui-ux-pro-max/`): searchable local catalog with 79 styles, 192 product palettes, 119 UX guidelines, and 22 framework stacks via `python3.11 skills/ui-ux-pro-max/scripts/search.py`.
+- **Two-pass design workflow** (`skills/frontend-design/`): intentional aesthetic point-of-view, token system planning, and explicit AI cliché elimination checklist.
+- **Negative design filter** (`skills/antislop/`): 3 dials (Energy, Rhythm, Motion) and anti-slop Delivery Gate before shipping UI.
+- **Web interface standards** (`skills/web-design-guidelines/`): code-level Vercel standard compliance for forms, a11y, hydration, and animations.
+- **Vite & Vitest playbooks** (`skills/vite/`, `skills/vitest/`): Vite 8 Rolldown migration, SSR, and deterministic Vitest unit/integration testing patterns.
+- **Anti-slop copywriting rules**: `rules/communication-style.md` bans AI buzzwords (*unlock, elevate, tapestry*), significance inflation, unsourced metrics, and conversational filler.
+
+## Changed
+- **`ui-design` deepened**: integrated with `ui-ux-pro-max` search engine, 2-pass design discipline, and progressive-disclosure references (`references/pro-rules.md`, `references/quick-reference.md`, `references/web-interface-guidelines.md`).
+- **`clean-code` updated**: added AI comment slop elimination rules (no decorative borders, workflow narration, signature echoing, or empty labels).
+- **Subagent skill loadouts**:
+  - `designer`: gains `ui-ux-pro-max`, `frontend-design`, `web-design-guidelines`, `vite`, and 2-pass workflow.
+  - `reviewer`: gains `web-design-guidelines` for UI code reviews.
+  - `tester`: gains `vitest` for Vite-native test suites and vi mocking.
+- **`rules/skill-reminder.md`**: updated UI routing to pair `ui-design` with `antislop` filter and Delivery Gate verification.
+
+## Docs
+- **All documentation resynced**: `README.md`, `AGENTS.md`, `docs/SKILLS.md`, `docs/STRUCTURE.md`, `CONTRIBUTING.md` updated to 53 skills.
+
 # v0.10.4 (2026-09-20)
 
 ## Changed

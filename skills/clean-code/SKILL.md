@@ -29,8 +29,17 @@ Principles from Robert C. Martin's "Clean Code". Transform "code that works" int
   # good: code explains itself
   if employee.isEligibleForFullBenefits():
   ```
-- Good comments: legal, informative (regex intent), clarification of external libs, TODOs
-- Bad: mumbling, redundant, misleading, mandated, noise, position markers
+- Good comments: legal, intent/why, platform traps, non-obvious constraints, actionable TODOs. Keep concise (1-2 lines max).
+- Bad: mumbling, redundant, misleading, mandated, noise, position markers.
+- **AI Comment Slop to eliminate:**
+  - Decorative separators: `// ============`, `/* ---- ROUTES ---- */`, box-drawing borders.
+  - Restating the obvious / signature echo: `let count = 0; // Initialize count`, repeating JSDoc params without added value.
+  - Workflow narration: `// Step 1: Validate`, `// Step 2: Process`, `// Step 3: Return`.
+  - Empty labels: `// Main logic`, `// Helper function`, `// Business logic`.
+  - Vague TODOs: `// TODO: improve this` without actionable task and context.
+  - Decorative emoji in code: `// 🚀 Performance`, `// ✅ Done`.
+  - End markers: `} // end if`, `# End of function`.
+  - Line-by-line narration: narrating each line instead of explaining block intent.
 
 ## 4. Formatting
 - Newspaper metaphor: high-level concepts top, details bottom

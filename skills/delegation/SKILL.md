@@ -1,6 +1,6 @@
 ---
 name: delegation
-description: Decide when and how to delegate work to subagents (planner, builder, designer, documenter, tester, reviewer). Use when dispatching subagents, running parallel tasks, choosing a subagent for a job, or deciding inline-vs-delegate. Front-load triggers: delegate, subagent, parallel, task dispatch, spawn agent, launch agents.
+description: "Decide when and how to delegate work to subagents (planner, builder, designer, documenter, tester, reviewer). Use when dispatching subagents, running parallel tasks, choosing a subagent for a job, or deciding inline-vs-delegate. Front-load triggers: delegate, subagent, parallel, task dispatch, spawn agent, launch agents."
 ---
 
 # Delegation Policy

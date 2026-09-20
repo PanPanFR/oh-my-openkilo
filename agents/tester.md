@@ -45,9 +45,11 @@ Tester. Quality assurance specialist. Write, run, fix test suites in an isolated
 
 **Folder**: `test/` at repo root, mirror source (`test/unit/`, `test/integration/`, `test/api/`). One file per module (`test/auth.test.ts`). Check existing first.
 
+**Skills (load per task)**: `vitest` (Vite-native unit testing, vi mocking, snapshots, fixtures, coverage), `playwright-cli` (E2E browser automation).
+
 **E2E/browser**: use the `playwright-cli` skill (bash) for scripted automation (form flows, login, navigation, mocks, video/trace, test generation), including stateful persistent/self-healing loops.
 
-**Before writing**: identify framework (package.json), existing patterns, dependencies/side effects.
+**Before writing**: identify framework (package.json), existing patterns, dependencies/side effects. When using Vitest, follow `vitest` skill patterns (vi.mock hoisting, deterministic timers, typed test contexts).
 
 **Quality**: Arrange/Act/Assert. Edge cases first (empty, null, boundary, unicode, dep errors, races). Min 4 cases: happy, null/empty, dep error, boundary. Name by behavior. No tautological asserts, no shared state, deterministic mocks only.
 

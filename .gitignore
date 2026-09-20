@@ -32,3 +32,7 @@ Thumbs.db
 # git
 .git/
 .github/
+
+# Python bytecode
+__pycache__/
+*.pyc

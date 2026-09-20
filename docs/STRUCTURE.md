@@ -18,7 +18,7 @@ oh-my-openkilo/
 │   ├── reviewer.md
 │   └── documenter.md
 │
-├── skills/                            # 47 skill packs (mirror of ~/.config/opencode/skills/)
+├── skills/                            # 53 skill packs (mirror of ~/.config/opencode/skills/)
 │   └── <skill-name>/
 │       ├── SKILL.md                   # always present
 │       ├── README.md                  # optional, user-facing
@@ -58,7 +58,7 @@ oh-my-openkilo/
     ├── INSTALL.md                     # this install guide
     ├── STRUCTURE.md                   # this file
     ├── AGENTS.md                      # 6 agents in detail
-    ├── SKILLS.md                      # 47 skills table
+    ├── SKILLS.md                      # 53 skills table
     ├── RULES.md                       # 3 rules in detail
     ├── COMMANDS.md                    # command reference
     └── CONFIGURATION.md               # opencode.json breakdown
@@ -103,4 +103,4 @@ Once an agent/skill/rule/command is published in the repo, the corresponding fil
 2. `git commit` and `git push`.
 3. Run `/update-pack` in OpenCode to pull the new version locally.
 
-This applies to **all 6 agents, 47 skills, 3 rules, 8 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); `/update-pack` will not touch local files.
+This applies to **all 6 agents, 53 skills, 3 rules, 8 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); `/update-pack` will not touch local files.
