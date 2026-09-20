@@ -1,3 +1,9 @@
+# v0.10.4 (2026-09-20)
+
+## Docs
+- **Token-saving figures**: every optimization entry now states what it saves per turn, per session, or per spawn (measured where possible, marked ~ where estimated).
+- **Pack-focused wording**: internal sync notes and private tool names removed from current and history entries. The log now reads as pack changes only.
+
 # v0.10.3 (2026-09-20)
 
 ## Changed
