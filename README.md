@@ -275,26 +275,27 @@ Same model, different discipline. The pack splits the one model into roles with 
 
 A typical task, both ways. Say you need to fix a login bug:
 
-```mermaid
-flowchart TB
-    subgraph Plain["😶 Plain OpenCode"]
-        direction TB
-        P1["You describe the bug"] --> P2["Model reads half the repo, edits 3 files"]
-        P2 --> P3["Says done. You ask: sure nothing broke?"]
-        P3 --> P4["Finds a second bug it introduced"]
-        P4 --> P2
-        P2 -.-> P5["3 sessions later, nobody remembers why the table has a new column"]
-    end
-    subgraph Pack["😎 With this pack"]
-        direction TB
-        Q1["Planner writes a 1-page plan"] --> Q2["You approve it"]
-        Q2 --> Q3["Builder executes"]
-        Q3 --> Q4["Tester: login suite green"]
-        Q4 --> Q5["Reviewer: no auth holes"]
-        Q5 --> Q6["remember saves the lesson"]
-        Q6 -.-> Q7["Next month, recall brings it back in 1 query"]
-    end
-```
+<table>
+<tr><th>😶 Plain OpenCode</th><th>😎 With this pack</th></tr>
+<tr><td>
+
+1. You describe the bug
+2. Model reads half the repo, edits 3 files
+3. Says done. You ask: sure nothing broke?
+4. Finds a second bug it introduced → back to step 2
+5. Three sessions later, nobody remembers why the table has a new column
+
+</td><td>
+
+1. Planner writes a 1-page plan
+2. You approve it
+3. Builder executes
+4. Tester: login suite green
+5. Reviewer: no auth holes
+6. `remember` saves the lesson → next month, `recall` brings it back in 1 query
+
+</td></tr>
+</table>
 
 > [!TIP]
 > Same model, different discipline: plan first, verify after, remember forever.
