@@ -163,29 +163,19 @@ Same model, different discipline. The pack splits the one model into roles with 
 
 ### A real case: planner + builder flow
 
-Say you need a rate limiter on your API. Here is exactly what happens:
+Rate limiter, three messages:
 
-**1. You ask for a plan, not code:**
+**1. Plan:** > "Plan a rate-limiter. No code yet, options first."
 
-> "Plan a rate-limiter for our API. Don't write code yet, show me the options first."
+`planner` studies the codebase, writes `plan/rate-limiter.md`, stops.
 
-`planner` reads your codebase (graphify first, not blind grep), compares two or three approaches with trade-offs, and writes `plan/rate-limiter.md`: goal, files to touch, test steps, and what it deliberately leaves out. Then it stops. Nothing is built yet.
+**2. Build:** > "Build `plan/rate-limiter.md`."
 
-**2. You approve, then hand the plan over:**
+`builder` executes; `tester` greens the tests, `reviewer` checks for bypass holes.
 
-> "Looks good, build `plan/rate-limiter.md`."
+**3. Remember:** > "remember 100 req/min per key, fixed window"
 
-`builder` executes the plan step by step. Mid-way it fans out on its own: `tester` writes the limit-exceeded test and runs it until green, `reviewer` checks the final diff for bypass holes (spoofed headers, missing keys). You get one report: what changed, test result, review verdict.
-
-**3. The decision sticks around:**
-
-> "remember rate limit is 100 req/min per key, fixed window, sliding window rejected as overkill"
-
-Next month a teammate asks why limits behave that way:
-
-> "recall rate limiter decision"
-
-One query, full context back. No re-reading the code, no re-arguing the trade-off.
+Next month: > "recall rate limiter decision" — full context, one query.
 
 > [!TIP]
 > Same model, different discipline: plan first, verify after, remember forever.
