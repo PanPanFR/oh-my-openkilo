@@ -1,28 +1,14 @@
 # v0.11.5 (2026-09-22)
 
-## Fixed
-- **Stale skill counts in README**: three leftover "47" references (intro, features, overview table) corrected to 54. Missed by the v0.11.0 resync.
-
-# v0.11.4 (2026-09-22)
-
 ## Added
+- **ReactBits MCP (opt-in, off by default)**: `reactbits` entry (`npx -y reactbits-dev-mcp-server`, community server for 135+ animated components) in `examples/opencode.example.json`, plus a `docs/CONFIGURATION.md` subsection. Enable by removing `"disabled": true`; optional `GITHUB_TOKEN` raises GitHub API rate limits.
 - **UI component tooling router**: new `rules/ui-tooling.md` (shadcn CLI vs MCP decision map, cost principle, designer workflow, MCP enable protocol), wired into `agents/designer.md` (shadcn skill + `shadcn_*`/`reactbits_*`/`magicuidesign*` tool allows) and `rules/skill-reminder.md` routing.
 - **shadcn skill (global)**: official `shadcn-ui/ui` skill mirrored to `skills/` (54 total, 26 core). Designer loads it for component rules and CLI workflow.
 
-# v0.11.3 (2026-09-22)
-
-## Added
-- **ReactBits MCP (opt-in, off by default)**: `reactbits` entry (`npx -y reactbits-dev-mcp-server`, community server for 135+ animated components) in `examples/opencode.example.json`, plus a `docs/CONFIGURATION.md` subsection. Enable by removing `"disabled": true`; optional `GITHUB_TOKEN` raises GitHub API rate limits.
-
-# v0.11.2 (2026-09-22)
-
-## Fixed
-- **RTK on Windows**: documented that `rtk ls`/`tree`/`find` need Git's `usr\bin` on the user PATH (`docs/CONFIGURATION.md`, `plugins/rtk.ts` header). PowerShell's `ls` is an alias invisible to rtk's native resolver; without it every rewritten `ls` fails with `Failed to resolve 'ls' via PATH`.
-
-# v0.11.1 (2026-09-22)
-
 ## Fixed
 - **Planner shell permissions**: allow all shell commands (`resource: "*"`, `effect: allow`). Prevents `Permission denied: shell` errors when planner runs git commands or codebase recon beyond the previously narrow whitelist.
+- **RTK on Windows**: documented that `rtk ls`/`tree`/`find` need Git's `usr\bin` on the user PATH (`docs/CONFIGURATION.md`, `plugins/rtk.ts` header). PowerShell's `ls` is an alias invisible to rtk's native resolver; without it every rewritten `ls` fails with `Failed to resolve 'ls' via PATH`.
+- **Stale skill counts in README**: three leftover "47" references (intro, features, overview table) corrected to 54. Missed by the v0.11.0 resync.
 
 # v0.11.0 (2026-09-20)
 
