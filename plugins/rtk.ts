@@ -1,5 +1,8 @@
 // RTK OpenCode plugin, rewrites commands to use rtk for token savings.
 // Requires: rtk >= 0.23.0 in PATH.
+// Windows: also add Git usr/bin (C:\Program Files\Git\usr\bin) to PATH,
+// else `rtk ls` fails with `Failed to resolve 'ls' via PATH`
+// (PowerShell `ls` is an alias, not a binary).
 //
 // Thin delegating plugin: all rewrite logic lives in `rtk rewrite`,
 // which is the single source of truth (src/discover/registry.rs).

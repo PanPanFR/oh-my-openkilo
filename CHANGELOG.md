@@ -1,3 +1,8 @@
+# v0.11.2 (2026-09-22)
+
+## Fixed
+- **RTK on Windows**: documented that `rtk ls`/`tree`/`find` need Git's `usr\bin` on the user PATH (`docs/CONFIGURATION.md`, `plugins/rtk.ts` header). PowerShell's `ls` is an alias invisible to rtk's native resolver; without it every rewritten `ls` fails with `Failed to resolve 'ls' via PATH`.
+
 # v0.11.1 (2026-09-22)
 
 ## Fixed
