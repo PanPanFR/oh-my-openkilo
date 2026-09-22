@@ -17,7 +17,7 @@ This pack gives OpenCode 6 specialist agents, 47 how-to guides, and 3 house rule
   <a href="https://github.com/PanPanFR/oh-my-openkilo/commits/main"><img src="https://img.shields.io/github/last-commit/PanPanFR/oh-my-openkilo?style=flat" alt="Last commit"></a>
   <br>
   <a href="#-meet-the-team"><img src="https://img.shields.io/badge/agents-6-orange" alt="6 agents"></a>
-  <a href="#-skills"><img src="https://img.shields.io/badge/skills-53-green" alt="53 skills"></a>
+  <a href="#-skills"><img src="https://img.shields.io/badge/skills-54-green" alt="54 skills"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/credentials-zero-brightgreen" alt="Zero credentials"></a>
   <img src="https://img.shields.io/badge/size-23_MB-blueviolet" alt="Pack size: 23 MB">
   <img src="https://img.shields.io/badge/no_build_step-brightgreen" alt="No build step">
@@ -318,17 +318,17 @@ Then restart OpenCode or run `/reload`. Changed files are backed up automaticall
 
 ## 🧩 Skills
 
-53 how-to guides in 5 groups. They load on their own when your task matches; you never open them.
+54 how-to guides in 5 groups. They load on their own when your task matches; you never open them.
 
 | Group | Count | Examples |
 |----------|-------|----------|
-| core | 25 | `antislop`, `clean-code`, `cloudflare`, `code-review`, `frontend-design`, `impeccable`, `plans`, `ui-design`, `ui-ux-pro-max`, `vite`, `vitest`, `web-design-guidelines`, `web-perf` |
+| core | 26 | `antislop`, `clean-code`, `cloudflare`, `code-review`, `frontend-design`, `impeccable`, `plans`, `ui-design`, `ui-ux-pro-max`, `vite`, `vitest`, `web-design-guidelines`, `web-perf`, `shadcn` |
 | agentmemory | 6 | `agentmemory-architecture`, `agentmemory-config`, `agentmemory-mcp-tools`, `agentmemory-rest-api` |
 | caveman | 6 | `caveman`, `caveman-commit`, `caveman-review` |
 | workflow & memory | 14 | `commit-context`, `delegation`, `handoff`, `lesson`, `recall`, `remember`, `recap` |
 | browser | 2 | `playwright-cli`, `graphify` |
 
-> **All 53 with descriptions:** [docs/SKILLS.md](docs/SKILLS.md)
+> **All 54 with descriptions:** [docs/SKILLS.md](docs/SKILLS.md)
 
 ---
 
@@ -355,7 +355,7 @@ Start with install, then jump to whatever you need:
 | [docs/INSTALL.md](docs/INSTALL.md) | Step-by-step install, uninstall, troubleshooting |
 | [docs/WORKFLOWS.md](docs/WORKFLOWS.md) | Full worked examples (audit, debug, new feature, arch review, code map) |
 | [docs/AGENTS.md](docs/AGENTS.md) | All 6 agents: when to use each, how to edit, model table |
-| [docs/SKILLS.md](docs/SKILLS.md) | All 53 guides grouped by category, with descriptions |
+| [docs/SKILLS.md](docs/SKILLS.md) | All 54 guides grouped by category, with descriptions |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, `/update-pack` mechanics |
 | [docs/STRUCTURE.md](docs/STRUCTURE.md) | Every folder and file in the repo, explained |
 | [docs/RULES.md](docs/RULES.md) | The 3 house rules in detail |

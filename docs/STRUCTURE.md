@@ -18,17 +18,18 @@ oh-my-openkilo/
 │   ├── reviewer.md
 │   └── documenter.md
 │
-├── skills/                            # 53 skill packs (mirror of ~/.config/opencode/skills/)
+├── skills/                            # 54 skill packs (mirror of ~/.config/opencode/skills/)
 │   └── <skill-name>/
 │       ├── SKILL.md                   # always present
 │       ├── README.md                  # optional, user-facing
 │       ├── references/                # optional, progressive-disclosure
 │       └── scripts/, examples/, ...   # optional, skill-specific
 │
-├── rules/                             # 3 always-on rules (mirror of ~/.config/opencode/rules/)
+├── rules/                             # 4 rules (3 always-on + 1 on-demand) (mirror of ~/.config/opencode/rules/)
 │   ├── communication-style.md         # caveman + ponytail style
 │   ├── language.md                    # English-only files
 │   └── skill-reminder.md              # mandatory skill check before work
+│   └── ui-tooling.md                  # CLI-vs-MCP router (on demand)
 │
 ├── commands/                          # 8 slash commands
 │   ├── caveman.md                     # terse mode + commit/review/compress/stats/help subcommands
@@ -58,7 +59,7 @@ oh-my-openkilo/
     ├── INSTALL.md                     # this install guide
     ├── STRUCTURE.md                   # this file
     ├── AGENTS.md                      # 6 agents in detail
-    ├── SKILLS.md                      # 53 skills table
+    ├── SKILLS.md                      # 54 skills table
     ├── RULES.md                       # 3 rules in detail
     ├── COMMANDS.md                    # command reference
     └── CONFIGURATION.md               # opencode.json breakdown
@@ -103,4 +104,4 @@ Once an agent/skill/rule/command is published in the repo, the corresponding fil
 2. `git commit` and `git push`.
 3. Run `/update-pack` in OpenCode to pull the new version locally.
 
-This applies to **all 6 agents, 53 skills, 3 rules, 8 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); `/update-pack` will not touch local files.
+This applies to **all 6 agents, 54 skills, 4 rules, 8 commands**. If you want a personal fork, copy the file under a new name (e.g. `agents/builder.local.md`); `/update-pack` will not touch local files.

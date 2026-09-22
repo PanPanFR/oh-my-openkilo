@@ -1,3 +1,9 @@
+# v0.11.4 (2026-09-22)
+
+## Added
+- **UI component tooling router**: new `rules/ui-tooling.md` (shadcn CLI vs MCP decision map, cost principle, designer workflow, MCP enable protocol), wired into `agents/designer.md` (shadcn skill + `shadcn_*`/`reactbits_*`/`magicuidesign*` tool allows) and `rules/skill-reminder.md` routing.
+- **shadcn skill (global)**: official `shadcn-ui/ui` skill mirrored to `skills/` (54 total, 26 core). Designer loads it for component rules and CLI workflow.
+
 # v0.11.3 (2026-09-22)
 
 ## Added

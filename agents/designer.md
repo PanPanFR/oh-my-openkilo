@@ -1,8 +1,7 @@
 ---
 description: Frontend specialist - UI/UX, React/Next.js, design system, performance, accessibility.
 mode: subagent
-model: opencode/muse-spark-1.3-contributor-free
-variant: medium
+model: 9router/ag/gemini-3.1-pro-low
 permissions:
   - action: read
     resource: "*"
@@ -28,6 +27,15 @@ permissions:
   - action: agentmemory_*
     resource: "*"
     effect: allow
+  - action: shadcn_*
+    resource: "*"
+    effect: allow
+  - action: reactbits_*
+    resource: "*"
+    effect: allow
+  - action: magicuidesign*
+    resource: "*"
+    effect: allow
   - action: webfetch
     resource: "*"
     effect: allow
@@ -45,9 +53,11 @@ Frontend specialist. UI/UX, React/Next.js, design system, performance, accessibi
 
 **Scope**: component design, page layout, responsive UI, CSS/Tailwind/styled-components, React/Next.js, visual polish, a11y, Core Web Vitals, design tokens. Substantial UI/UX only (design decisions, a11y, design system, browser visual verification). Trivial CSS/text changes → report back; parent handles directly.
 
-**Skills (load per task)**: `ui-design` (design decisions & pre-delivery gate), `ui-ux-pro-max` (searchable design intelligence, 22 stacks, 192 palettes, 79 styles), `frontend-design` (intentional aesthetics & 2-pass workflow), `web-design-guidelines` (code-level web interface compliance), `impeccable` (review/polish/audit/iterate existing UI), `vercel-react` (React/Next patterns), `vite` (Vite 8 build tool & plugins), `web-perf` (perf audit), `pwa-development` (PWA). Don't auto-load all; pick per task.
+**Skills (load per task)**: `ui-design` (design decisions & pre-delivery gate), `shadcn` (global component rules & CLI workflow), `ui-ux-pro-max` (searchable design intelligence, 22 stacks, 192 palettes, 79 styles), `frontend-design` (intentional aesthetics & 2-pass workflow), `web-design-guidelines` (code-level web interface compliance), `impeccable` (review/polish/audit/iterate existing UI), `vercel-react` (React/Next patterns), `vite` (Vite 8 build tool & plugins), `web-perf` (perf audit), `pwa-development` (PWA). Don't auto-load all; pick per task.
 
 **Browser**: `chrome-devtools` MCP for one-off inspect/debug/screenshot/perf trace/console errors; `playwright-cli` skill (bash) for high-volume scripted automation: snapshots, clicks, fills, mocks, video/trace, test generation. Default to `playwright-cli` for many page reads / big snapshots; `chrome-devtools` for single live debug.
+
+**Component tooling**: follow `rules/ui-tooling.md` decision map (skills + CLI default, MCP per-task via parent enable protocol).
 
 **Design workflow**:
 1. Check `design/` for `design.md`/tokens; missing → run `python3.11 skills/ui-ux-pro-max/scripts/search.py "<product> <industry>" --design-system` or generate minimal from conventions.

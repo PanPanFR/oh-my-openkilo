@@ -79,7 +79,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Model guidance:** Choose a model that is strong at UI/UX judgment, frontend implementation, and visual polish. Multimodal is a plus because the agent reviews screenshots and mockups.
 
-**Permissions:** allowlist in frontmatter — `read`, `edit`, `shell`, `glob`, `grep`, `todowrite`, `chrome-devtools_*`, `agentmemory_*`, `webfetch`, `websearch`, `lsp`, `skill`; no subagents, everything else denied.
+**Permissions:** allowlist in frontmatter — `read`, `edit`, `shell`, `glob`, `grep`, `todowrite`, `chrome-devtools_*`, `agentmemory_*`, `shadcn_*`, `reactbits_*`, `magicuidesign*`, `webfetch`, `websearch`, `lsp`, `skill`; no subagents, everything else denied.
 
 **Required MCP:** none. Multimodal model recommended for visual work; text-only is fine for design review and a11y.
 

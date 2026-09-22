@@ -1,10 +1,10 @@
 # Skills
 
-53 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
+54 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
 
 The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-gain`, `ponytail-help`) and the superpowers plugin skills (`brainstorming`, `using-superpowers`, `writing-plans`, `executing-plans`, `dispatching-parallel-agents`, `subagent-driven-development`, `receiving-code-review`, `requesting-code-review`, `finishing-a-development-branch`, `using-git-worktrees`, `orchestration`) install via the plugin system. They are not counted below; the count is `ls skills/`, the filesystem is the source of truth.
 
-## Core (25)
+## Core (26)
 
 | Skill                              | When it loads                                                              |
 |------------------------------------|----------------------------------------------------------------------------|
@@ -22,6 +22,7 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `ponytail-review`                  | Review a diff or repo for over-engineering                                 |
 | `pwa-development`                  | PWA, service workers, caching strategies, offline                          |
 | `resolving-merge-conflicts`        | In-progress git merge/rebase conflict                                      |
+| `shadcn`                           | shadcn/ui components: add/search/docs, composition rules, presets          |
 | `systematic-debugging`             | Any bug, test failure, or unexpected behavior before proposing a fix       |
 | `test-driven-development`          | Any feature or bugfix, before writing implementation code                  |
 | `ui-design`                        | Designing pages or UI components, colors/typography, a11y                  |
@@ -90,7 +91,7 @@ Skills with `references/` use progressive disclosure: `SKILL.md` is short and de
 
 ## Total count
 
-The numbers above add to **53** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
+The numbers above add to **54** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
 
 ## Editing a skill
 

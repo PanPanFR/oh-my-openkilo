@@ -16,6 +16,7 @@ Codebase-relation question (data flow, callers, where defined, architecture, >2 
 ## UI Routing
 
 Build new UI / design from scratch -> load `ui-design` (+ delegate `designer` for substantial work) + apply `antislop` (negative filter).
+Component library task (install/browse shadcn, ReactBits, Magic UI) -> load `rules/ui-tooling.md` + `shadcn` skill; CLI default, MCP per-task.
 Review/polish/audit/iterate existing UI (critique, polish, distill, harden, animate, typeset) -> load `impeccable` (refine/polish) or `antislop` (slop audit).
 Mechanical anti-pattern check (no LLM) -> `npx impeccable detect <path>` (CI-able).
 Anti-slop Delivery Gate: run gate before delivering UI. Terse output: 1-line PASS (`Delivery Gate: PASS [...]`), cite failing rule IDs only on FAIL.
