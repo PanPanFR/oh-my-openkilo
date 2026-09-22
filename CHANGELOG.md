@@ -1,3 +1,8 @@
+# v0.11.1 (2026-09-22)
+
+## Fixed
+- **Planner shell permissions**: allow all shell commands (`resource: "*"`, `effect: allow`). Prevents `Permission denied: shell` errors when planner runs git commands or codebase recon beyond the previously narrow whitelist.
+
 # v0.11.0 (2026-09-20)
 
 ## Added

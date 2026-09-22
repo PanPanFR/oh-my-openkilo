@@ -12,24 +12,6 @@ permissions:
     effect: allow
   - action: shell
     resource: "*"
-    effect: deny
-  - action: shell
-    resource: "*graphify*"
-    effect: allow
-  - action: shell
-    resource: "Remove-Item*"
-    effect: allow
-  - action: shell
-    resource: "git add*"
-    effect: allow
-  - action: shell
-    resource: "git commit*"
-    effect: allow
-  - action: shell
-    resource: "git status*"
-    effect: allow
-  - action: shell
-    resource: "rm*"
     effect: allow
   - action: glob
     resource: "*"
