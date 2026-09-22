@@ -6,7 +6,7 @@
 
 **A team of AI specialists for OpenCode. You describe the task, they do the work.**
 
-This pack gives OpenCode 6 specialist agents, 47 how-to guides, and 3 house rules. It works with free models, so there is nothing to pay and no API key to set up.
+This pack gives OpenCode 6 specialist agents, 54 how-to guides, and 3 house rules. It works with free models, so there is nothing to pay and no API key to set up.
 
 <sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's team workflow</sub>
 
@@ -58,7 +58,7 @@ That is the whole setup. Future updates are just `/update-pack` inside OpenCode.
 OpenCode on its own is one general assistant. This pack turns it into a small team:
 
 - **Specialists for each job.** A builder that does the coding, a planner that thinks before anyone codes, plus experts for UI, tests, code review, and docs. You talk to the builder; the builder calls in the experts when needed.
-- **How-to guides for common tasks.** 47 short playbooks (debugging, testing, code review, planning, and more). The right guide loads automatically when your task matches it. You never open them yourself.
+- **How-to guides for common tasks.** 54 short playbooks (debugging, testing, code review, planning, and more). The right guide loads automatically when your task matches it. You never open them yourself.
 - **Memory + a map of your code.** The pack remembers what happened in past sessions and keeps a searchable map of your codebase, so answers are based on your actual code, not guesses.
 
 Technically it is just files: plain-text prompts plus a few tiny plugins. There is nothing to compile and no installer to run. It works on Windows (tested) and on macOS/Linux (same steps, not tested by the maintainer, see [Compatibility](#-compatibility)).
@@ -72,7 +72,7 @@ The workflow ideas come from [Kilo Code](https://github.com/Kilo-Org/kilocode), 
 | Piece | Count | Plain meaning |
 |-----------|-------|--------------|
 | Agents    | 6     | The team members (see below). |
-| Skills    | 47    | How-to guides the agents follow automatically. Full list: [docs/SKILLS.md](docs/SKILLS.md). |
+| Skills    | 54    | How-to guides the agents follow automatically. Full list: [docs/SKILLS.md](docs/SKILLS.md). |
 | Rules     | 3     | House rules applied to every session (check memory, write in English, keep replies short). Details: [docs/RULES.md](docs/RULES.md). |
 | Plugins   | 7     | Small extras (auto-save notes, code map sync, short-reply mode, token-saving shell output). All optional, remove any to disable. |
 | Commands  | 12    | Shortcuts like `/update-pack` and `/recall`. All optional. List: [docs/COMMANDS.md](docs/COMMANDS.md). |

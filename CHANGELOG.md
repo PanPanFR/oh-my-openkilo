@@ -1,3 +1,8 @@
+# v0.11.5 (2026-09-22)
+
+## Fixed
+- **Stale skill counts in README**: three leftover "47" references (intro, features, overview table) corrected to 54. Missed by the v0.11.0 resync.
+
 # v0.11.4 (2026-09-22)
 
 ## Added
