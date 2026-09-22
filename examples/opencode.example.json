@@ -101,6 +101,11 @@
         "type": "local",
         "command": ["npx", "@playwright/mcp@latest"],
         "disabled": true
+      },
+      "reactbits": {
+        "type": "local",
+        "command": ["npx", "-y", "reactbits-dev-mcp-server"],
+        "disabled": true
       }
     }
   },

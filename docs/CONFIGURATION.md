@@ -102,7 +102,7 @@ Each MCP server is one of two types:
 - `"type": "local"`: runs a command on your machine via `npx` or `python`
 - `"type": "remote"`: connects to a remote URL
 
-The example ships a small starter set: `agentmemory` (always on, you need it for the memory skills) and `chrome-devtools` (on by default, for quick browser screenshots and inspection). Anything else (`playwright`, `context7`, your own) you add yourself by following the same shape.
+The example ships a small starter set: `agentmemory` (always on, you need it for the memory skills) and `chrome-devtools` (on by default, for quick browser screenshots and inspection). Anything else (`playwright`, `context7`, `reactbits`, your own) is opt-in: the first three ship in the example with `"disabled": true`, your own you add yourself by following the same shape.
 
 To enable:
 
@@ -117,6 +117,7 @@ To enable:
 |------------------------|----------------------------------------------------|-------|----------------------------------------|
 | `agentmemory`          | `AGENTMEMORY_SERVER_URL` (default: local server)    | yes (npm global) | memory skills, `recall`/`remember` |
 | `chrome-devtools`      | none (uses installed Chrome)                       | yes   | quick screenshots, page inspection     |
+| `reactbits`            | none (optional `GITHUB_TOKEN` for rate limits)     | yes   | ReactBits animated components          |
 
 Anything beyond the rows above (`playwright`, `context7`, your own) is something you wire up yourself; the example just shows you the shape.
 
@@ -124,7 +125,7 @@ Anything beyond the rows above (`playwright`, `context7`, your own) is something
 
 ## Installing MCP servers
 
-Two MCPs ship enabled in the example: `agentmemory` (memory skills) and `chrome-devtools` (quick browser screenshots and inspection). Everything else (`playwright`, `context7`, your own) is opt-in — copy the shape, set the env var, drop `"disabled": true`.
+Two MCPs ship enabled in the example: `agentmemory` (memory skills) and `chrome-devtools` (quick browser screenshots and inspection). Everything else (`playwright`, `context7`, `reactbits`, your own) is opt-in — the first three ship with `"disabled": true`, your own you add by copying the shape and setting the env var.
 
 Most MCPs in this pack are `npx`-based; OpenCode downloads the package on first use. None of them require a separate install step before enabling in `opencode.json`, but several need a one-time setup after the first run.
 
@@ -219,6 +220,24 @@ npx playwright install chromium       # ~150 MB
 ```
 
 Caches per machine; subsequent runs reuse the binary.
+
+### `reactbits` (opt-in, npm, no setup)
+
+```jsonc
+{
+  "mcp": {
+    "servers": {
+      "reactbits": {
+        "type": "local",
+        "command": ["npx", "-y", "reactbits-dev-mcp-server"],
+        "disabled": true
+      }
+    }
+  }
+}
+```
+
+Community server exposing 135+ animated ReactBits components. `npx` downloads it on first invocation; no token needed. Set `GITHUB_TOKEN` in your shell for higher GitHub API rate limits (60 to 5,000 req/hr), then remove `"disabled": true` and restart. (ReactBits' own docs recommend the `shadcn` MCP with the `@react-bits` registry instead; this standalone entry is the community alternative.)
 
 ### Troubleshooting MCP installs
 

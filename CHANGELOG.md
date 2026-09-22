@@ -1,3 +1,8 @@
+# v0.11.3 (2026-09-22)
+
+## Added
+- **ReactBits MCP (opt-in, off by default)**: `reactbits` entry (`npx -y reactbits-dev-mcp-server`, community server for 135+ animated components) in `examples/opencode.example.json`, plus a `docs/CONFIGURATION.md` subsection. Enable by removing `"disabled": true`; optional `GITHUB_TOKEN` raises GitHub API rate limits.
+
 # v0.11.2 (2026-09-22)
 
 ## Fixed
