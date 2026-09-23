@@ -12,6 +12,7 @@
 - **Agentmemory index router** (`skills/agentmemory/`): entry point routing between the 6 agentmemory reference skills.
 
 ## Changed
+- **Jev runtime modernized**: replaced PowerShell script with native Node.js ESM wrapper (`jev-decide.mjs`, ~3.5x faster startup, zero shell escaping issues, stdin piping support, generic provider resolution). Added `recon` category to triage preset for non-code inspection/Q&A, bypass triage on pure read-only chat, and calibrated gate thresholds to per-dimension probabilities.
 - **Redundancy elimination & skill consolidation** (54 → 53 skills):
   - `workers` eliminated → fully covered by unified `cloudflare` platform skill.
   - `frontend-design` eliminated → absorbed into `ui-design` (carries full 2-pass Anthropic taste and delivery gate).

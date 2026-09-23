@@ -19,7 +19,7 @@ Single source of truth. This file only indexes them; do not duplicate content he
 
 ## Jev gates (mandatory, no slash)
 
-- Builder triage + verify, planner delegation + verify, reviewer review gate, tester test-scope gate, designer ui gate. See each agent file for the exact `jev-decide.ps1 -Preset` call. Script failure -> proceed with LLM judgment, never block.
+- Builder triage + verify (skip triage on pure read-only Q&A), planner delegation + verify, reviewer review gate, tester test-scope gate, designer ui gate. See each agent file for the exact `jev-decide.mjs -Preset` call. Script failure -> proceed with LLM judgment, never block.
 
 ## Superseded by skills (deleted 2026-08-30)
 

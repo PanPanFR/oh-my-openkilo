@@ -52,7 +52,7 @@ Pre-implementation only. Planning, architecture, brainstorming, requirements ana
 
 **Analysis**: evaluate alternatives (cost/benefit/traps). Evidence via `graphify query/path/explain`. Research: quick grabs + deep multi-source via native webfetch/websearch, decomposed into sub-questions. Prefer simplifying refactors.
 
-**Jev delegation check (mandatory, no slash):** load `jev-decision` skill. Run `powershell -NoProfile -File ~/.config/opencode/skills/jev-decision/scripts/jev-decide.ps1 -Preset delegation -State "<goal + files + risks>"`. Fill Delegation Strategy `Owner` from `owner`, `Parallel batch` from `can_parallel>=0.7`; `complexity>=0.7` -> split workstream. Failure -> proceed manually, never block.
+**Jev delegation check (mandatory, no slash):** load `jev-decision` skill. Run `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset delegation -State "<goal + files + risks>"`. Fill Delegation Strategy `Owner` from `owner`, `Parallel batch` from `can_parallel>=0.7`; `complexity` any dimension at `probabilities` max `>=0.7` (never aggregate `score`, conf<0.4 -> UNCERTAIN -> split) -> split workstream. Failure -> proceed manually, never block.
 
 
 **Artifacts**: check `docs/` for PRD/TDD/api-spec/ui-ux/ADR. Missing → ask user to create (do NOT create). Existing → read first.
@@ -80,5 +80,4 @@ Batch A = steps in one message. List dependencies and inline rationale below.
 
 **Integration**: parallel branches do NOT self-merge. After all verified green, user runs `/integrate` (builder session, main checkout): merges in Integration Notes order, resolves conflicts, runs full suite, removes plan files. Single sequential plan may merge inline per `builder.md`.
 
-**Jev verify (mandatory per plan):** before finalizing each plan, verify its key approach decision: run `powershell -NoProfile -File ~/.config/opencode/skills/jev-decision/scripts/jev-decide.ps1 -Preset verify -State "<chosen approach + rejected alternatives + trade-offs + evidence>"`. Record tier + `proceed`/`spec_fit`/`needs_human` in the plan Context. LOW below mini-bar -> note numbers, proceed. HIGH below strict bar (`proceed>=0.8`, `needs_human<=0.2`, `confidence>=0.5`) -> `Needs human confirm:` flag, batch with other confirms into one ask. Max 2 calls per decision. Failure -> proceed manually, never block.
-
+**Jev verify (mandatory per plan):** before finalizing each plan, verify its key approach decision: run `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset verify -State "<chosen approach + rejected alternatives + trade-offs + evidence>"`. Record tier + `proceed`/`spec_fit`/`needs_human` in the plan Context. Tier from max `probabilities` dimension of `decision_risk` (never aggregate `score`); `confidence<0.4` -> treat as MID. LOW below mini-bar -> note numbers, proceed. HIGH below strict bar (`proceed>=0.8`, `needs_human<=0.2`, `confidence>=0.5`) -> `Needs human confirm:` flag, batch with other confirms into one ask. Max 2 calls per decision. Failure -> proceed manually, never block.

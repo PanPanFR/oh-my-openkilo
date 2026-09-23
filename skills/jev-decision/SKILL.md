@@ -10,7 +10,10 @@ Jev is a decision-only model. It never generates text or code. It scores a `stat
 - Endpoint: `POST <JEV_ENDPOINT>` (full decision URL, e.g. `https://<YOUR_PROVIDER_BASE_URL>/systemone`). Supply via `-Endpoint` param, `JEV_ENDPOINT` env var, or `providers.<your-provider>.settings.baseURL` in opencode.json (script appends `/systemone`).
 - Model: `openrouter/typesafe/jev-1.13` default (verified live 2026-09-23, context 200k). Override via `-Model` param or `JEV_MODEL` env var.
 - Auth: `Authorization: Bearer <your key>` - supply via `-ApiKey` param, `JEV_API_KEY` env var, or `providers.<your-provider>.settings.apiKey` in opencode.json.
-- Wrapper: `powershell -NoProfile -File ~/.config/opencode/skills/jev-decision/scripts/jev-decide.ps1 -Preset <name> -State "<state>"`
+- Wrapper: `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset <name> -State "<state>"`
+- State structure: `Goal: <request> | Files: <git status --short> | Diff: <git diff --stat> | Risks: <known risks>`. Dense, structured facts maximize confidence.
+- Pure Q&A / read-only chat: skip triage gate entirely.
+- State with quotes/newlines/backticks: pipe via stdin to node script, or pass `-StateFile <path>` (CLI quoting breaks otherwise)
 
 ## Setup (fill in your own endpoint + key)
 
@@ -21,7 +24,7 @@ This repo ships **no endpoint and no key**. Fill in your own before calling:
    - `JEV_ENDPOINT` = full decision URL (e.g. `https://<YOUR_PROVIDER_BASE_URL>/systemone`)
    - `JEV_API_KEY` = your key (optional `JEV_MODEL` overrides the default model)
 3. Or configure `providers.<your-provider>.settings.baseURL` + `settings.apiKey` in `opencode.json` (the script reads the first provider with both set; `{env:VAR}` placeholders are resolved).
-4. Test: `powershell -NoProfile -File ~/.config/opencode/skills/jev-decision/scripts/jev-decide.ps1 -Preset triage -State "hello"`. Missing values fail fast with a Setup pointer, never with a credential.
+4. Test: `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset triage -State "hello"`. Missing values fail fast with a Setup pointer, never with a credential.
 ## Question schema (verified against live endpoint)
 
 - `choice`: `{ "type": "choice", "instructions": "...", "criteria": { "<opt>": "<what it means>" } }` -> `{ "choice": "<opt>", "probabilities": {...}, "confidence": 0..1 }`
@@ -33,7 +36,7 @@ This repo ships **no endpoint and no key**. Fill in your own before calling:
 
 | Preset | Questions |
 |---|---|
-| `triage` | `task_type` choice[simple-edit, feature, ui, refactor, bug, docs], `needs_plan` noul, `risk` score[security, blast-radius] |
+| `triage` | `task_type` choice[simple-edit, feature, ui, refactor, bug, docs, recon], `needs_plan` noul, `risk` score[security, blast-radius] |
 | `delegation` | `owner` choice[builder-inline, designer, reviewer, tester, documenter], `can_parallel` noul, `complexity` score[coordination-cost, domain-risk] |
 | `review` | `spec_match` score[spec-coverage, scope-discipline], `security_risk` score[injection, auth, exposure], `merge_ready` noul, `needs_tester` noul |
 | `test` | `needs_tests` noul, `test_scope` choice[unit, integration, e2e, all], `bug_risk` score[regression-likelihood, blast-radius] |
@@ -48,13 +51,14 @@ LLM proposes, Jev disposes. Research first (webfetch docs, check code/patterns),
 
 State must contain: (1) proposal, (2) alternatives with one-line rejection reason each, (3) evidence (doc URLs, file:line refs, constraints). No alternatives/evidence -> do more research first, do not call.
 
-Picking among candidates (custom choice, options filled by the agent from its own research): pass -QuestionsJson with a pick choice whose criteria maps each candidate to its evidence summary, plus spec_fit score and needs_human noul. Risk-tiered bar (strict only where it hurts). LOW risk (`decision_risk<=0.3`, reversible, small blast radius): `proceed>=0.6` + `needs_human<=0.4` -> implement, log numbers in one line; below -> treat as MID. MID: `proceed>=0.7` + `needs_human<=0.3` -> implement with the risk noted in output; `needs_human>=0.7` or `proceed<=0.3` -> ask; middle -> research once, re-verify, then implement-with-note unless `needs_human>=0.7`. HIGH risk (`decision_risk>=0.7`, or auth/payment/migration/irreversible whatever the score): `proceed>=0.8` + `needs_human<=0.2` + `confidence>=0.5` -> implement, else ask with numbers; never guess through a low score here. Same tiers for `pick` (use its `confidence`). Batch: collect every verify-ask in a phase and ask once, not once per decision. Max 2 verify calls per decision.
+Picking among candidates (custom choice, options filled by the agent from its own research): pass -QuestionsJson with a pick choice whose criteria maps each candidate to its evidence summary, plus spec_fit score and needs_human noul. Risk-tiered bar (strict only where it hurts); all score tiers below read max `probabilities` dimension, never aggregate `score`. LOW risk (`decision_risk` all dims <=0.3, reversible, small blast radius): `proceed>=0.6` + `needs_human<=0.4` -> implement, log numbers in one line; below -> treat as MID. MID: `proceed>=0.7` + `needs_human<=0.3` -> implement with the risk noted in output; `needs_human>=0.7` or `proceed<=0.3` -> ask; middle -> research once, re-verify, then implement-with-note unless `needs_human>=0.7`. HIGH risk (`decision_risk` any dim >=0.7, or auth/payment/migration/irreversible whatever the score): `proceed>=0.8` + `needs_human<=0.2` + `confidence>=0.5` -> implement, else ask with numbers; never guess through a low score here. Same tiers for `pick` (use its `confidence`). Batch: collect every verify-ask in a phase and ask once, not once per decision. Max 2 verify calls per decision.
 
 ## Thresholds (apply everywhere, deterministic)
 
 - noul: `>=0.7` = YES, `<=0.3` = NO, else UNCERTAIN -> take the safer branch (needs_plan=true, needs_tester=true, needs_tests=true). (verify preset uses its own strict bar, see Verify pattern).
 - choice: use `.choice`; if `.confidence < 0.4` -> UNCERTAIN -> default `builder-inline` (triage/delegation) or `all` (test_scope).
-- score: `>=0.7` HIGH, `<=0.3` LOW. `risk/security_risk/bug_risk >= 0.7` always adds `reviewer` (plus `tester` on auth/migration/payment).
+- score: read `probabilities` (index -> dimension via `legend`), NEVER the aggregate `score` — aggregate tracks only the LAST dimension (verified live 2026-09-23: risk security=0.46/blast=0.54 -> score 0.54). Per-dimension: prob `>=0.7` = HIGH, `<=0.3` = LOW. Any `risk/security_risk/bug_risk` dimension `>=0.7` always adds `reviewer` (plus `tester` on auth/migration/payment); gate the security dimension directly, never via aggregate.
+- score confidence: `score.confidence < 0.4` -> UNCERTAIN -> safer branch: risk dims (`risk/security_risk/bug_risk/decision_risk`) treated HIGH, all other dims treated as the conservative default (needs_plan/needs_tester/needs_tests = true).
 
 ## Fallback (hard rule)
 
