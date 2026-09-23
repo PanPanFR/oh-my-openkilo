@@ -1,7 +1,7 @@
 # v0.12.0 (2026-09-23)
 
 ## Added
-- **Jev decision framework** (`skills/jev-decision/`): fast calibrated decision gates via 9router System One (`openrouter/typesafe/jev-1.13`). Integrated across agents:
+- **Jev decision framework** (`skills/jev-decision/`): fast calibrated decision gates via bring-your-own System One endpoint (default model `openrouter/typesafe/jev-1.13`, endpoint + key user-supplied - see `skills/jev-decision/SKILL.md` Setup). Integrated across agents:
   - `builder`: triage auto-route (`-Preset triage`) + verify gate (`-Preset verify`).
   - `planner`: delegation check (`-Preset delegation`) + verify gate before finalizing plans.
   - `reviewer`: review gate (`-Preset review`: spec match, security risk, merge ready).
@@ -170,3 +170,4 @@
 
 ## Fixes
 - Counts corrected everywhere; private servers and dead plugins removed; macOS/Linux marked untested.
+

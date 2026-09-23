@@ -1,17 +1,27 @@
 ---
 name: jev-decision
-description: "Fast structured decisions via 9router System One (Jev jev-1.13). Use for routing, triage, delegation, review/test/UI gates. Returns typed choice/noul/score with probabilities, not text. Triggers: jev, systemone, triage, route, delegation gate, review gate, test scope."
+description: "Fast structured decisions via System One decision endpoint (Jev jev-1.13). Use for routing, triage, delegation, review/test/UI gates. Returns typed choice/noul/score with probabilities, not text. Triggers: jev, systemone, triage, route, delegation gate, review gate, test scope."
 ---
 
-# Jev Decision (System One, via 9router)
+# Jev Decision (System One, bring-your-own endpoint)
 
 Jev is a decision-only model. It never generates text or code. It scores a `state` string against typed `questions` and returns calibrated answers in ~100-500ms. Use it at decision points; keep the chat LLM for generation.
 
-- Endpoint: `POST <baseURL>/systemone` (configured via `providers.9router.settings.baseURL` in opencode.json, or `JEV_ENDPOINT` env var)
-- Model: `openrouter/typesafe/jev-1.13` (verified live 2026-09-23, context 200k)
-- Auth: `Authorization: Bearer <9router key>` (same key as `providers.9router.settings.apiKey`)
+- Endpoint: `POST <JEV_ENDPOINT>` (full decision URL, e.g. `https://<YOUR_PROVIDER_BASE_URL>/systemone`). Supply via `-Endpoint` param, `JEV_ENDPOINT` env var, or `providers.<your-provider>.settings.baseURL` in opencode.json (script appends `/systemone`).
+- Model: `openrouter/typesafe/jev-1.13` default (verified live 2026-09-23, context 200k). Override via `-Model` param or `JEV_MODEL` env var.
+- Auth: `Authorization: Bearer <your key>` - supply via `-ApiKey` param, `JEV_API_KEY` env var, or `providers.<your-provider>.settings.apiKey` in opencode.json.
 - Wrapper: `powershell -NoProfile -File ~/.config/opencode/skills/jev-decision/scripts/jev-decide.ps1 -Preset <name> -State "<state>"`
 
+## Setup (fill in your own endpoint + key)
+
+This repo ships **no endpoint and no key**. Fill in your own before calling:
+
+1. Pick a System One-compatible decision provider and create a key.
+2. Set env vars in your shell profile (or pass `-Endpoint` / `-ApiKey` per call):
+   - `JEV_ENDPOINT` = full decision URL (e.g. `https://<YOUR_PROVIDER_BASE_URL>/systemone`)
+   - `JEV_API_KEY` = your key (optional `JEV_MODEL` overrides the default model)
+3. Or configure `providers.<your-provider>.settings.baseURL` + `settings.apiKey` in `opencode.json` (the script reads the first provider with both set; `{env:VAR}` placeholders are resolved).
+4. Test: `powershell -NoProfile -File ~/.config/opencode/skills/jev-decision/scripts/jev-decide.ps1 -Preset triage -State "hello"`. Missing values fail fast with a Setup pointer, never with a credential.
 ## Question schema (verified against live endpoint)
 
 - `choice`: `{ "type": "choice", "instructions": "...", "criteria": { "<opt>": "<what it means>" } }` -> `{ "choice": "<opt>", "probabilities": {...}, "confidence": 0..1 }`
@@ -49,3 +59,4 @@ Picking among candidates (custom choice, options filled by the agent from its ow
 ## Fallback (hard rule)
 
 Script failure (network, 401/403/429, 400, timeout) -> proceed with LLM judgment, never block, note `Jev unavailable, used LLM judgment` in one line. Never retry more than once per decision point. Never use Jev as `model`/`small_model`/`agents.*.model` (it cannot generate text or call tools).
+

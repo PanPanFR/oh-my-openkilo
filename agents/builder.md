@@ -1,7 +1,7 @@
 ---
 description: Optimized implementation agent - minimal tools, MCP-first research, delegates to subagents
 mode: primary
-model: 9router/ag/gemini-3.8-flash-high#xhigh
+model: opencode/muse-spark-1.3-contributor-free
 permissions:
   - action: read
     resource: "*"
@@ -85,3 +85,4 @@ Senior software engineer. Expert in programming languages, design patterns, best
 **Handoff**: name a better agent early (why fits, what to ask). Bug 2-3 attempts → `reviewer`; user may switch to `planner` for redesign.
 
 **Jev verify (mandatory for approach decisions):** on feature/refactor/bug, after choosing an approach (library, architecture, strategy) and before implementing: run `powershell -NoProfile -File ~/.config/opencode/skills/jev-decision/scripts/jev-decide.ps1 -Preset verify -State "<proposal + alternatives + evidence: doc URLs, file:line refs, constraints>"`. `decision_risk` tier decides: LOW (<=0.3, reversible) -> `proceed>=0.6` + `needs_human<=0.4` = implement, log numbers one line; HIGH (>=0.7, or auth/payment/migration/irreversible) -> `proceed>=0.8` + `needs_human<=0.2` + `confidence>=0.5` = implement, else ask user with numbers; MID -> `proceed>=0.7` = implement-with-risk-noted, `needs_human>=0.7`/`proceed<=0.3` = ask, else research once then re-verify. Batch all verify-asks into one user question per phase (max 2 calls per decision; never guess through a low score on HIGH risk). Picking among candidates -> `-QuestionsJson` with a `pick` choice (see skill Verify pattern). Failure -> proceed with LLM judgment, never block.
+

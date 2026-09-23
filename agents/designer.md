@@ -1,7 +1,7 @@
 ---
 description: Frontend specialist - UI/UX, React/Next.js, design system, performance, accessibility.
 mode: subagent
-model: 9router/ag/gemini-3.1-pro-low
+model: opencode/muse-spark-1.3-contributor-free
 permissions:
   - action: read
     resource: "*"
@@ -73,3 +73,4 @@ Frontend specialist. UI/UX, React/Next.js, design system, performance, accessibi
 **Execution**: numbered steps with dependencies, `todowrite` per step. Verify each (build, lint, visual). Done = browser preview matches design + no a11y violations + Lighthouse perf >90.
 
 **Handoff**: mostly testing/review/docs → report back; parent routes to `tester`/`reviewer`/`documenter`. Research-heavy framework/API question → parent fetches natively.
+

@@ -4,27 +4,48 @@ param(
   [string]$QuestionsJson = "",
   [string]$Model = "openrouter/typesafe/jev-1.13",
   [string]$Endpoint = "",
+  [string]$ApiKey = "",
   [int]$TimeoutSec = 20
 )
 $ErrorActionPreference = "Stop"
-$d = Split-Path $PSCommandPath -Parent; while ($d -and -not (Test-Path (Join-Path $d "opencode.json"))) { $d = Split-Path $d -Parent }; $cfgDir = if ($d) { $d } else { "$env:USERPROFILE/.config/opencode" }
-$key = $env:NINEROUTER_API_KEY
-$cfgFile = Join-Path $cfgDir "opencode.json"
-if (Test-Path $cfgFile) {
-  try {
-    $j = Get-Content $cfgFile -Raw | ConvertFrom-Json
-    if ([string]::IsNullOrWhiteSpace($key)) { $key = $j.providers.'9router'.settings.apiKey }
-    if ([string]::IsNullOrWhiteSpace($Endpoint)) {
-      $base = $j.providers.'9router'.settings.baseURL
-      if ($base) { $Endpoint = "$($base.TrimEnd('/'))/systemone" }
-    }
-  } catch {}
+if (-not $PSBoundParameters.ContainsKey('Model') -and -not [string]::IsNullOrWhiteSpace($env:JEV_MODEL)) { $Model = $env:JEV_MODEL }
+if (-not $PSBoundParameters.ContainsKey('Endpoint') -and [string]::IsNullOrWhiteSpace($Endpoint) -and -not [string]::IsNullOrWhiteSpace($env:JEV_ENDPOINT)) { $Endpoint = $env:JEV_ENDPOINT }
+if (-not $PSBoundParameters.ContainsKey('ApiKey') -and [string]::IsNullOrWhiteSpace($ApiKey) -and -not [string]::IsNullOrWhiteSpace($env:JEV_API_KEY)) { $ApiKey = $env:JEV_API_KEY }
+function Resolve-EnvPlaceholder([string]$s) {
+  if ([string]::IsNullOrWhiteSpace($s)) { return $s }
+  $m = [regex]::Match($s, '^\{env:(.+?)\}$')
+  if ($m.Success) {
+    $v = [Environment]::GetEnvironmentVariable($m.Groups[1].Value)
+    if (-not [string]::IsNullOrWhiteSpace($v)) { return $v }
+  }
+  return $s
 }
-if ([string]::IsNullOrWhiteSpace($Endpoint)) {
-  $Endpoint = $env:JEV_ENDPOINT
+if ([string]::IsNullOrWhiteSpace($Endpoint) -or [string]::IsNullOrWhiteSpace($ApiKey)) {
+  $d = Split-Path $PSCommandPath -Parent; while ($d -and -not (Test-Path (Join-Path $d "opencode.json"))) { $d = Split-Path $d -Parent }; $cfgDir = if ($d) { $d } else { "$env:USERPROFILE/.config/opencode" }
+  $cfgFile = Join-Path $cfgDir "opencode.json"
+  if (Test-Path $cfgFile) {
+    try {
+      $j = Get-Content $cfgFile -Raw | ConvertFrom-Json
+      foreach ($p in $j.providers.PSObject.Properties) {
+        $s = $p.Value.settings
+        if ($null -eq $s) { continue }
+        if ([string]::IsNullOrWhiteSpace($Endpoint) -and -not [string]::IsNullOrWhiteSpace($s.baseURL)) {
+          $base = Resolve-EnvPlaceholder($s.baseURL)
+          if (-not [string]::IsNullOrWhiteSpace($base) -and -not ($base -match '^\{env:.+\}$') -and -not ($base -match '<YOUR_')) {
+            if ($base -match 'systemone\s*$') { $Endpoint = $base } else { $Endpoint = "$($base.TrimEnd('/'))/systemone" }
+          }
+        }
+        if ([string]::IsNullOrWhiteSpace($ApiKey) -and -not [string]::IsNullOrWhiteSpace($s.apiKey)) {
+          $k = Resolve-EnvPlaceholder($s.apiKey)
+          if (-not [string]::IsNullOrWhiteSpace($k) -and -not ($k -match '^\{env:.+\}$') -and -not ($k -match '<YOUR_')) { $ApiKey = $k }
+        }
+        if (-not [string]::IsNullOrWhiteSpace($Endpoint) -and -not [string]::IsNullOrWhiteSpace($ApiKey)) { break }
+      }
+    } catch {}
+  }
 }
-if ([string]::IsNullOrWhiteSpace($Endpoint)) { Write-Error "Jev: missing endpoint (set JEV_ENDPOINT or configure providers.9router.settings.baseURL in opencode.json)"; exit 2 }
-if ([string]::IsNullOrWhiteSpace($key)) { Write-Error "Jev: missing API key (set NINEROUTER_API_KEY or providers.9router.settings.apiKey)"; exit 2 }
+if ([string]::IsNullOrWhiteSpace($Endpoint)) { Write-Error "Jev: missing endpoint. Set JEV_ENDPOINT env var, pass -Endpoint, or configure providers.<your-provider>.settings.baseURL in opencode.json. See skills/jev-decision/SKILL.md Setup."; exit 2 }
+if ([string]::IsNullOrWhiteSpace($ApiKey)) { Write-Error "Jev: missing API key. Set JEV_API_KEY env var, pass -ApiKey, or configure providers.<your-provider>.settings.apiKey in opencode.json. See skills/jev-decision/SKILL.md Setup."; exit 2 }
 
 $presets = @{
   triage     = '{"task_type":{"type":"choice","instructions":"Pick exactly one task category.","criteria":{"simple-edit":"1-2 files, obvious change, no design needed","feature":"new behavior or endpoint","ui":"screens, components, styling, layout","refactor":"restructure without behavior change","bug":"fix broken behavior","docs":"docs/comments only"}},"needs_plan":{"type":"noul","instructions":"Does this need a plan file under plan/ before implementation?"},"risk":{"type":"score","instructions":"How risky is this change?","criteria":["security","blast-radius"]}}'
@@ -39,7 +60,7 @@ if (-not $qJson) { Write-Error "Jev: unknown preset '$Preset' (triage|delegation
 $questions = $qJson | ConvertFrom-Json
 $body = @{ model = $Model; state = $State; questions = $questions } | ConvertTo-Json -Depth 20 -Compress
 try {
-  $res = Invoke-RestMethod -Uri $Endpoint -Method Post -Headers @{ Authorization = "Bearer $key"; "Content-Type" = "application/json" } -Body $body -TimeoutSec $TimeoutSec
+  $res = Invoke-RestMethod -Uri $Endpoint -Method Post -Headers @{ Authorization = "Bearer $ApiKey"; "Content-Type" = "application/json" } -Body $body -TimeoutSec $TimeoutSec
   $res.answers | ConvertTo-Json -Depth 20 -Compress
 } catch {
   $msg = $_.Exception.Message

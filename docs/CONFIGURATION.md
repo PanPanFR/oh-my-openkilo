@@ -11,7 +11,7 @@ Below is a tour of every block in that example so you know what you're editing. 
 | Field               | Type     | Purpose                                                                                |
 |---------------------|----------|----------------------------------------------------------------------------------------|
 | `$schema`           | string   | JSON schema URL. Don't change unless OpenCode changes the schema location.             |
-| `model`             | string   | Default model for primary agents. Use the format `<provider>/<model>` (e.g. `9router/Kimi-K2.6`). |
+| `model`             | string   | Default model for primary agents. Use the format `<provider>/<model>` (e.g. `anthropic/claude-sonnet-4-5`). |
 | `small_model`       | string   | Model for short tasks (commit messages, file summaries). Cheaper and faster.            |
 | `permissions`       | array    | Ordered `{action, resource, effect}` rules. See below.                                                    |
 | `disabled_providers`| string[] | Providers to exclude from auto-discovery.                                               |
@@ -82,7 +82,7 @@ External LLM providers. Each provider has:
 - `settings`: provider-specific config (API key, base URL, headers)
 - `models`: model definitions (`modelID`, display name, `limit`, `capabilities`)
 
-The example has one provider placeholder (`9router`). Add your own providers here, e.g. `opencode`, `anthropic`, `openai`, `google`, or any OpenAI-compatible endpoint.
+The example has one provider placeholder (`your-provider`). Add your own providers here, e.g. `opencode`, `anthropic`, `openai`, `google`, or any OpenAI-compatible endpoint.
 
 **Credentials:** use the `{env:VAR}` placeholder pattern. Set the env var in your shell, or in a `.env` file (which is gitignored):
 
@@ -269,3 +269,4 @@ show me your current model, list connected MCPs, and confirm which rules are loa
 ```
 
 If anything is missing, check the spelling of the relevant key in `opencode.json` and that any required env vars are set in your shell.
+

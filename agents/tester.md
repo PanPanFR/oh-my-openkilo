@@ -1,7 +1,7 @@
 ---
 description: Quality assurance specialist - writes and runs test suites, iterates failures in isolation
 mode: subagent
-model: 9router/ag/gemini-3.8-flash-high#medium
+model: opencode/muse-spark-1.3-contributor-free
 permissions:
   - action: read
     resource: "*"
@@ -60,3 +60,4 @@ Tester. Quality assurance specialist. Write, run, fix test suites in an isolated
 **Report**: pass/fail counts + command; files changed; failures with minimal repro + actual vs expected; exact rerun commands.
 
 **Rules**: no implementation code unless explicit.
+

@@ -29,7 +29,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Default model:** `opencode/muse-spark-1.3-contributor-free`
 
-**Recommended models:** any strong instruction-following coding model. Swap to `anthropic/claude-sonnet-4-5`, `openai/gpt-5`, or `9router/Kimi-K2.6` if you have provider credentials and want higher quality on complex tasks.
+**Recommended models:** any strong instruction-following coding model. Swap to `anthropic/claude-sonnet-4-5`, `openai/gpt-5` if you have provider credentials and want higher quality on complex tasks.
 
 **Model guidance:** `builder` is a generalist that delegates. It does not need your strongest reasoning model; it needs a model that's good at following delegation rules and not jumping to code before the design is settled. Free models are fine for everyday work.
 
@@ -51,7 +51,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Default model:** `opencode/muse-spark-1.3-contributor-free`
 
-**Recommended models:** strong reasoning and planning models. Worth paying for: `anthropic/claude-sonnet-4-5`, `openai/gpt-5`, `9router/Minimax-M3` (1M context, good for big repos).
+**Recommended models:** strong reasoning and planning models. Worth paying for: `anthropic/claude-sonnet-4-5`, `openai/gpt-5` (or any long-context model for big repos).
 
 **Model guidance:** `planner` does the high-leverage work — it decides what to build and how. A weak model here means a weak plan, which means wasted implementation time downstream. If you mix free + paid, this is the agent to upgrade first.
 
@@ -75,7 +75,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Default model:** `opencode/muse-spark-1.3-contributor-free`
 
-**Recommended models:** strong UI/UX judgment + frontend implementation. Good fits: `anthropic/claude-sonnet-4-5`, `google/gemini-2.5-pro`, `9router/Gemini-3.6-Flash`.
+**Recommended models:** strong UI/UX judgment + frontend implementation. Good fits: `anthropic/claude-sonnet-4-5`, `google/gemini-2.5-pro`.
 
 **Model guidance:** Choose a model that is strong at UI/UX judgment, frontend implementation, and visual polish. Multimodal is a plus because the agent reviews screenshots and mockups.
 
@@ -97,7 +97,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Default model:** `opencode/muse-spark-1.3-contributor-free`
 
-**Recommended models:** reliable test-running model. Good fits: any `9router/*` or `opencode/*` model with solid bash execution. No need for a frontier model.
+**Recommended models:** reliable test-running model. Good fits: any `opencode/*` or `anthropic/*` model with solid bash execution. No need for a frontier model.
 
 **Model guidance:** `tester` runs shell commands a lot (test runners, fixtures, isolation). Pick a model that handles `bash` reliably and is comfortable reading test output, not one that's good at "creative" reasoning.
 
@@ -117,7 +117,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Default model:** `opencode/muse-spark-1.3-contributor-free`
 
-**Recommended models:** strong reasoning + security awareness. Worth paying for on auth/data paths: `anthropic/claude-sonnet-4-5`, `openai/gpt-5`, `9router/GLM-5.1`.
+**Recommended models:** strong reasoning + security awareness. Worth paying for on auth/data paths: `anthropic/claude-sonnet-4-5`, `openai/gpt-5`.
 
 **Model guidance:** `reviewer` reads code and produces a verdict, not a fix. It benefits from a model that's good at finding edge cases and security smells, not from raw code generation speed. For security-sensitive work (auth, crypto, payments), upgrade to your strongest model.
 
@@ -137,7 +137,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Default model:** `opencode/muse-spark-1.3-contributor-free`
 
-**Recommended models:** long-context writing model. Good fits: `9router/Minimax-M3` (1M context for big codebases), `anthropic/claude-sonnet-4-5`.
+**Recommended models:** long-context writing model. Good fits: `anthropic/claude-sonnet-4-5` (or any long-context model for big codebases).
 
 **Model guidance:** Documentation work rewards context. The agent reads code, summarizes it, and produces prose. A 1M-context model means it can hold a whole repo in mind while writing; a small-context model means it makes things up.
 
@@ -168,7 +168,7 @@ Subagents are also dispatched by `builder` and `planner` via the `subagent` tool
 ## How to change a model
 
 1. Open the agent's `.md` file under `~/.config/opencode/agents/` (the file the installer copied; same as the source in `agents/`).
-2. Edit the `model:` line. Use the format `<provider>/<model>` (e.g. `anthropic/claude-sonnet-4-5`, `openai/gpt-5`, `9router/Kimi-K2.6`).
+2. Edit the `model:` line. Use the format `<provider>/<model>` (e.g. `anthropic/claude-sonnet-4-5`, `openai/gpt-5`).
 3. Save and run `/reload` (or restart OpenCode).
 
 `variant:` (reasoning effort) sits in the same frontmatter block as `model:`. The pack ships it tuned per role; defaults and how to adjust are in [Reasoning effort](#reasoning-effort). (`temperature:` was dropped: OpenCode V2 ignores the legacy key.)
@@ -196,3 +196,5 @@ Reasoning effort is a direct latency and cost multiplier: every notch down means
 ## Adding a new agent
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md#adding-a-new-agent--skill--rule). New agents are typically subagents specialized for one job that the existing 6 don't cover well.
+
+

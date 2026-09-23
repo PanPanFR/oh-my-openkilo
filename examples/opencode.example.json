@@ -66,11 +66,11 @@
     "superpowers@git+https://github.com/obra/superpowers.git"
   ],
   "providers": {
-    "9router": {
+    "your-provider": {
       "package": "@opencode/ai/providers/openai-compatible",
       "settings": {
-        "baseURL": "https://<YOUR_ROUTER_BASE_URL>/v1",
-        "apiKey": "{env:NINE_ROUTER_API_KEY}"
+        "baseURL": "https://<YOUR_PROVIDER_BASE_URL>/v1",
+        "apiKey": "{env:YOUR_PROVIDER_API_KEY}"
       },
       "models": {}
     }
@@ -111,3 +111,4 @@
   },
   "lsp": true
 }
+
