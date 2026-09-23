@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Use when reviewing a branch, PR, or work-in-progress changes since a fixed point (commit, branch, tag) - two-axis review of coding standards compliance and spec fidelity
+description: Use when reviewing a branch, PR, diff, or work-in-progress changes - two-axis review of coding standards compliance and spec fidelity with concise actionable findings
 ---
 
 Two-axis review of the diff between `HEAD` and a fixed point the user supplies:
@@ -8,7 +8,10 @@ Two-axis review of the diff between `HEAD` and a fixed point the user supplies:
 - **Standards** — does the code conform to this repo's documented coding standards?
 - **Spec** — does the code faithfully implement the originating issue / spec?
 
-Both axes run as **parallel sub-agents** so they don't pollute each other's context, then this skill aggregates their findings.
+Both axes run as **parallel sub-agents** (or sequential in single-session) so they don't pollute each other's context, then this skill aggregates their findings.
+
+Findings format: one line per finding: `<file>:<line>: <severity> <problem>. <fix>.`
+Severity: `🔴 bug` (broken behavior) / `🟡 risk` (fragile/race/leak) / `🔵 nit` (style/naming, cap at 5) / `❓ q` (genuine question).
 
 The issue tracker should have been provided to you — if `docs/agents/issue-tracker.md` is missing, default to the local-markdown tracker.
 

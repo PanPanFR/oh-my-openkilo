@@ -1,10 +1,10 @@
 # Skills
 
-54 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
+53 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
 
 The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-gain`, `ponytail-help`) and the superpowers plugin skills (`brainstorming`, `using-superpowers`, `writing-plans`, `executing-plans`, `dispatching-parallel-agents`, `subagent-driven-development`, `receiving-code-review`, `requesting-code-review`, `finishing-a-development-branch`, `using-git-worktrees`, `orchestration`) install via the plugin system. They are not counted below; the count is `ls skills/`, the filesystem is the source of truth.
 
-## Core (26)
+## Core (25)
 
 | Skill                              | When it loads                                                              |
 |------------------------------------|----------------------------------------------------------------------------|
@@ -14,7 +14,6 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `code-review`                      | Reviewing a branch, PR, or work-in-progress since a fixed point            |
 | `codebase-design`                  | Designing or improving a module's interface, seam placement, testability   |
 | `documentation`                    | Writing README, CHANGELOG, runbooks, API docs                              |
-| `frontend-design`                 | Distinctive, intentional visual design & 2-pass workflow (eliminate AI tropes) |
 | `git-commit`                       | User says commit, /commit, generate commit                                 |
 | `grilling`                         | Stress-test a plan, decision, or idea                                      |
 | `impeccable`                       | Review/polish/audit/iterate existing UI (build-time design stays `ui-design`) |
@@ -35,10 +34,11 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `web-perf`                         | Performance audits, Core Web Vitals, page speed                            |
 | `writing-skills`                   | Creating new skills, editing existing skills, or verifying skills          |
 
-## Agentmemory suite (6)
+## Agentmemory suite (7)
 
 | Skill                       | When it loads                                                        |
 |-----------------------------|----------------------------------------------------------------------|
+| `agentmemory`               | Routing and index for agentmemory skills suite                       |
 | `agentmemory-agents`        | Installing agentmemory into a host agent, connect adapter issues     |
 | `agentmemory-architecture`  | How memory is stored/retrieved end to end, extending the system      |
 | `agentmemory-config`        | Ports, env vars, feature flags, auth                                 |
@@ -46,18 +46,16 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `agentmemory-mcp-tools`     | Choosing a memory MCP tool, argument details                         |
 | `agentmemory-rest-api`      | Talking to the memory server over HTTP, MCP fallback                 |
 
-## Caveman family (6)
+## Caveman family (4)
 
 | Skill               | When it loads                                                       |
 |---------------------|---------------------------------------------------------------------|
 | `caveman`           | Toggle terse mode in chat                                            |
-| `caveman-commit`    | Generate commit messages in compressed conventional format           |
 | `caveman-compress`  | Compress natural-language memory files (CLAUDE.md, todos, prefs)     |
 | `caveman-help`      | Quick-reference card for caveman modes and commands                  |
-| `caveman-review`    | Compressed PR review comments                                        |
 | `caveman-stats`     | Real token usage and savings from the session log                    |
 
-## Workflow & memory (14)
+## Workflow, memory & decisions (15)
 
 | Skill                     | When it loads                                                              |
 |---------------------------|----------------------------------------------------------------------------|
@@ -67,13 +65,14 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `forget`                  | Delete specific memory observations after confirmation                     |
 | `handoff`                 | "Where were we", resume the most recent session                            |
 | `handoff-compact`         | Compact the current conversation into a handoff document                   |
+| `i-have-adhd`             | Output structure: action-first, numbered steps, progress visibility        |
+| `jev-decision`            | Fast structured decisions via Jev 1.13: triage, delegation, review, test gates |
 | `lesson`                  | Save a correction as a confidence-weighted rule                            |
 | `memory-discipline`       | Session loop: recall before work, save at decision points                  |
 | `recall`                  | Search past observations, sessions, and learnings                          |
 | `recap`                   | Summarize the last N sessions for the project                              |
 | `remember`                | Save an insight or decision to long-term memory                            |
 | `session-history`         | Timeline of what happened in past sessions                                 |
-| `workers`                 | Cloudflare Workers code: wrangler config, bindings, limits, error 1102     |
 | `write-agentmemory-skill` | House format for writing or updating agentmemory skills                    |
 
 ## Browser (2)
@@ -91,7 +90,7 @@ Skills with `references/` use progressive disclosure: `SKILL.md` is short and de
 
 ## Total count
 
-The numbers above add to **54** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
+The numbers above add to **53** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
 
 ## Editing a skill
 

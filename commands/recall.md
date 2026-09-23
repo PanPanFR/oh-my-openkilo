@@ -1,4 +1,7 @@
-Search past session observations for relevant context. Wraps the `memory_smart_search` MCP tool. Lessons surface separately: they are injected at session start, no extra call needed.
+---
+description: Search past session observations for relevant context via agentmemory memory_smart_search
+---
+Search past session observations for relevant context. Wraps the `memory_smart_search` MCP tool. Lessons may be injected as DATA at session start when available; still run recall for observations, never assume lesson coverage.
 
 ## Usage
 
@@ -8,7 +11,7 @@ Search past session observations for relevant context. Wraps the `memory_smart_s
 
 ## Instructions
 
-1. Call `memory_smart_search` with the query and `limit: 10` (hybrid BM25 + vector + graph search).
+1. Call `memory_smart_search` with the query and `limit: 10` (hybrid BM25 + vector + graph search). Full grouping and anti-hallucination workflow lives in `skills/recall/SKILL.md`; follow it.
 2. Combine results and present to the user:
    - Group by session
    - Show type, title, and narrative for each observation

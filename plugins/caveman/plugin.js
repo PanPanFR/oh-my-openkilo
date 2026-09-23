@@ -228,7 +228,6 @@ const CavemanPlugin = async (_ctx) => {
 // pump; per-turn reinforcement rides the context session hook.
 export default {
   id: "caveman",
-  server: CavemanPlugin,
   setup: async (ctx) => {
     const hooks = (await CavemanPlugin({})) || {};
 

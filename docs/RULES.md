@@ -1,26 +1,28 @@
 # Rules
 
-Three global rules shape every session. Rules are **not auto-loaded from the `rules/` folder**; each one has to be registered in `opencode.json` under `instructions`. The example lists them in the order the maintainer runs them (protocol rules first):
+Four global rules shape every session. Rules are registered in `opencode.json` under `instructions`, or referenced from `AGENTS.md`:
 
 ```jsonc
 {
   "instructions": [
     "rules/skill-reminder.md",
     "rules/language.md",
-    "rules/communication-style.md"
+    "rules/communication-style.md",
+    "rules/ui-tooling.md"
   ]
 }
 ```
 
 Order matters: earlier entries get better model compliance, so the first-action protocols come first. Reorder to taste.
 
-## The three rules
+## The four rules
 
 | Rule                  | What it does                                                                                            |
 |-----------------------|---------------------------------------------------------------------------------------------------------|
 | `skill-reminder`      | Before any implementation task: check for a matching skill via the `skill` tool, and recall agentmemory first. |
 | `language`            | All file content in English. Chat can be any language.                                                  |
 | `communication-style` | Caveman (terse) replies and Ponytail (minimal) code style in every session.                              |
+| `ui-tooling`          | UI component tooling decision map: CLI vs MCP servers vs skills.                                         |
 
 Everything else (memory recall, graphify navigation, parallel delegation, Cloudflare doc-first) is handled by the matching skill, loaded on demand. See [SKILLS.md](SKILLS.md).
 

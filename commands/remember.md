@@ -1,4 +1,7 @@
-Explicitly save an insight, decision, or learning to agentmemory for future sessions. Wraps the `memory_save` MCP tool.
+---
+description: Save an insight, decision, or learning to agentmemory via memory_save
+---
+Explicitly save an insight, decision, or learning to agentmemory for future sessions. Wraps the `memory_save` MCP tool. Full tagging workflow lives in `skills/remember/SKILL.md`; follow it.
 
 ## Usage
 
@@ -17,3 +20,4 @@ Explicitly save an insight, decision, or learning to agentmemory for future sess
    - `files` — extracted file list (empty array if none)
    - `type` — choose from: pattern, preference, architecture, bug, workflow, fact
 5. Confirm the save and show the concepts tagged so the user knows retrieval terms.
+6. For concept quality rules and anti-patterns, follow `skills/remember/SKILL.md`.

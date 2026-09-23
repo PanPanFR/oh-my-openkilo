@@ -7,7 +7,7 @@ No args: activate at full. `off`: deactivate. `lite | full | ultra | wenyan-lite
 
 Subcommands (route on first word of $ARGUMENTS):
 - `commit`: generate Conventional Commits message for staged changes. Subject <=50 chars, imperative, lowercase after type, no period. Body only when why not obvious.
-- `review <diff|files>`: review diff. One line per finding: `L<line>: <severity> <problem>. <fix>.` Severity: critical / warn / nit. Group by file. End with one-line verdict.
+- `review <diff|files>`: review diff. One line per finding: `L<line>: <severity> <problem>. <fix>.` Severity: bug / risk / nit / q (security: critical / high / medium / low). Group by file. End with one-line verdict.
 - `compress <file>`: run `caveman-compress` skill on filepath. Only natural-language files (.md, .txt, .typ, .tex, extensionless). Refuse source/config (.py, .js, .ts, .json, .yaml, .toml, .sh). Never compress `*.original.md`. Backup to `<file>.original.md` first.
 - `stats`: read lifetime log at `~/.config/caveman/.caveman-history.jsonl`. Output total saved, sessions, avg ratio. One short table.
 - `help`: show this card: on/off/levels plus commit, review, compress, stats. Note natural triggers work too: "turn on caveman", "stop caveman", "normal mode".

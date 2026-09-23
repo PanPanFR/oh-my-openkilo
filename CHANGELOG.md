@@ -1,3 +1,32 @@
+# v0.12.0 (2026-09-23)
+
+## Added
+- **Jev decision framework** (`skills/jev-decision/`): fast calibrated decision gates via 9router System One (`openrouter/typesafe/jev-1.13`). Integrated across agents:
+  - `builder`: triage auto-route (`-Preset triage`) + verify gate (`-Preset verify`).
+  - `planner`: delegation check (`-Preset delegation`) + verify gate before finalizing plans.
+  - `reviewer`: review gate (`-Preset review`: spec match, security risk, merge ready).
+  - `tester`: test-scope gate (`-Preset test`: unit, integration, e2e, all).
+  - `designer`: UI gate (`-Preset ui`: complexity and designer requirement).
+- **ADHD output structure** (`skills/i-have-adhd/`, `/i-have-adhd` command): action-first numbered steps, turn-by-turn state restatement, tangent suppression, visible progress. Complementary to Caveman: ADHD owns structure, Caveman owns density.
+- **Context7 live docs routing**: official library documentation and version-grounded API resolution via Context7 MCP (`tools["context7"]`). Permissions allowed in `builder`, `planner`, `documenter`, and `reviewer`.
+- **Agentmemory index router** (`skills/agentmemory/`): entry point routing between the 6 agentmemory reference skills.
+
+## Changed
+- **Redundancy elimination & skill consolidation** (54 → 53 skills):
+  - `workers` eliminated → fully covered by unified `cloudflare` platform skill.
+  - `frontend-design` eliminated → absorbed into `ui-design` (carries full 2-pass Anthropic taste and delivery gate).
+  - `caveman-commit` eliminated → absorbed into `git-commit` (terse Conventional Commits format, ≤50 char subject).
+  - `caveman-review` eliminated → absorbed into `code-review` (concise `<file>:<line>: <severity> <problem>. <fix>.` findings).
+- **Tool balance & RTK guidelines**: `AGENTS.md` establishes fast native tools (`read`, `grep`, `glob`) for file inspection, reserving `shell` for Git and test/build runs compressed by RTK.
+- **`skills/plans` synchronized**: plan paths updated to root `plan/<slug>.md`, branch convention aligned to `feature/<slug>`, execution aligned with `/integrate` session, mode announcement noise removed.
+- **`skills/web-design-guidelines`**: prioritized local offline Vercel guidelines reference (`skills/ui-design/references/web-interface-guidelines.md`) with webfetch fallback.
+
+## Fixed
+- **Graphify plugin shell support** (`plugins/graphify.ts`): hook checks for `shell` tool alongside `bash` so reminder hooks fire on Windows.
+- **Designer MCP permissions** (`agents/designer.md`): added `magicuidesign-mcp_*` matching server ID, added `antislop` to skill list.
+- **Agent skill linkages**: `reviewer` linked to `code-review`, `documenter` linked to `documentation`.
+- **Command frontmatters**: added standard `description` headers to `recall.md`, `remember.md`, `update-pack.md`.
+
 # v0.11.5 (2026-09-22)
 
 ## Added

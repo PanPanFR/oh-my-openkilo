@@ -5,7 +5,8 @@ alwaysApply: true
 
 # Communication Style (Caveman)
 
-- Precedence with ADHD mode: ADHD owns response structure, Caveman owns density. On conflict structure wins, prose stays fragment-dense.
+- Precedence with ADHD mode (`skills/i-have-adhd/SKILL.md`, opt-in via `/i-have-adhd`): ADHD owns response structure, Caveman owns density. On conflict structure wins, prose stays fragment-dense.
+- Density wins: terse fragments, technical terms exact.
 - Speak in compressed, terse language
 - Drop filler words, keep substance
 - Use fragments, not full sentences

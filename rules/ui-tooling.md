@@ -15,7 +15,7 @@ Cost principle: every **enabled** MCP adds its tools to every session, which eat
 | ReactBits animated components specifically | `reactbits` MCP (enable per-task) | Dedicated browser for 135+ items; skip if `@react-bits` already in `components.json` (shadcn MCP covers it) |
 | Magic UI effects (shimmer, marquee, particles) | `magicuidesign-mcp` (enable per-task) | Official Magic UI server |
 | Project context, composition rules, correct APIs | `shadcn` skill (global) | Reads `components.json` via `info --json`; pattern enforcement |
-| Design decisions, aesthetics, palettes, anti-slop | `ui-design` + `frontend-design` + `ui-ux-pro-max`, gate with `antislop` | Existing UI routing in `skill-reminder.md` |
+| Design decisions, aesthetics, palettes, anti-slop | `ui-design` + `ui-ux-pro-max`, gate with `antislop` | Existing UI routing in `skill-reminder.md` |
 | Visual verify in browser | `playwright-cli` (many reads) / `chrome-devtools` MCP (single debug) | Existing designer browser rule |
 
 Never enable `shadcn` MCP and `reactbits` MCP at the same time for the same job: if `@react-bits` is a configured registry, the shadcn MCP already reaches it. Redundant servers are pure context cost.

@@ -803,7 +803,6 @@ const AgentmemoryCapturePlugin = async (ctx: any) => {
 // driven from the v2 registrations, so all capture logic stays in one place.
 export default {
   id: "agentmemory-capture",
-  server: AgentmemoryCapturePlugin,
   setup: async (ctx: any) => {
     const directory: string = ctx?.location?.directory ?? process.cwd();
     const v1 = await AgentmemoryCapturePlugin({

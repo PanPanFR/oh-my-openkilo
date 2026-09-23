@@ -1,14 +1,20 @@
+---
+description: Pull latest oh-my-openkilo pack from GitHub and sync safely into live config
+---
 Pull the latest oh-my-openkilo pack from GitHub and sync it into the user's live config dir. Self-contained: the URL is hardcoded in this command, you (the model) run `git` directly with inline shell commands, and nothing on the user's disk can go stale.
 
 ## Source of truth
 
 The pack lives at exactly this URL. Do not guess, do not pull from a fork, do not look anywhere else:
-
 ```
 https://github.com/PanPanFR/oh-my-openkilo
 ```
 
 Default branch: `main`. This command always pulls the latest `main` so the user gets the newest fixes on top of the release they came from.
+
+## Direction (read first)
+
+This command pulls pack -> live only. The reverse direction (live -> pack, publishing) is NOT this command and has stricter rules: never publish `AGENTS.md` (it carries machine-specific paths) and only mirror skill files that exist on both sides. Do not mix the two directions.
 
 ## Safety contract (non-negotiable)
 

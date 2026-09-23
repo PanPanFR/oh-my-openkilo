@@ -8,15 +8,15 @@ Run a full config health check and act as the user's config assistant. Optional 
 
 - Locate configs: global `~/.config/opencode/opencode.json` (or `.jsonc`), plus project-level `./opencode.json` / `.opencode/opencode.json` if present.
 - Parse each file. If JSON is invalid, report the exact error with line number, then fix it.
-- Verify every referenced path exists and is loadable: `instructions` files, local `plugin` paths, `skills.paths`. For npm/git plugin specs, just report them (installed at startup).
+- Verify every referenced path exists and is loadable: `agents/*.md`, local `plugins/*.ts` (autoloaded from `plugins/` dir, plus `plugins` key for npm packages), `commands/*.md`, `skills/*/SKILL.md`, `rules/*.md`. For npm/git plugin specs, just report them (installed at startup).
 - Verify `model` and `small_model` reference a defined provider, and each model id exists in that provider's `models` map.
 - Validate `mcp` entries: `type` present ("local" or "remote"), `command` is an array of strings (never a single string), remote entries have `url`.
-- Validate `permission` values are valid actions ("allow", "ask", "deny").
+- Validate `permissions[]` entries have valid `action` (read, edit, glob, grep, shell, subagent, webfetch, websearch, skill, plus `<server>_*` MCP actions), `resource`, and `effect` ("allow", "deny", "ask").
 - Flag unknown top-level keys (opencode rejects them with ConfigInvalidError and refuses to start).
 
 ## 2. MCP server checks
 
-Skip `enabled: false` servers (list them as intentionally disabled). For each enabled server:
+Skip `disabled: true` servers (list them as intentionally disabled). For each enabled server:
 
 - **local**: verify the runtime is available (`node --version` for npx commands, `python --version` for python commands) and any referenced script path exists. Then spawn it and send an MCP `initialize` JSON-RPC request; confirm a valid response. Report failures with stderr.
 - **remote**: send an HTTP JSON-RPC `initialize` request to the URL; confirm a valid response. Distinguish: 401/403 (auth problem), timeout (server down or blocked), connection refused, DNS failure.
@@ -33,7 +33,7 @@ These have multi-part installs. Check every part, not just the MCP entry.
      - Windows: `["node", "C:\\Users\\<You>\\AppData\\Roaming\\npm\\node_modules\\@agentmemory\\mcp\\bin.mjs"]`
      - macOS: `["node", "/usr/local/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
      - Linux: `["node", "/usr/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
-  3. Plugin `./plugins/agentmemory-capture.ts` (from `plugin` array): file must exist relative to the config dir.
+  3. Plugin `./plugins/agentmemory-capture.ts` (autoloaded from the global `plugins/` dir per v2 discovery; the `plugins` array in opencode.json is only needed for npm packages): file must exist relative to the config dir.
   4. Live check: call MCP tool `agentmemory_memory_diagnose` if available; report any subsystem errors it finds (no auto-heal tool in the core set, fixes are manual).
   - Reference: local skills `agentmemory-config` (ports: REST 3111, streams 3112, viewer 3113, engine 49134) and `agentmemory-architecture`. Package: https://www.npmjs.com/package/@agentmemory/mcp
 
@@ -52,7 +52,7 @@ Fix within the existing config only:
 - missing/invalid credentials: prompt the user, insert, re-test
 - stale `{env:VAR}` references: ask user for value, offer inline literal
 
-Do NOT invent new MCP servers. Do NOT flip `enabled` unless the user asks. Do NOT touch unrelated fields.
+Do NOT invent new MCP servers. Do NOT flip `disabled` unless the user asks. Do NOT touch unrelated fields.
 
 ## 5. Official docs per MCP server
 

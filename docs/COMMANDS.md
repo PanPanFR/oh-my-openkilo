@@ -12,8 +12,8 @@ Slash commands. Type the name (with leading `/`) at the start of an OpenCode pro
 | `/remember <note>`   | Save a decision, insight, or pattern to agentmemory's long-term storage              |
 | `/impeccable`        | Review/polish/audit/iterate existing UI via the `impeccable` skill                   |
 | `/integrate`         | Integrate verified parallel plan branches into main (merge, conflicts, cleanup)      |
+| `/i-have-adhd`       | Action-first, numbered steps, progress-visible output structure                      |
 | `/caveman`           | Terse caveman-mode replies; subcommands: `commit`, `review`, `compress <file>`, `stats`, `help` |
-| `/caveman-commit`    | Generate a compressed commit message (subject ≤ 50 chars, body only if needed)       |
 
 ## `/update-pack` in detail
 

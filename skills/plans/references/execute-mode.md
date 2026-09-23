@@ -25,8 +25,9 @@ For each task:
 
 After all tasks complete and verified:
 - Verify the full test suite passes on the branch
-- Present integration options to your human partner: merge to main, open a PR, or keep the branch for later
-- Execute their choice
+- Commit all changes on `feature/<slug>`
+- Parallel plans: never merge yourself. Report "done on feature/<slug>". Integration runs via `/integrate` in main checkout
+- Sequential single plan: may merge inline per `agents/builder.md`
 
 ## When to Stop and Ask for Help
 

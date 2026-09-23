@@ -23,12 +23,12 @@ Display this reference card when invoked. One-shot — do NOT change mode, write
 
 Mode stick until changed or session end.
 
-## Skills
+## Skills & Commands
 
-| Skill | Trigger | What it do |
+| Tool | Trigger | What it do |
 |-------|---------|-----------|
-| **caveman-commit** | `/caveman-commit` | Terse commit messages. Conventional Commits. ≤50 char subject. |
-| **caveman-review** | `/caveman-review` | One-line PR comments: `L42: bug: user null. Add guard.` |
+| **git-commit** | `/commit` or `/caveman commit` | Terse Conventional Commits. Staging + execution + safety. ≤50 char subject. |
+| **code-review** | `/review` or `/caveman review` | Two-axis review. One-line findings: `L42: bug: user null. Add guard.` |
 | **caveman-compress** | `/caveman-compress <file>` | Compress .md files to caveman prose. Saves ~46% input tokens. |
 | **caveman-help** | `/caveman-help` | This card. |
 

@@ -20,20 +20,22 @@ Review files for compliance with Web Interface Guidelines.
 
 ## Guidelines Source
 
-Fetch fresh guidelines before each review:
+Read local guidelines reference (fast, offline):
+```
+~/.config/opencode/skills/ui-design/references/web-interface-guidelines.md
+```
 
+Online fallback:
 ```
 https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
 ```
 
-Use WebFetch to retrieve the latest rules. The fetched content contains all the rules and output format instructions.
-
 ## Usage
 
 When a user provides a file or pattern argument:
-1. Fetch guidelines from the source URL above
+1. Read guidelines from local reference (fallback to URL if missing)
 2. Read the specified files
-3. Apply all rules from the fetched guidelines
-4. Output findings using the format specified in the guidelines
+3. Apply all rules from the guidelines
+4. Output findings using the format `file:line: [rule] description`
 
 If no files specified, ask the user which files to review.

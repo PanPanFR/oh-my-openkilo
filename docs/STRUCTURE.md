@@ -18,7 +18,7 @@ oh-my-openkilo/
 │   ├── reviewer.md
 │   └── documenter.md
 │
-├── skills/                            # 54 skill packs (mirror of ~/.config/opencode/skills/)
+├── skills/                            # 53 skill packs (mirror of ~/.config/opencode/skills/)
 │   └── <skill-name>/
 │       ├── SKILL.md                   # always present
 │       ├── README.md                  # optional, user-facing
@@ -28,13 +28,13 @@ oh-my-openkilo/
 ├── rules/                             # 4 rules (3 always-on + 1 on-demand) (mirror of ~/.config/opencode/rules/)
 │   ├── communication-style.md         # caveman + ponytail style
 │   ├── language.md                    # English-only files
-│   └── skill-reminder.md              # mandatory skill check before work
+│   ├── skill-reminder.md              # mandatory skill check before work
 │   └── ui-tooling.md                  # CLI-vs-MCP router (on demand)
 │
 ├── commands/                          # 8 slash commands
 │   ├── caveman.md                     # terse mode + commit/review/compress/stats/help subcommands
-│   ├── caveman-commit.md              # compressed commit message generator
 │   ├── configcheck.md                 # post-install health check
+│   ├── i-have-adhd.md                 # action-first numbered output structure
 │   ├── impeccable.md                  # route UI review/polish to the impeccable skill
 │   ├── integrate.md                   # integration session for parallel plan branches
 │   ├── recall.md                      # search agentmemory

@@ -9,6 +9,10 @@ FIRST ACTION before ANY task: recall via agentmemory (`memory_smart_search`, tas
 
 Before implementing: scan skill list, load matching skill via `skill` tool -> follow it. Most specific wins; independent concerns -> load all parallel. Unsure -> load anyway (skipped relevant skill costs quality). Load BEFORE any code written or command run.
 
+## Output Structure (ADHD)
+
+Decide from triage/delegation signals, never wait for a user keyword. Load `i-have-adhd` alongside the task skill when ANY holds: more than 2 steps, `needs_plan>=0.7`, `complexity>=0.7`, parallel batch work, or the answer risks burying the action. User saying "adhd" or invoking `/i-have-adhd` also loads it. Complements Caveman density, never replaces it. Off on "stop adhd mode" / "normal mode".
+
 ## Graphify Hard Gate
 
 Codebase-relation question (data flow, callers, where defined, architecture, >2 files) -> `graphify query` FIRST, before grep/read. No exceptions. graphify-out/ missing in nontrivial task -> `graphify extract .` once, then use it. New code missing from graph -> `graphify update .` (incremental), then query. Reject skip excuses ("project is small", "grep is quicker").
@@ -17,6 +21,7 @@ Codebase-relation question (data flow, callers, where defined, architecture, >2 
 
 Build new UI / design from scratch -> load `ui-design` (+ delegate `designer` for substantial work) + apply `antislop` (negative filter).
 Component library task (install/browse shadcn, ReactBits, Magic UI) -> load `rules/ui-tooling.md` + `shadcn` skill; CLI default, MCP per-task.
+Library/API docs, setup, version-specific codegen -> Context7 MCP first (resolve-library-id -> query-docs, skip resolve if ID known), websearch/webfetch fallback.
 Review/polish/audit/iterate existing UI (critique, polish, distill, harden, animate, typeset) -> load `impeccable` (refine/polish) or `antislop` (slop audit).
 Mechanical anti-pattern check (no LLM) -> `npx impeccable detect <path>` (CI-able).
 Anti-slop Delivery Gate: run gate before delivering UI. Terse output: 1-line PASS (`Delivery Gate: PASS [...]`), cite failing rule IDs only on FAIL.

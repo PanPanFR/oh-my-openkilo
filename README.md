@@ -6,7 +6,7 @@
 
 **A team of AI specialists for OpenCode. You describe the task, they do the work.**
 
-This pack gives OpenCode 6 specialist agents, 54 how-to guides, and 3 house rules. It works with free models, so there is nothing to pay and no API key to set up.
+This pack gives OpenCode 6 specialist agents, 53 how-to guides, and 4 house rules. It works with free models, so there is nothing to pay and no API key to set up.
 
 <sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's team workflow</sub>
 
@@ -17,7 +17,7 @@ This pack gives OpenCode 6 specialist agents, 54 how-to guides, and 3 house rule
   <a href="https://github.com/PanPanFR/oh-my-openkilo/commits/main"><img src="https://img.shields.io/github/last-commit/PanPanFR/oh-my-openkilo?style=flat" alt="Last commit"></a>
   <br>
   <a href="#-meet-the-team"><img src="https://img.shields.io/badge/agents-6-orange" alt="6 agents"></a>
-  <a href="#-skills"><img src="https://img.shields.io/badge/skills-54-green" alt="54 skills"></a>
+  <a href="#-skills"><img src="https://img.shields.io/badge/skills-53-green" alt="53 skills"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/credentials-zero-brightgreen" alt="Zero credentials"></a>
   <img src="https://img.shields.io/badge/size-23_MB-blueviolet" alt="Pack size: 23 MB">
   <img src="https://img.shields.io/badge/no_build_step-brightgreen" alt="No build step">
@@ -318,29 +318,30 @@ Then restart OpenCode or run `/reload`. Changed files are backed up automaticall
 
 ## 🧩 Skills
 
-54 how-to guides in 5 groups. They load on their own when your task matches; you never open them.
+53 how-to guides in 5 groups. They load on their own when your task matches; you never open them.
 
 | Group | Count | Examples |
 |----------|-------|----------|
-| core | 26 | `antislop`, `clean-code`, `cloudflare`, `code-review`, `frontend-design`, `impeccable`, `plans`, `ui-design`, `ui-ux-pro-max`, `vite`, `vitest`, `web-design-guidelines`, `web-perf`, `shadcn` |
-| agentmemory | 6 | `agentmemory-architecture`, `agentmemory-config`, `agentmemory-mcp-tools`, `agentmemory-rest-api` |
-| caveman | 6 | `caveman`, `caveman-commit`, `caveman-review` |
-| workflow & memory | 14 | `commit-context`, `delegation`, `handoff`, `lesson`, `recall`, `remember`, `recap` |
+| core | 25 | `antislop`, `clean-code`, `cloudflare`, `code-review`, `impeccable`, `plans`, `ui-design`, `ui-ux-pro-max`, `vite`, `vitest`, `web-design-guidelines`, `web-perf`, `shadcn` |
+| agentmemory | 7 | `agentmemory`, `agentmemory-architecture`, `agentmemory-config`, `agentmemory-mcp-tools`, `agentmemory-rest-api` |
+| caveman | 4 | `caveman`, `caveman-compress`, `caveman-help`, `caveman-stats` |
+| workflow, memory & decisions | 15 | `commit-context`, `delegation`, `handoff`, `i-have-adhd`, `jev-decision`, `lesson`, `recall`, `remember`, `recap` |
 | browser | 2 | `playwright-cli`, `graphify` |
 
-> **All 54 with descriptions:** [docs/SKILLS.md](docs/SKILLS.md)
+> **All 53 with descriptions:** [docs/SKILLS.md](docs/SKILLS.md)
 
 ---
 
 ## 📏 Rules
 
-Three house rules, active in every session:
+Four house rules, active in every session:
 
 | Rule | What it means |
 |------|---------|
 | `skill-reminder` | Before any task: check past notes, then load the matching how-to guide |
 | `language` | Files are written in English; chat can be any language |
 | `communication-style` | Replies stay short, code stays minimal |
+| `ui-tooling` | UI component tooling router: CLI vs MCP decision map |
 
 > **Full rule guide:** [docs/RULES.md](docs/RULES.md)
 

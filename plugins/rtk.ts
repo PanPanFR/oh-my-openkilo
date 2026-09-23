@@ -1,90 +1,85 @@
-// RTK OpenCode plugin, rewrites commands to use rtk for token savings.
-// Requires: rtk >= 0.23.0 in PATH.
-// Windows: also add Git usr/bin (C:\Program Files\Git\usr\bin) to PATH,
-// else `rtk ls` fails with `Failed to resolve 'ls' via PATH`
-// (PowerShell `ls` is an alias, not a binary).
+// RTK OpenCode plugin — rewrites shell commands to use rtk for token savings.
+// Requires: rtk in PATH (or RTK_BIN env override).
 //
 // Thin delegating plugin: all rewrite logic lives in `rtk rewrite`,
-// which is the single source of truth (src/discover/registry.rs).
-// To add or change rewrite rules, edit the Rust registry, not this file.
+// which is the single source of truth. To add or change rewrite rules,
+// edit the rtk registry — not this file.
 //
-// Dual contract: default export carries both runtimes.
-// v1 (>= 1.18.29) calls server(), v2 calls setup().
+// v2 plugin contract (opencode >= 2.0): default export with id + setup.
+// Registers via ctx.tool.hook; mutates payload input in place. Fail-open:
+// any failure passes the command through unchanged.
 
-async function rtkServer(input: any) {
-  const sh: any = (input as any)?.$ ?? (globalThis as any).Bun?.$ ?? null;
-  if (!sh) {
-    console.warn("[rtk] shell API unavailable, plugin disabled");
-    return {};
-  }
+import { execFileSync, spawnSync } from "child_process";
+import { existsSync } from "fs";
+
+function resolveRtkBin(): string | null {
+  const override = process.env.RTK_BIN?.trim();
+  if (override && existsSync(override)) return override;
+  // Direct PATH probe first — no `which`/`where` dependency, works on
+  // Windows even when Git usr/bin is missing from the service env.
   try {
-    await sh`which rtk`.quiet();
+    execFileSync("rtk", ["--version"], { stdio: "ignore", timeout: 8000 });
+    return "rtk";
   } catch {
-    console.warn("[rtk] rtk binary not found in PATH, plugin disabled");
-    return {};
+    // fall through to platform locators
   }
-
-  return {
-    "tool.execute.before": async (input: any, output: any) => {
-      const tool = String(input?.tool ?? "").toLowerCase();
-      if (tool !== "bash" && tool !== "shell") return;
-      const args = output?.args;
-      if (!args || typeof args !== "object") return;
-
-      const command = (args as Record<string, unknown>).command;
-      if (typeof command !== "string" || !command) return;
-
-      try {
-        const result = await sh`rtk rewrite ${command}`.quiet().nothrow();
-        const rewritten = String((result as any)?.stdout ?? "").trim();
-        if (rewritten && rewritten !== command) {
-          (args as Record<string, unknown>).command = rewritten;
-        }
-      } catch {
-        // rtk rewrite failed, pass through unchanged
-      }
-    },
-  };
-}
-
-async function rtkSetup(ctx: any) {
-  const sh: any = ctx?.$ ?? (globalThis as any).Bun?.$ ?? null;
-  if (!sh) {
-    console.warn("[rtk] shell API unavailable, plugin disabled");
-    return;
-  }
+  const locator =
+    process.platform === "win32"
+      ? { cmd: "where.exe", args: ["rtk"] }
+      : { cmd: "which", args: ["rtk"] };
   try {
-    await sh`which rtk`.quiet();
+    const out = execFileSync(locator.cmd, locator.args, {
+      encoding: "utf8",
+      timeout: 8000,
+    })
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter(Boolean);
+    if (out.length > 0) return out[0];
   } catch {
-    console.warn("[rtk] rtk binary not found in PATH, plugin disabled");
-    return;
+    // locator failed — no binary
   }
-  const hook = ctx?.tool?.hook;
-  if (typeof hook !== "function") {
-    console.warn("[rtk] ctx.tool.hook unavailable, plugin disabled");
-    return;
-  }
-  await hook("execute.before", async (payload: any) => {
-    const tool = String(payload?.tool ?? "").toLowerCase();
-    if (tool !== "bash" && tool !== "shell") return;
-    const target = payload?.input ?? payload?.args;
-    if (!target || typeof target !== "object") return;
-    const command = (target as Record<string, unknown>).command;
-    if (typeof command !== "string" || !command) return;
-    try {
-      const result = await sh`rtk rewrite ${command}`.quiet().nothrow();
-      const rewritten = String((result as any)?.stdout ?? "").trim();
-      if (rewritten && rewritten !== command) {
-        (target as Record<string, unknown>).command = rewritten;
-      }
-    } catch {
-      // rtk rewrite failed, pass through unchanged
-    }
-  });
+  return null;
 }
 
 export default {
   id: "rtk",
-  server: rtkServer,
-  setup: rtkSetup,
+  setup: async (ctx: any) => {
+    const bin = resolveRtkBin();
+    if (!bin) {
+      console.warn(
+        "[rtk] rtk binary not found in PATH (set RTK_BIN to override) — plugin disabled"
+      );
+      return;
+    }
+    const hook = ctx?.tool?.hook;
+    if (typeof hook !== "function") {
+      console.warn("[rtk] ctx.tool.hook unavailable — plugin disabled");
+      return;
+    }
+    await hook("execute.before", async (payload: any) => {
+      const tool = String(payload?.tool ?? "").toLowerCase();
+      if (tool !== "bash" && tool !== "shell") return;
+      const input = payload?.input ?? payload?.args;
+      if (!input || typeof input !== "object") return;
+      const command = (input as Record<string, unknown>).command;
+      if (typeof command !== "string" || !command) return;
+      // Already an rtk invocation — nothing to rewrite.
+      if (/^\s*rtk(\.exe)?\b/.test(command)) return;
+      try {
+        // `rtk rewrite` exits nonzero when there is no equivalent;
+        // stdout empty there too. Non-empty stdout that differs = rewrite.
+        const result = spawnSync(bin, ["rewrite", command], {
+          encoding: "utf8",
+          timeout: 8000,
+        });
+        const rewritten = String((result as any)?.stdout ?? "").trim();
+        if (rewritten && rewritten !== command) {
+          (input as Record<string, unknown>).command = rewritten;
+        }
+      } catch {
+        // rtk rewrite failed — pass through unchanged
+      }
+    });
+  },
 };
