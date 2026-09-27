@@ -39,8 +39,11 @@ const SCRIPT = path.resolve(
 // -TimeoutSec is passed to the wrapper — one source of truth, and killing
 // the child covers hung node startup as well as slow network.
 const TIMEOUT_MS = 3_000;
-const PART_QUIET_MS = 400; // parts stream in separately; classify after quiet period
-const INJECT_WAIT_MS = 1_500; // context assembly waits at most this long for the verdict (debounce + call)
+// Injection budget math: debounce (300ms) + node spawn (~100ms) + Jev call
+// (observed 0.2-1.0s, spikes higher) must fit inside INJECT_WAIT_MS for a
+// this-turn verdict; otherwise fail-open and the verdict lands next turn.
+const PART_QUIET_MS = 300; // parts stream in separately; classify after quiet period
+const INJECT_WAIT_MS = 2_500; // context assembly waits at most this long for the verdict
 const MIN_PROMPT_LEN = 8; // skip "yes", "go on", etc.
 const STATE_MAX = 600; // dense state, truncated
 const MAX_TRACKED = 500; // bound every buffer
