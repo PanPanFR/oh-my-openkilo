@@ -6,10 +6,16 @@
 // the next assembled session context. The chat LLM keeps all generation;
 // Jev only classifies.
 //
+// Event shape: user-message content arrives via `message.part.updated`
+// events; `message.updated` carries metadata (id, role). Both orderings are
+// handled — parts are buffered as orphans until the metadata registers the
+// message, and a quiet-period debounce decides when the message is complete.
+// Builds that inline parts on `message.updated` also work.
+//
 // Fail-open by design (a routing hint must never brick a session):
 //   - JEV_ROUTER=off            → plugin disabled entirely (kill-switch)
 //   - missing endpoint/key      → script exits 2, no injection, one warn
-//   - timeout (default 3s)      → spawn killed, no injection
+//   - timeout (3s local timer)  → child killed, no injection
 //   - any parse/spawn error     → swallowed after first warning
 // The verdict is ADVISORY: needs_subagent is a hint, never a mandate
 // (subagent dispatch has been flaky on some opencode builds — see memory).
@@ -18,7 +24,9 @@
 // ctx.event.subscribe() (async-iterable, verified live opencode 2.0.8);
 // injection rides ctx.session.hook("context") using the same push pattern
 // as agentmemory-capture.ts. Spawn is async — the event pump never blocks
-// on the Jev call.
+// on the Jev call. The context hook awaits the in-flight classification
+// for a bounded window (same pattern agentmemory uses for /session/start)
+// so a fast Jev reply lands in THIS turn, not the next one.
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -27,11 +35,26 @@ const SCRIPT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "../skills/jev-decision/scripts/jev-decide.mjs",
 );
+// Single authoritative timeout: the local SIGKILL timer below. No
+// -TimeoutSec is passed to the wrapper — one source of truth, and killing
+// the child covers hung node startup as well as slow network.
 const TIMEOUT_MS = 3_000;
+const PART_QUIET_MS = 400; // parts stream in separately; classify after quiet period
+const INJECT_WAIT_MS = 1_500; // context assembly waits at most this long for the verdict (debounce + call)
 const MIN_PROMPT_LEN = 8; // skip "yes", "go on", etc.
 const STATE_MAX = 600; // dense state, truncated
+const MAX_TRACKED = 500; // bound every buffer
 
-function userTextFromInfo(info: any): string {
+interface Entry {
+  sid: string;
+  msgId: string;
+  text: string;
+  timer: ReturnType<typeof setTimeout> | null;
+  resolve: () => void;
+  done: Promise<void>;
+}
+
+function inlinePartsText(info: any): string {
   const parts = Array.isArray(info?.parts) ? info.parts : [];
   return parts
     .filter((p: any) => p?.type === "text" && !p?.synthetic && !p?.ignored)
@@ -80,7 +103,7 @@ function callJev(state: string): Promise<string | null> {
   return new Promise((resolve) => {
     let child: any;
     try {
-      child = spawn("node", [SCRIPT, "-Preset", "route", "-TimeoutSec", "3", "-State", state], {
+      child = spawn("node", [SCRIPT, "-Preset", "route", "-State", state], {
         stdio: ["ignore", "pipe", "pipe"],
         env: process.env,
       });
@@ -100,9 +123,9 @@ function callJev(state: string): Promise<string | null> {
       child.kill("SIGKILL");
       done(null);
     }, TIMEOUT_MS);
-    child.stdout.on("data", (d) => (out += d));
+    child.stdout.on("data", (d: any) => (out += d));
     child.on("error", () => done(null));
-    child.on("close", (code) => {
+    child.on("close", (code: number) => {
       if (code !== 0) return done(null);
       try {
         const parsed = JSON.parse(out);
@@ -127,8 +150,12 @@ export default {
       return;
     }
 
+    const pending = new Map<string, Entry>(); // messageID → collecting entry
+    const orphanParts = new Map<string, string>(); // parts that arrived before metadata
+    const latest = new Map<string, string>(); // sessionID → newest classified messageID
     const verdicts = new Map<string, string>(); // sessionID → routing block (one-shot)
-    const routed = new Set<string>(); // messageIDs already classified
+    const inflight = new Map<string, Promise<void>>(); // sessionID → newest classification
+    const classified = new Set<string>(); // messageIDs already dispatched
     let warnedOnce = false;
     const warn = (msg: string) => {
       if (!warnedOnce) {
@@ -136,8 +163,62 @@ export default {
         console.warn(`[jev-router] ${msg} — falling back to LLM judgment (silent from now on)`);
       }
     };
+    const bound = <K, V>(m: Map<K, V>, max: number) => {
+      while (m.size > max) m.delete(m.keys().next().value as K);
+    };
 
-    // ── event pump: watch for new user messages ──
+    const classify = (entry: Entry) => {
+      const { sid, msgId, text } = entry;
+      classified.add(msgId);
+      if (classified.size > MAX_TRACKED) classified.clear(); // bound memory
+      // Skip commands, tiny acks, and tool-result-ish chatter.
+      if (!text || text.length < MIN_PROMPT_LEN || text.startsWith("/")) {
+        entry.resolve();
+        return;
+      }
+      latest.set(sid, msgId);
+      bound(latest, MAX_TRACKED);
+      const state = `Goal: ${text.slice(0, STATE_MAX)} | Context: coding harness session, route classification for agent ownership and subagent dispatch | Note: verdict advisory, fail-open.`;
+      // Async — never blocks the pump. Only the newest message's verdict may
+      // land; stale completions (out-of-order races) are dropped. The entry
+      // settles only after the call does, so a context hook awaiting
+      // entry.done sees the verdict, not just the dispatch.
+      callJev(state)
+        .then(
+          (block) => {
+            if (block && latest.get(sid) === msgId) {
+              verdicts.set(sid, block);
+              bound(verdicts, 100);
+            } else if (!block) warn("no routing verdict (timeout/endpoint/parse)");
+          },
+          () => warn("routing call rejected (spawn failure)"),
+        )
+        .finally(() => entry.resolve());
+    };
+
+    const schedule = (entry: Entry) => {
+      if (entry.timer) clearTimeout(entry.timer);
+      entry.timer = setTimeout(() => {
+        pending.delete(entry.msgId);
+        classify(entry);
+      }, PART_QUIET_MS);
+    };
+
+    // The awaited pipeline starts at REGISTRATION, not at classification:
+    // the context hook may fire during the debounce window, so the per-entry
+    // settled-promise must cover debounce + call from the moment we know
+    // this is a routable user message.
+    const makeEntry = (sid: string, msgId: string, text = ""): Entry => {
+      let res: () => void = () => {};
+      const done = new Promise<void>((r) => (res = r));
+      const entry: Entry = { sid, msgId, text, timer: null, resolve: res, done };
+      done.then(() => {
+        if (inflight.get(sid) === done) inflight.delete(sid);
+      });
+      return entry;
+    };
+
+    // ── event pump ──
     let stream: any = null;
     try {
       stream = subscribe();
@@ -153,32 +234,70 @@ export default {
       try {
         for await (const event of stream) {
           try {
-            if (event?.type !== "message.updated") continue;
-            const info = event?.properties?.info ?? event?.info;
-            if (!info || info.role !== "user") continue;
-            const mid = String(info.id ?? "");
-            if (!mid || routed.has(mid)) continue;
-            const text = userTextFromInfo(info);
-            // Skip commands, tiny acks, and tool-result-ish chatter.
-            if (!text || text.length < MIN_PROMPT_LEN || text.startsWith("/")) continue;
-            routed.add(mid);
-            if (routed.size > 500) routed.clear(); // bound memory
+            const props = event?.properties ?? event;
+            const type = event?.type;
 
-            const sid = String(event?.properties?.sessionID ?? event?.sessionID ?? info.sessionID ?? "");
-            if (!sid) continue;
-
-            const state = `Goal: ${text.slice(0, STATE_MAX)} | Context: coding harness session, route classification for agent ownership and subagent dispatch | Note: verdict advisory, fail-open.`;
-            // Async — never block the pump. Latest verdict wins per session.
-            callJev(state).then(
-              (block) => {
-                if (block) {
-                  verdicts.set(sid, block);
-                  // FIFO bound: evict oldest beyond 100 sessions.
-                  if (verdicts.size > 100) verdicts.delete(verdicts.keys().next().value as string);
-                } else warn("no routing verdict (timeout/endpoint/parse)");
-              },
-              () => warn("routing call rejected (spawn failure)"),
-            );
+            if (type === "message.updated") {
+              const info = props.info;
+              if (!info || info.role !== "user") continue;
+              const mid = String(info.id ?? "");
+              if (!mid || classified.has(mid)) continue;
+              const sid = String(props.sessionID ?? info.sessionID ?? "");
+              if (!sid) continue;
+              // message.updated can repeat for the same message (metadata
+              // refresh). Append to the existing entry instead of creating a
+              // second one — a duplicate entry would double-spawn Jev and a
+              // partial-text verdict could win on timing inversion.
+              const existing = pending.get(mid);
+              if (existing) {
+                const inline = inlinePartsText(info);
+                if (inline) existing.text = existing.text ? `${existing.text}\n${inline}` : inline;
+                schedule(existing);
+                continue;
+              }
+              const entry = makeEntry(sid, mid);
+              // Adopt any parts that streamed in before the metadata, plus
+              // builds that inline parts on message.updated itself.
+              const orphan = orphanParts.get(mid);
+              if (orphan) {
+                orphanParts.delete(mid);
+                entry.text = orphan;
+              }
+              const inline = inlinePartsText(info);
+              if (inline) entry.text = entry.text ? `${entry.text}\n${inline}` : inline;
+              pending.set(mid, entry);
+              bound(pending, MAX_TRACKED);
+              inflight.set(sid, entry.done); // hook can now await debounce+call
+              schedule(entry);
+            } else if (type === "message.part.updated") {
+              const part = props.part;
+              if (!part || part.type !== "text" || part.synthetic || part.ignored) continue;
+              const mid = String(props.messageID ?? props.info?.id ?? "");
+              if (!mid || !part.text) continue;
+              const entry = pending.get(mid);
+              if (entry) {
+                entry.text = entry.text ? `${entry.text}\n${part.text}` : String(part.text);
+                schedule(entry); // more parts may follow — restart quiet period
+              } else {
+                // Metadata not seen yet (or an assistant message we ignore).
+                const prev = orphanParts.get(mid);
+                orphanParts.set(mid, prev ? `${prev}\n${part.text}` : String(part.text));
+                bound(orphanParts, 100);
+              }
+            } else if (type === "session.idle") {
+              // Hygiene: any still-pending user entry for this session gets
+              // one final chance to classify now that input is done.
+              const sid = String(props.sessionID ?? props.info?.sessionID ?? "");
+              if (sid) {
+                for (const entry of [...pending.values()]) {
+                  if (entry.sid === sid) {
+                    pending.delete(entry.msgId);
+                    if (entry.timer) clearTimeout(entry.timer);
+                    classify(entry);
+                  }
+                }
+              }
+            }
           } catch {
             // single-event failure must not kill the pump
           }
@@ -195,6 +314,14 @@ export default {
           try {
             const sid = String(input?.sessionID ?? input?.session?.id ?? "");
             if (!sid) return;
+            // The verdict may still be in flight (Jev answers in ~100-500ms;
+            // context assembly can start sooner). Bounded wait, mirroring
+            // agentmemory's /session/start race guard — prompt assembly is
+            // delayed by at most INJECT_WAIT_MS.
+            const p = inflight.get(sid);
+            if (p) {
+              await Promise.race([p.catch(() => {}), new Promise((r) => setTimeout(r, INJECT_WAIT_MS))]);
+            }
             const block = verdicts.get(sid);
             if (!block) return;
             const arr = Array.isArray(input?.context)
@@ -212,8 +339,13 @@ export default {
               pushed = true;
             }
             // One-shot, but only consume after a successful push — otherwise
-            // retry on the next context assembly.
-            if (pushed) verdicts.delete(sid);
+            // retry on the next context assembly. Identity check: a newer
+            // message may have registered its own awaitable while this hook
+            // was waiting; don't delete that one.
+            if (pushed) {
+              verdicts.delete(sid);
+              if (inflight.get(sid) === p) inflight.delete(sid);
+            }
           } catch (e: any) {
             warn(`context hook failed: ${e?.message}`);
           }

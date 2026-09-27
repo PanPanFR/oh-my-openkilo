@@ -1,6 +1,6 @@
 # Rules
 
-Four global rules shape every session. Rules are registered in `opencode.json` under `instructions`, or referenced from `AGENTS.md`:
+Five global rules shape every session. Rules are registered in `opencode.json` under `instructions`, or referenced from `AGENTS.md`:
 
 ```jsonc
 {

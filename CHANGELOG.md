@@ -7,7 +7,7 @@
   - `delegation` preset extended with `needs_subagent` noul + `context_isolation` score [coordination-cost, context-cost].
   - New `plugins/jev-router.ts` (optional, remove to disable): watches new user messages, calls Jev `-Preset route` async with a 3s budget, injects a one-shot advisory `JEV ROUTING` block into the next assembled session context. Fail-open on every path (bad endpoint, 401/403/429, timeout, parse error); kill-switch `JEV_ROUTER=off`.
   - New `rules/jev-routing.md` (5th house rule): when to call which preset, the skill-match protocol, deterministic thresholds, hard rules (never as `model`, advisory-only, no secrets).
-  - `skills/jev-decision/SKILL.md`: preset table updated + new "Routing layer" section. `AGENTS.md`: routing index lines. README/docs counts updated (5 rules, 8 plugins).
+  - `skills/jev-decision/SKILL.md`: preset table updated + new "Routing layer" section. `AGENTS.md`: routing index lines. README/docs counts updated (5 rules, 7 plugins).
   - Threshold semantics: uncertain `needs_subagent` -> inline (cheaper default); uncertain `needs_planner` -> plan first (safer). Existing 6 presets and all current CLI flags unchanged.
 
 # v0.12.0 (2026-09-23)

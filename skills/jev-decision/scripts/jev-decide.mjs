@@ -374,6 +374,10 @@ async function main() {
         console.error("Jev: -CandidatesJson must not override the built-in 'none' option");
         process.exit(2);
       }
+      if (!k.trim()) {
+        console.error("Jev: -CandidatesJson has an empty or whitespace-only skill name");
+        process.exit(2);
+      }
       if (typeof v !== "string" || !v.trim()) {
         console.error(`Jev: candidate '${k}' needs a non-empty string evidence line`);
         process.exit(2);

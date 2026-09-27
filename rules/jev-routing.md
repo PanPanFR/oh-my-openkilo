@@ -19,11 +19,21 @@ Manual calls above are for mid-task decisions and skill matching.
 ## Skill-match protocol (LLM proposes, Jev disposes)
 
 1. Shortlist 5–8 candidate skills from installed skill descriptions — never
-   feed all 54; Jev picks, the LLM filters.
+   feed all 53; Jev picks, the LLM filters.
 2. One call:
    `jev-decide.mjs -Preset skill-match -CandidatesJson '{"skill-a":"evidence","skill-b":"evidence"}' -State "<goal>"`
-3. `skill_pick=none` → load nothing; trust LLM judgment.
-4. Candidates must be `{ name: one-line evidence }`, max 12.
+3. Apply the answers together:
+   - `skill_pick=none` → load nothing; trust LLM judgment.
+   - `load_now` gates the loading: `>=0.7` load immediately;
+     `<=0.3` defer until the matching category of work starts;
+     UNCERTAIN → load (safer branch: guidance beats context savings,
+     same preference as the `skill-reminder` rule) — but only when
+     `skill_pick` is a real skill, never for `none`.
+   - `mismatch_risk` per-dimension `>=0.7` (context-waste or
+     guidance-mismatch) → re-check the shortlist before loading; the pick
+     may be a near-miss.
+4. Candidates must be `{ name: one-line evidence }`, non-empty names,
+   max 12.
 
 ## Thresholds (deterministic, no exceptions)
 
