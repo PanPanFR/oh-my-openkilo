@@ -46,6 +46,7 @@ const PART_QUIET_MS = 300; // parts stream in separately; classify after quiet p
 const INJECT_WAIT_MS = 2_500; // context assembly waits at most this long for the verdict
 const MIN_PROMPT_LEN = 8; // skip "yes", "go on", etc.
 const STATE_MAX = 600; // dense state, truncated
+const ORPHAN_MAX = 2_000; // per-message text cap: STATE_MAX is 600 anyway; stops assistant-stream flooding
 const MAX_TRACKED = 500; // bound every buffer
 
 interface Entry {
@@ -248,26 +249,24 @@ export default {
               const sid = String(props.sessionID ?? info.sessionID ?? "");
               if (!sid) continue;
               // message.updated can repeat for the same message (metadata
-              // refresh). Append to the existing entry instead of creating a
-              // second one — a duplicate entry would double-spawn Jev and a
-              // partial-text verdict could win on timing inversion.
+              // refresh). Its parts — when present at all — are a FULL
+              // SNAPSHOT: replace, never append, or the text doubles on
+              // every repeat (part.updated deltas already accumulated).
               const existing = pending.get(mid);
               if (existing) {
                 const inline = inlinePartsText(info);
-                if (inline) existing.text = existing.text ? `${existing.text}\n${inline}` : inline;
+                if (inline) existing.text = inline.slice(0, ORPHAN_MAX);
                 schedule(existing);
                 continue;
               }
               const entry = makeEntry(sid, mid);
-              // Adopt any parts that streamed in before the metadata, plus
-              // builds that inline parts on message.updated itself.
-              const orphan = orphanParts.get(mid);
-              if (orphan) {
-                orphanParts.delete(mid);
-                entry.text = orphan;
-              }
+              // Prefer the snapshot over buffered orphan deltas (assumes a
+              // snapshot is complete — the observed v2 shape sends no parts
+              // here at all); fall back to orphans when parts are absent.
               const inline = inlinePartsText(info);
-              if (inline) entry.text = entry.text ? `${entry.text}\n${inline}` : inline;
+              const orphan = orphanParts.get(mid);
+              if (orphan) orphanParts.delete(mid);
+              entry.text = (inline || orphan || "").slice(0, ORPHAN_MAX);
               pending.set(mid, entry);
               bound(pending, MAX_TRACKED);
               inflight.set(sid, entry.done); // hook can now await debounce+call
@@ -279,12 +278,25 @@ export default {
               if (!mid || !part.text) continue;
               const entry = pending.get(mid);
               if (entry) {
-                entry.text = entry.text ? `${entry.text}\n${part.text}` : String(part.text);
+                // Delta append (part events carry one chunk each), capped:
+                // STATE_MAX is 600, anything past ORPHAN_MAX is noise.
+                if (entry.text.length < ORPHAN_MAX) {
+                  entry.text = entry.text ? `${entry.text}\n${part.text}` : String(part.text);
+                }
                 schedule(entry); // more parts may follow — restart quiet period
               } else {
-                // Metadata not seen yet (or an assistant message we ignore).
+                // Metadata not seen yet (or an assistant message we can't
+                // distinguish without role info on part events). Same cap
+                // kills the assistant-stream case: growth stops at
+                // ORPHAN_MAX instead of reallocating per chunk, and the
+                // 100-message FIFO can no longer be flooded into evicting
+                // genuine user orphans early.
                 const prev = orphanParts.get(mid);
-                orphanParts.set(mid, prev ? `${prev}\n${part.text}` : String(part.text));
+                if (prev === undefined) {
+                  orphanParts.set(mid, String(part.text).slice(0, ORPHAN_MAX));
+                } else if (prev.length < ORPHAN_MAX) {
+                  orphanParts.set(mid, `${prev}\n${part.text}`.slice(0, ORPHAN_MAX));
+                }
                 bound(orphanParts, 100);
               }
             } else if (type === "session.idle") {

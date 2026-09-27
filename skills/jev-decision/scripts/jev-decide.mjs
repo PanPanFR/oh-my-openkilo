@@ -370,7 +370,7 @@ async function main() {
       process.exit(2);
     }
     for (const [k, v] of Object.entries(candidates)) {
-      if (k === "none") {
+      if (k.trim() === "none") {
         console.error("Jev: -CandidatesJson must not override the built-in 'none' option");
         process.exit(2);
       }
