@@ -279,9 +279,11 @@ export default {
               const entry = pending.get(mid);
               if (entry) {
                 // Delta append (part events carry one chunk each), capped:
-                // STATE_MAX is 600, anything past ORPHAN_MAX is noise.
+                // STATE_MAX is 600, anything past ORPHAN_MAX is noise. Slice
+                // the COMBINED text — a single part larger than the
+                // remaining allowance must not push past the cap.
                 if (entry.text.length < ORPHAN_MAX) {
-                  entry.text = entry.text ? `${entry.text}\n${part.text}` : String(part.text);
+                  entry.text = (entry.text ? `${entry.text}\n${part.text}` : String(part.text)).slice(0, ORPHAN_MAX);
                 }
                 schedule(entry); // more parts may follow — restart quiet period
               } else {
