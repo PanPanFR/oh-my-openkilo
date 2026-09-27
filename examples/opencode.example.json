@@ -63,6 +63,7 @@
     "./plugins/caveman/plugin.js",
     "./plugins/graphify.ts",
     "./plugins/rtk.ts",
+    "./plugins/jev-router.ts",
     "superpowers@git+https://github.com/obra/superpowers.git"
   ],
   "providers": {

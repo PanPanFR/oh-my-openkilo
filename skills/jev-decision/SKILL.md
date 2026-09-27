@@ -37,13 +37,25 @@ This repo ships **no endpoint and no key**. Fill in your own before calling:
 | Preset | Questions |
 |---|---|
 | `triage` | `task_type` choice[simple-edit, feature, ui, refactor, bug, docs, recon], `needs_plan` noul, `risk` score[security, blast-radius] |
-| `delegation` | `owner` choice[builder-inline, designer, reviewer, tester, documenter], `can_parallel` noul, `complexity` score[coordination-cost, domain-risk] |
+| `route` | `agent` choice[builder, planner, designer, tester, reviewer, documenter], `needs_planner` noul, `needs_subagent` noul, `fit` score[domain-match, context-cost] |
+| `delegation` | `owner` choice[builder-inline, designer, reviewer, tester, documenter], `can_parallel` noul, `complexity` score[coordination-cost, domain-risk], `needs_subagent` noul, `context_isolation` score[coordination-cost, context-cost] |
+| `skill-match` | `skill_pick` choice[runtime candidates + none], `load_now` noul, `mismatch_risk` score[context-waste, guidance-mismatch] |
 | `review` | `spec_match` score[spec-coverage, scope-discipline], `security_risk` score[injection, auth, exposure], `merge_ready` noul, `needs_tester` noul |
 | `test` | `needs_tests` noul, `test_scope` choice[unit, integration, e2e, all], `bug_risk` score[regression-likelihood, blast-radius] |
 | `ui` | `needs_designer` noul, `ui_complexity` score[layout, interaction, visual-system], `a11y_risk` score[keyboard, contrast, focus] |
 | `verify` | `spec_fit` score[requirement-coverage, constraint-fit], `decision_risk` score[failure-impact, reversibility], `proceed` noul, `needs_human` noul |
 
 Custom questions: `-QuestionsJson '{...}'` (overrides preset).
+
+## Routing layer (agent / skill / subagent classification)
+
+Three decision points, wired via `rules/jev-routing.md` and `plugins/jev-router.ts`:
+
+1. **Agent routing** (`-Preset route`): who owns the task — builder, planner, designer, tester, reviewer, documenter. The plugin runs this automatically on each new user message and injects an advisory JEV ROUTING block into session context (one-shot). `needs_subagent` uncertain → default inline (cheaper); `needs_planner` uncertain → treat as YES (safer).
+2. **Skill routing** (`-Preset skill-match -CandidatesJson '<shortlist>'`): LLM shortlists 5-8 candidate skills from descriptions, Jev picks (or `none`). Candidates = `{ "skill-name": "one-line evidence" }`, max 12, merged into the `skill_pick` choice criteria. LLM proposes, Jev disposes — same anti-hallucination rule as the Verify pattern.
+3. **Subagent dispatch** (`-Preset delegation`, extended): `needs_subagent` noul + `context_isolation` score[coordination-cost, context-cost] alongside the existing owner/parallel questions. Spawn only on YES (>=0.7); uncertain → inline.
+
+Kill-switch: `JEV_ROUTER=off` disables the plugin hook; manual preset calls are unaffected. Verdicts are advisory — explicit user instructions always win.
 
 ## Verify pattern (anti-hallucination)
 
@@ -56,7 +68,7 @@ Picking among candidates (custom choice, options filled by the agent from its ow
 ## Thresholds (apply everywhere, deterministic)
 
 - noul: `>=0.7` = YES, `<=0.3` = NO, else UNCERTAIN -> take the safer branch (needs_plan=true, needs_tester=true, needs_tests=true). (verify preset uses its own strict bar, see Verify pattern).
-- choice: use `.choice`; if `.confidence < 0.4` -> UNCERTAIN -> default `builder-inline` (triage/delegation) or `all` (test_scope).
+- choice: use `.choice`; if `.confidence < 0.4` -> UNCERTAIN -> default `builder-inline` (triage/delegation), `builder` (route), or `all` (test_scope).
 - score: read `probabilities` (index -> dimension via `legend`), NEVER the aggregate `score` — aggregate tracks only the LAST dimension (verified live 2026-09-23: risk security=0.46/blast=0.54 -> score 0.54). Per-dimension: prob `>=0.7` = HIGH, `<=0.3` = LOW. Any `risk/security_risk/bug_risk` dimension `>=0.7` always adds `reviewer` (plus `tester` on auth/migration/payment); gate the security dimension directly, never via aggregate.
 - score confidence: `score.confidence < 0.4` -> UNCERTAIN -> safer branch: risk dims (`risk/security_risk/bug_risk/decision_risk`) treated HIGH, all other dims treated as the conservative default (needs_plan/needs_tester/needs_tests = true).
 

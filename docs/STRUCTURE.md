@@ -25,8 +25,9 @@ oh-my-openkilo/
 │       ├── references/                # optional, progressive-disclosure
 │       └── scripts/, examples/, ...   # optional, skill-specific
 │
-├── rules/                             # 4 rules (3 always-on + 1 on-demand) (mirror of ~/.config/opencode/rules/)
+├── rules/                             # 5 rules (4 always-on + 1 on-demand) (mirror of ~/.config/opencode/rules/)
 │   ├── communication-style.md         # caveman + ponytail style
+│   ├── jev-routing.md                 # Jev agent/skill/subagent routing rule
 │   ├── language.md                    # English-only files
 │   ├── skill-reminder.md              # mandatory skill check before work
 │   └── ui-tooling.md                  # CLI-vs-MCP router (on demand)
@@ -41,8 +42,9 @@ oh-my-openkilo/
 │   ├── remember.md                    # save to agentmemory
 │   └── update-pack.md                 # pull + sync from GitHub
 │
-├── plugins/                           # 5 small plugin files (no dist/, no node_modules)
+├── plugins/                           # 6 small plugin files (no dist/, no node_modules)
 │   ├── agentmemory-capture.ts         # hook for capturing session observations
+│   ├── jev-router.ts                  # Jev routing: classify agent/subagent per user message
 │   ├── caveman/                       # terse-mode + style pack
 │   │   ├── plugin.js
 │   │   ├── caveman-config.cjs

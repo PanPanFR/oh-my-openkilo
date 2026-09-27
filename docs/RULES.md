@@ -6,6 +6,7 @@ Four global rules shape every session. Rules are registered in `opencode.json` u
 {
   "instructions": [
     "rules/skill-reminder.md",
+    "rules/jev-routing.md",
     "rules/language.md",
     "rules/communication-style.md",
     "rules/ui-tooling.md"
@@ -15,11 +16,12 @@ Four global rules shape every session. Rules are registered in `opencode.json` u
 
 Order matters: earlier entries get better model compliance, so the first-action protocols come first. Reorder to taste.
 
-## The four rules
+## The five rules
 
 | Rule                  | What it does                                                                                            |
 |-----------------------|---------------------------------------------------------------------------------------------------------|
 | `skill-reminder`      | Before any implementation task: check for a matching skill via the `skill` tool, and recall agentmemory first. |
+| `jev-routing`         | Jev (decision-only) classifies agent, skill, and subagent routing before work starts. Fail-open, advisory. |
 | `language`            | All file content in English. Chat can be any language.                                                  |
 | `communication-style` | Caveman (terse) replies and Ponytail (minimal) code style in every session.                              |
 | `ui-tooling`          | UI component tooling decision map: CLI vs MCP servers vs skills.                                         |

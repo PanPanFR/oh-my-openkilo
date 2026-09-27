@@ -1,3 +1,15 @@
+# v0.13.0 (2026-09-27)
+
+## Added
+- **Jev routing layer** — Jev (System One decision-only model) now classifies routing decisions before work starts, not just quality gates:
+  - New `route` preset (`skills/jev-decision/scripts/jev-decide.mjs`): owner agent choice [builder, planner, designer, tester, reviewer, documenter] + `needs_planner` noul + `needs_subagent` noul + `fit` score [domain-match, context-cost].
+  - New `skill-match` preset + `-CandidatesJson` flag: the chat LLM shortlists 5-8 candidate skills from descriptions, Jev picks (or `none`). LLM proposes, Jev disposes. Guards: `none` key cannot be overridden, evidence must be non-empty strings, max 12 candidates.
+  - `delegation` preset extended with `needs_subagent` noul + `context_isolation` score [coordination-cost, context-cost].
+  - New `plugins/jev-router.ts` (optional, remove to disable): watches new user messages, calls Jev `-Preset route` async with a 3s budget, injects a one-shot advisory `JEV ROUTING` block into the next assembled session context. Fail-open on every path (bad endpoint, 401/403/429, timeout, parse error); kill-switch `JEV_ROUTER=off`.
+  - New `rules/jev-routing.md` (5th house rule): when to call which preset, the skill-match protocol, deterministic thresholds, hard rules (never as `model`, advisory-only, no secrets).
+  - `skills/jev-decision/SKILL.md`: preset table updated + new "Routing layer" section. `AGENTS.md`: routing index lines. README/docs counts updated (5 rules, 8 plugins).
+  - Threshold semantics: uncertain `needs_subagent` -> inline (cheaper default); uncertain `needs_planner` -> plan first (safer). Existing 6 presets and all current CLI flags unchanged.
+
 # v0.12.0 (2026-09-23)
 
 ## Added

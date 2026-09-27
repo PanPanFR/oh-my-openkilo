@@ -6,7 +6,7 @@
 
 **A team of AI specialists for OpenCode. You describe the task, they do the work.**
 
-This pack gives OpenCode 6 specialist agents, 53 how-to guides, and 4 house rules. It works with free models, so there is nothing to pay and no API key to set up.
+This pack gives OpenCode 6 specialist agents, 53 how-to guides, and 5 house rules. It works with free models, so there is nothing to pay and no API key to set up.
 
 <sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's team workflow</sub>
 
@@ -73,8 +73,8 @@ The workflow ideas come from [Kilo Code](https://github.com/Kilo-Org/kilocode), 
 |-----------|-------|--------------|
 | Agents    | 6     | The team members (see below). |
 | Skills    | 54    | How-to guides the agents follow automatically. Full list: [docs/SKILLS.md](docs/SKILLS.md). |
-| Rules     | 3     | House rules applied to every session (check memory, write in English, keep replies short). Details: [docs/RULES.md](docs/RULES.md). |
-| Plugins   | 7     | Small extras (auto-save notes, code map sync, short-reply mode, token-saving shell output). All optional, remove any to disable. |
+| Rules     | 5     | House rules applied to every session (check memory, write in English, keep replies short, route via Jev). Details: [docs/RULES.md](docs/RULES.md). |
+| Plugins   | 8     | Small extras (auto-save notes, code map sync, short-reply mode, token-saving shell output, Jev routing). All optional, remove any to disable. |
 | Commands  | 12    | Shortcuts like `/update-pack` and `/recall`. All optional. List: [docs/COMMANDS.md](docs/COMMANDS.md). |
 
 ```mermaid
@@ -334,7 +334,7 @@ Then restart OpenCode or run `/reload`. Changed files are backed up automaticall
 
 ## 📏 Rules
 
-Four house rules, active in every session:
+Five house rules, active in every session:
 
 | Rule | What it means |
 |------|---------|
@@ -342,6 +342,7 @@ Four house rules, active in every session:
 | `language` | Files are written in English; chat can be any language |
 | `communication-style` | Replies stay short, code stays minimal |
 | `ui-tooling` | UI component tooling router: CLI vs MCP decision map |
+| `jev-routing` | Jev classifies agent, skill, and subagent routing before work starts (fail-open, advisory) |
 
 > **Full rule guide:** [docs/RULES.md](docs/RULES.md)
 
@@ -359,7 +360,7 @@ Start with install, then jump to whatever you need:
 | [docs/SKILLS.md](docs/SKILLS.md) | All 54 guides grouped by category, with descriptions |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, `/update-pack` mechanics |
 | [docs/STRUCTURE.md](docs/STRUCTURE.md) | Every folder and file in the repo, explained |
-| [docs/RULES.md](docs/RULES.md) | The 3 house rules in detail |
+| [docs/RULES.md](docs/RULES.md) | The 5 house rules in detail |
 | [docs/CONFIGURATION.md](docs/CONFIGURATION.md) | Settings file explained block by block, keys, per-tool setup |
 
 ---
