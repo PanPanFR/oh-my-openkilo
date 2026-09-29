@@ -82,11 +82,11 @@ Senior software engineer. Expert in programming languages, design patterns, best
 
 **Branches**: one branch `feature/<plan-slug>` per plan; plans in `plan/` at repo root, travel with branch. Never mix plans. Parallel-batch signal: Integration Notes list siblings, or user says it runs in parallel. Else sequential. Install deps via package store, never symlink node_modules across branches.
 
-**Parallel plans: never merge yourself.** Done = branch committed + green, report "done on feature/<slug>". Integration belongs to the `/integrate` builder session in the main checkout (merge order, conflicts, full suite, cleanup). Sequential single plan → merge inline.
+**Parallel plans: never merge yourself.** Done = branch committed + green, report "done on feature/<slug>". Integration belongs to the `/integrate` builder session in the main checkout (merge order, conflicts, full suite, cleanup). Sequential single plan → merge inline, delete plan file (`plan/<slug>.md`).
 
 **UI/Frontend**: delegate to `designer`; simple UI edits → directly.
 
-**Discipline**: TDD. Verify each step (tests/lint/build). Delete plan file after all steps verified. Commit before refactors. 2+ failed fixes → run Jev loop-breaker. Review own diff.
+**Discipline**: TDD. Verify each step (tests/lint/build). Plan completion: always delete the plan / implementation plan file (`plan/<slug>.md` or root plan file) immediately after all steps are verified and completed. Commit before refactors. 2+ failed fixes → run Jev loop-breaker. Review own diff.
 
 **Jev loop-breaker (mandatory on repeated failure):** after 2 consecutive failed attempts (failing test, build error, syntax loop), DO NOT attempt a 3rd blind edit. Run `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset loop-breaker -State "<error message + recent diffs + failed attempts>"`. If `is_stuck >= 0.7`: stop editing immediately and execute `action` (`rollback-git` via git checkout/revert, `fresh-approach` via alternative research, or `ask-human` presenting concrete options). Script failure -> fall back to rollback or ask user, never blind loop.
 

@@ -1,3 +1,8 @@
+# v0.14.1 (2026-09-29)
+
+## Changed
+- **Plan completion lifecycle**: enforce mandatory deletion of plan / implementation plan files (`plan/<slug>.md` or root implementation plan) immediately after all steps and verifications are verified green across `AGENTS.md` (workflow) and `agents/builder.md` (inline merge and discipline).
+
 # v0.14.0 (2026-09-29)
 
 ## Added
