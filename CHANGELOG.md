@@ -1,3 +1,10 @@
+# v0.14.0 (2026-09-29)
+
+## Added
+- **Jev memory curation gate** (`curate-memory` preset in `skills/jev-decision/`): evaluates candidate memories before saving (`is_durable` noul, `action` choice [save, lesson, drop], `quality` score). Integrated into `skills/remember/` to reject ephemeral noise and auto-route lessons.
+- **Jev loop-breaker gate** (`loop-breaker` preset in `skills/jev-decision/`): triggers after 2 consecutive failed attempts (`is_stuck` noul, `action` choice [rollback-git, fresh-approach, ask-human, continue-tweak], `root_cause` score). Integrated into `agents/builder.md` to prevent repetitive failure loops and prompt drift.
+- Preset count in `skills/jev-decision/` updated to 10 (triage, delegation, route, skill-match, review, test, ui, verify, curate-memory, loop-breaker).
+
 # v0.13.1 (2026-09-29)
 
 ## Changed

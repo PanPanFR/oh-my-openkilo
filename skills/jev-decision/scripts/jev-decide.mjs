@@ -183,6 +183,47 @@ const presets = {
       instructions: "How risky is loading the wrong skill for this task?",
       criteria: ["context-waste", "guidance-mismatch"]
     }
+  },
+  "curate-memory": {
+    is_durable: {
+      type: "noul",
+      instructions: "Is this fact/decision/insight valuable for future sessions, rather than ephemeral session status or trivial detail?"
+    },
+    action: {
+      type: "choice",
+      instructions: "What should be done with this memory candidate?",
+      criteria: {
+        save: "valuable architecture decision, user preference, or project convention",
+        lesson: "hard-won correction, debugging rule, or what-to-avoid principle",
+        drop: "ephemeral status, temporary workaround, self-evident code syntax, or trivial noise"
+      }
+    },
+    quality: {
+      type: "score",
+      instructions: "Evaluate the quality of this memory candidate.",
+      criteria: ["specificity", "future-reusability"]
+    }
+  },
+  "loop-breaker": {
+    is_stuck: {
+      type: "noul",
+      instructions: "Is the agent stuck in a repetitive or unproductive failure loop?"
+    },
+    action: {
+      type: "choice",
+      instructions: "What recovery action should be taken immediately?",
+      criteria: {
+        "rollback-git": "revert last changes and re-read error from scratch",
+        "fresh-approach": "abandon current strategy, research alternative API/library",
+        "ask-human": "ambiguous requirement, credential issue, or external dependency failure",
+        "continue-tweak": "clear superficial typo or single obvious syntax fix remaining"
+      }
+    },
+    root_cause: {
+      type: "score",
+      instructions: "Diagnose likely root cause.",
+      criteria: ["assumption-gap", "tooling-environment"]
+    }
   }
 };
 

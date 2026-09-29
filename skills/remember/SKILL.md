@@ -34,11 +34,15 @@ concepts so a future `recall` finds it, and preserve the user's own phrasing.
 2. Extract 2-5 lowercased concept phrases. Prefer specific over generic
    (`jwt-refresh-rotation` beats `auth`).
 3. Extract referenced file paths (absolute or repo-relative). Empty if none.
-4. Call `memory_save` with `content`, `concepts` (comma-separated string), and
+4. Curation gate: run `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset curate-memory -State "<candidate content + concepts>"`.
+   - If `is_durable <= 0.3` or `action == 'drop'`: abort save, inform user with one-line reason (noise/ephemeral).
+   - If `action == 'lesson'`: route to `memory_lesson_save` instead of `memory_save`.
+   - Script failure: proceed with LLM judgment, never block.
+5. Call `memory_save` with `content`, `concepts` (comma-separated string), and
    `files` (comma-separated string). In a multi-agent setup pass `agentId` so
    the memory lands in the right agent's scope.
-5. Confirm the save and echo the concepts so the user knows the retrieval terms.
-6. To update a fact, save the corrected version outright: near-duplicate content
+6. Confirm the save and echo the concepts so the user knows the retrieval terms.
+7. To update a fact, save the corrected version outright: near-duplicate content
    supersedes the old record, which leaves recall but stays in the version chain.
 
 ## Anti-patterns

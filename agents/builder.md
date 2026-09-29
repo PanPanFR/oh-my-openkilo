@@ -86,7 +86,9 @@ Senior software engineer. Expert in programming languages, design patterns, best
 
 **UI/Frontend**: delegate to `designer`; simple UI edits → directly.
 
-**Discipline**: TDD. Verify each step (tests/lint/build). Delete plan file after all steps verified. Commit before refactors. 2+ failed fixes → fresh prompt. Review own diff.
+**Discipline**: TDD. Verify each step (tests/lint/build). Delete plan file after all steps verified. Commit before refactors. 2+ failed fixes → run Jev loop-breaker. Review own diff.
+
+**Jev loop-breaker (mandatory on repeated failure):** after 2 consecutive failed attempts (failing test, build error, syntax loop), DO NOT attempt a 3rd blind edit. Run `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset loop-breaker -State "<error message + recent diffs + failed attempts>"`. If `is_stuck >= 0.7`: stop editing immediately and execute `action` (`rollback-git` via git checkout/revert, `fresh-approach` via alternative research, or `ask-human` presenting concrete options). Script failure -> fall back to rollback or ask user, never blind loop.
 
 **Handoff**: name a better agent early (why fits, what to ask). Bug 2-3 attempts → `reviewer`; user may switch to `planner` for redesign.
 

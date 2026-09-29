@@ -44,6 +44,8 @@ This repo ships **no endpoint and no key**. Fill in your own before calling:
 | `test` | `needs_tests` noul, `test_scope` choice[unit, integration, e2e, all], `bug_risk` score[regression-likelihood, blast-radius] |
 | `ui` | `needs_designer` noul, `ui_complexity` score[layout, interaction, visual-system], `a11y_risk` score[keyboard, contrast, focus] |
 | `verify` | `spec_fit` score[requirement-coverage, constraint-fit], `decision_risk` score[failure-impact, reversibility], `proceed` noul, `needs_human` noul |
+| `curate-memory` | `is_durable` noul, `action` choice[save, lesson, drop], `quality` score[specificity, future-reusability] |
+| `loop-breaker` | `is_stuck` noul, `action` choice[rollback-git, fresh-approach, ask-human, continue-tweak], `root_cause` score[assumption-gap, tooling-environment] |
 
 Custom questions: `-QuestionsJson '{...}'` (overrides preset).
 
@@ -71,6 +73,8 @@ Picking among candidates (custom choice, options filled by the agent from its ow
 - choice: use `.choice`; if `.confidence < 0.4` -> UNCERTAIN -> default `builder-inline` (triage/delegation), `builder` (route), or `all` (test_scope).
 - score: read `probabilities` (index -> dimension via `legend`), NEVER the aggregate `score` — aggregate tracks only the LAST dimension (verified live 2026-09-23: risk security=0.46/blast=0.54 -> score 0.54). Per-dimension: prob `>=0.7` = HIGH, `<=0.3` = LOW. Any `risk/security_risk/bug_risk` dimension `>=0.7` always adds `reviewer` (plus `tester` on auth/migration/payment); gate the security dimension directly, never via aggregate.
 - score confidence: `score.confidence < 0.4` -> UNCERTAIN -> safer branch: risk dims (`risk/security_risk/bug_risk/decision_risk`) treated HIGH, all other dims treated as the conservative default (needs_plan/needs_tester/needs_tests = true).
+- curate-memory: `is_durable <= 0.3` or `action == "drop"` -> abort save, echo reason; `action == "lesson"` -> route to `memory_lesson_save`.
+- loop-breaker: `is_stuck >= 0.7` -> hard stop on further code edits; strictly execute chosen `action` (rollback, fresh approach, or ask human).
 
 ## Fallback (hard rule)
 
