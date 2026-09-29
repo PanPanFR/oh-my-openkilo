@@ -1,58 +1,31 @@
-# Rule: jev-routing — Jev classifies agent, skills, subagent dispatch
+# Rule: jev-routing — call Jev only for complex decisions
 
 Jev (System One `jev-1.13`) is a **decision-only** model. It never generates
-text or code. The chat LLM proposes; Jev disposes. This rule wires three
-routing classifications into every non-trivial task.
+text or code. The chat LLM proposes; Jev disposes.
 
-## When to call (wrapper: `node skills/jev-decision/scripts/jev-decide.mjs`)
+## Principle
 
-| Decision point | Call | Answers |
-|---|---|---|
-| Task/session start (non-trivial work) | `-Preset route` | owner agent (6 options), `needs_planner`, `needs_subagent`, `fit` score |
-| Mid-task step ownership | `-Preset delegation` | `owner`, `can_parallel`, `needs_subagent`, `context_isolation` score |
-| Skill loading | `-Preset skill-match -CandidatesJson '<shortlist>'` | `skill_pick`, `load_now`, `mismatch_risk` score |
+Call Jev only when torn between 2+ plausible options AND a wrong pick is
+costly (rework, session direction, large token spend). Obvious / trivial /
+explicit-instruction → skip Jev entirely: no call, no note. Pre-check
+(free): "am I torn?" Not torn → don't call.
 
-The `plugins/jev-router.ts` plugin runs `route` automatically on each new
-user message and injects an advisory JEV ROUTING block into session context.
-Manual calls above are for mid-task decisions and skill matching.
+## When to call (`node skills/jev-decision/scripts/jev-decide.mjs`)
 
-## Skill-match protocol (LLM proposes, Jev disposes)
+- `-Preset route` — plan-first vs code-now, or task owner unclear
+  (non-trivial tasks only, once at task start).
+- `-Preset skill-match -CandidatesJson '<shortlist>'` — 2+ plausible
+  skills (obvious/none → load/skip directly, no call; UNCERTAIN
+  `load_now` → defer until that work starts).
+- `-Preset delegation` — inline vs subagent unclear (spawn only on
+  `needs_subagent` YES `>=0.7`; uncertain → inline).
 
-1. Shortlist 5–8 candidate skills from installed skill descriptions — never
-   feed all 53; Jev picks, the LLM filters.
-2. One call:
-   `jev-decide.mjs -Preset skill-match -CandidatesJson '{"skill-a":"evidence","skill-b":"evidence"}' -State "<goal>"`
-3. Apply the answers together:
-   - `skill_pick=none` → load nothing; trust LLM judgment.
-   - `load_now` gates the loading: `>=0.7` load immediately;
-     `<=0.3` defer until the matching category of work starts;
-     UNCERTAIN → load (safer branch: guidance beats context savings,
-     same preference as the `skill-reminder` rule) — but only when
-     `skill_pick` is a real skill, never for `none`.
-   - `mismatch_risk` per-dimension `>=0.7` (context-waste or
-     guidance-mismatch) → re-check the shortlist before loading; the pick
-     may be a near-miss.
-4. Candidates must be `{ name: one-line evidence }`, non-empty names,
-   max 12.
-
-## Thresholds (deterministic, no exceptions)
-
-- `noul`: `>=0.7` YES, `<=0.3` NO, else UNCERTAIN → safer branch:
-  `needs_planner`/`needs_tester`/`needs_tests` → treat as YES;
-  `needs_subagent` → treat as NO (inline is the cheaper default).
-- `choice`: use `.choice`; `confidence < 0.4` → default `builder` (route) or
-  `builder-inline` (delegation).
-- `score`: read per-dimension `probabilities` via `legend`, NEVER the
-  aggregate `score`. `>=0.7` HIGH, `<=0.3` LOW. `confidence < 0.4` → risk
-  dims treated HIGH.
+Full protocol + thresholds → `skills/jev-decision/SKILL.md`
+(Routing layer section). No auto-router plugin, by design.
 
 ## Hard rules
 
-- **Fail-open**: script error, timeout, 401/403/429 → proceed with LLM
-  judgment, one-line note `Jev unavailable, used LLM judgment`. Max 1 retry
-  per decision point. Routing must never block or brick a session.
-- **Never** set jev as `model` / `small_model` / `agents.*.model`.
-- Verdicts are **advisory**; explicit user instructions always win.
-- Kill-switch: `JEV_ROUTER=off` disables the plugin (manual calls unaffected).
-- Endpoints/keys only via `JEV_ENDPOINT` / `JEV_API_KEY` env or
-  `opencode.json` providers — never hardcoded.
+- **Fail-open**: error/timeout/401/403/429 → LLM judgment + one-line
+  note, max 1 retry. A routing call never blocks a session.
+- **Never** Jev as `model`; verdicts advisory, user wins; keys/endpoints
+  via env or `opencode.json` only.

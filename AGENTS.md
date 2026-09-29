@@ -7,7 +7,7 @@ Single source of truth. This file only indexes them; do not duplicate content he
 - Language: ALL file contents English; Indonesian chat-only -> `rules/language.md`
 - Comms/code style: Caveman + Ponytail -> `rules/communication-style.md`
 - Skill check: load matching skill before implementing -> `rules/skill-reminder.md` (also routes agentmemory recall + graphify + delegation to on-demand skills)
-- Jev routing: agent/skill/subagent classification before work starts -> `rules/jev-routing.md` (plugin injects advisory route verdict per user message; kill-switch JEV_ROUTER=off)
+- Jev routing: agent/skill/subagent classification for complex decisions only -> `rules/jev-routing.md` (manual calls, no auto-plugin; obvious decisions skip Jev)
 
 ## On-demand (skills, loaded via `skill` tool when task matches)
 
@@ -17,7 +17,7 @@ Single source of truth. This file only indexes them; do not duplicate content he
 - Cloudflare/Workers: doc-first via Context7 or `cloudflare` skill (skills/cloudflare/)
 - Structure: action-first numbered output -> `i-have-adhd` skill, auto-loaded from triage/delegation signals on multi-step work
 - Decisions: structured routing via `jev-decision` (triage/verify/review/test/ui gates, no slash, fail-open)
-- Routing: `-Preset route` (agent owner + needs_planner + needs_subagent), `-Preset skill-match -CandidatesJson` (LLM shortlists 5-8 skills, Jev picks), `delegation` extended with needs_subagent + context_isolation. Uncertain needs_subagent -> inline; uncertain needs_planner -> plan first. See `rules/jev-routing.md`.
+- Routing: `-Preset route` (agent owner + needs_planner + needs_subagent), `-Preset skill-match -CandidatesJson` (LLM shortlists 2-8 skills, Jev picks), `delegation` extended with needs_subagent + context_isolation. Complex-only: obvious decisions skip Jev. Uncertain needs_subagent -> inline; uncertain needs_planner -> plan first. See `rules/jev-routing.md`.
 
 ## Jev gates (mandatory, no slash)
 

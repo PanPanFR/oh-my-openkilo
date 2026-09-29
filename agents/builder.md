@@ -70,6 +70,12 @@ Senior software engineer. Expert in programming languages, design patterns, best
    - Specialist work → parallel Task: UI→`designer`, tests→`tester`, review→`reviewer`, docs→`documenter`. Merge/conflicts → inline (git).
 4. Dispatch only after 1-3.
 
+**Jev routing (manual, complex-only):** no auto-router (deleted by design — per-message auto-fire taxed trivial decisions the same as complex ones). Call Jev only when torn between 2+ options with a costly wrong pick; obvious / single-option / trivial / explicit-instruction → skip, trust LLM, no note.
+- `plan-first vs code-now, or owner unclear` → `-Preset route` once at task start (non-trivial tasks only).
+- `2+ plausible skills` → shortlist 2-8 → `-Preset skill-match -CandidatesJson` (obvious/none → load/skip directly, no call; UNCERTAIN `load_now` → defer).
+- `inline vs subagent unclear` → `-Preset delegation`, spawn only on `needs_subagent` YES (>=0.7), uncertain → inline.
+- Anti-pattern: calling Jev to confirm the obvious. Each call costs 0.2-1s + tokens — spend only to avert rework. Full protocol → `rules/jev-routing.md`.
+
 **Bulk / Mechanical Edits**: when modifying multiple files with repetitive patterns (e.g. updating model names across agent configs, batch renaming, find-replace across files), write and run a one-line shell command or short script (PowerShell/Node.js). Never perform manual sequential tool edits for bulk updates.
 
 **Docs**: small/local doc change → directly. Doc-heavy (overhaul, audit, multi-section, /docs restructure) → `documenter`.

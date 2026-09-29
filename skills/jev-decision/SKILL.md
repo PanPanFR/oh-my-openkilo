@@ -49,13 +49,13 @@ Custom questions: `-QuestionsJson '{...}'` (overrides preset).
 
 ## Routing layer (agent / skill / subagent classification)
 
-Three decision points, wired via `rules/jev-routing.md` and `plugins/jev-router.ts`:
+Three decision points, wired via `rules/jev-routing.md` (manual, complex-only — no auto-router plugin by design):
 
-1. **Agent routing** (`-Preset route`): who owns the task — builder, planner, designer, tester, reviewer, documenter. The plugin runs this automatically on each new user message and injects an advisory JEV ROUTING block into session context (one-shot). `needs_subagent` uncertain → default inline (cheaper); `needs_planner` uncertain → treat as YES (safer).
-2. **Skill routing** (`-Preset skill-match -CandidatesJson '<shortlist>'`): LLM shortlists 5-8 candidate skills from descriptions, Jev picks (or `none`). Candidates = `{ "skill-name": "one-line evidence" }`, max 12, non-empty names, merged into the `skill_pick` choice criteria. LLM proposes, Jev disposes — same anti-hallucination rule as the Verify pattern. Apply the answers together: `load_now` `>=0.7` → load immediately; `<=0.3` → defer until the matching work starts; UNCERTAIN → load (safer branch, matches the skill-reminder preference) but never for `none`. `mismatch_risk` dimension `>=0.7` → re-check the shortlist before loading.
+1. **Agent routing** (`-Preset route`, manual — once at task start for non-trivial work): who owns the task — builder, planner, designer, tester, reviewer, documenter. `needs_subagent` uncertain → default inline (cheaper); `needs_planner` uncertain → treat as YES (safer).
+2. **Skill routing** (`-Preset skill-match -CandidatesJson '<shortlist>'`): LLM shortlists 2-8 candidate skills from descriptions (obvious/none → load/skip directly, no call), Jev picks (or `none`). Candidates = `{ "skill-name": "one-line evidence" }`, max 12, non-empty names, merged into the `skill_pick` choice criteria. LLM proposes, Jev disposes — same anti-hallucination rule as the Verify pattern. Apply the answers together: `load_now` `>=0.7` → load immediately; `<=0.3` or UNCERTAIN → defer until the matching work starts (never spend context on a maybe). `mismatch_risk` dimension `>=0.7` → re-check the shortlist before loading.
 3. **Subagent dispatch** (`-Preset delegation`, extended): `needs_subagent` noul + `context_isolation` score[coordination-cost, context-cost] alongside the existing owner/parallel questions. Spawn only on YES (>=0.7); uncertain → inline.
 
-Kill-switch: `JEV_ROUTER=off` disables the plugin hook; manual preset calls are unaffected. Verdicts are advisory — explicit user instructions always win.
+No auto-router plugin (deleted by design — manual complex-only calls); verdicts are advisory — explicit user instructions always win.
 
 ## Verify pattern (anti-hallucination)
 

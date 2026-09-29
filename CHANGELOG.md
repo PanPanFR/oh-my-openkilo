@@ -1,3 +1,12 @@
+# v0.13.1 (2026-09-29)
+
+## Changed
+- **Jev routing goes manual-only (lean)** — deleted the auto-router plugin `plugins/jev-router.ts`: per-message auto-fire taxed trivial messages the same as complex ones (node spawn + 0.2–1s Jev call + up-to-2.5s context-assembly hold + advisory block tax every turn).
+- Routing presets stay (`route`, `skill-match`, extended `delegation`) as manual complex-only calls: the agent calls Jev from its own workflow when torn between options with a costly wrong pick; obvious / trivial / explicit-instruction decisions skip Jev entirely (`agents/builder.md` carries the ritual).
+- `skill-match` uncertain `load_now` now defers instead of loading (never spend context on a maybe); shortlist guidance narrowed to 2–8 candidates.
+- `rules/jev-routing.md` trimmed to principle + when-to-call table (60→31 lines); full protocol lives in `skills/jev-decision/SKILL.md` (single source, no duplication).
+- Counts corrected: 6 plugins (was 7), 6 example plugin specifiers (was 7); `examples/opencode.example.json` drops the `jev-router.ts` entry; docs tree/config updated.
+
 # v0.13.0 (2026-09-27)
 
 ## Added

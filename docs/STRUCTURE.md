@@ -42,9 +42,8 @@ oh-my-openkilo/
 │   ├── remember.md                    # save to agentmemory
 │   └── update-pack.md                 # pull + sync from GitHub
 │
-├── plugins/                           # 6 small plugin files (no dist/, no node_modules)
+├── plugins/                           # 5 small plugin files (no dist/, no node_modules)
 │   ├── agentmemory-capture.ts         # hook for capturing session observations
-│   ├── jev-router.ts                  # Jev routing: classify agent/subagent per user message
 │   ├── caveman/                       # terse-mode + style pack
 │   │   ├── plugin.js
 │   │   ├── caveman-config.cjs

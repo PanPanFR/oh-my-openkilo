@@ -74,7 +74,7 @@ The workflow ideas come from [Kilo Code](https://github.com/Kilo-Org/kilocode), 
 | Agents    | 6     | The team members (see below). |
 | Skills    | 53    | How-to guides the agents follow automatically. Full list: [docs/SKILLS.md](docs/SKILLS.md). |
 | Rules     | 5     | House rules applied to every session (check memory, write in English, keep replies short, route via Jev). Details: [docs/RULES.md](docs/RULES.md). |
-| Plugins   | 7     | Small extras (auto-save notes, code map sync, short-reply mode, token-saving shell output, Jev routing). All optional, remove any to disable. |
+| Plugins   | 6     | Small extras (auto-save notes, code map sync, short-reply mode, token-saving shell output). All optional, remove any to disable. |
 | Commands  | 12    | Shortcuts like `/update-pack` and `/recall`. All optional. List: [docs/COMMANDS.md](docs/COMMANDS.md). |
 
 ```mermaid
