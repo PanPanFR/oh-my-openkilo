@@ -51,6 +51,15 @@ const presets = {
       type: "score",
       instructions: "How complex is the coordination?",
       criteria: ["coordination-cost", "domain-risk"]
+    },
+    needs_subagent: {
+      type: "noul",
+      instructions: "Does this step need a spawned subagent with fresh context rather than inline execution in the current session?"
+    },
+    context_isolation: {
+      type: "score",
+      instructions: "How much would this step benefit from isolated context?",
+      criteria: ["coordination-cost", "context-cost"]
     }
   },
   review: {
@@ -129,6 +138,51 @@ const presets = {
       type: "noul",
       instructions: "Should a human confirm before proceeding?"
     }
+  },
+  route: {
+    agent: {
+      type: "choice",
+      instructions: "Which agent should own this task end to end?",
+      criteria: {
+        builder: "general coding, direct execution, default when uncertain",
+        planner: "upfront design, plan file before code, architecture decisions",
+        designer: "UI/UX, design system, accessibility, visual work",
+        tester: "test suite authoring and verification loops",
+        reviewer: "read-only diff audit or security review",
+        documenter: "documentation-heavy work, multi-section guides"
+      }
+    },
+    needs_planner: {
+      type: "noul",
+      instructions: "Does this task need a plan file approved before implementation starts?"
+    },
+    needs_subagent: {
+      type: "noul",
+      instructions: "Should part of this task run as a spawned subagent instead of inline in the main session?"
+    },
+    fit: {
+      type: "score",
+      instructions: "How confidently can routing be decided from the task text alone?",
+      criteria: ["domain-match", "context-cost"]
+    }
+  },
+  "skill-match": {
+    skill_pick: {
+      type: "choice",
+      instructions: "Which candidate skill guide should be loaded for this task? Pick 'none' when no candidate is clearly relevant.",
+      criteria: {
+        none: "no candidate matches strongly enough to spend context on"
+      }
+    },
+    load_now: {
+      type: "noul",
+      instructions: "Should the picked skill be loaded immediately, before any other action?"
+    },
+    mismatch_risk: {
+      type: "score",
+      instructions: "How risky is loading the wrong skill for this task?",
+      criteria: ["context-waste", "guidance-mismatch"]
+    }
   }
 };
 
@@ -139,6 +193,7 @@ function parseArgs() {
     stateFile: "",
     preset: "triage",
     questionsJson: "",
+    candidatesJson: "",
     model: process.env.JEV_MODEL || "openrouter/typesafe/jev-1.13",
     endpoint: process.env.JEV_ENDPOINT || "",
     apiKey: process.env.JEV_API_KEY || "",
@@ -160,6 +215,9 @@ function parseArgs() {
       i++;
     } else if (rawKey === "questionsjson" || rawKey === "questions-json") {
       options.questionsJson = val;
+      i++;
+    } else if (rawKey === "candidatesjson" || rawKey === "candidates-json") {
+      options.candidatesJson = val;
       i++;
     } else if (rawKey === "model") {
       options.model = val;
@@ -285,6 +343,58 @@ async function main() {
       console.error(`Jev: unknown preset '${opts.preset}' (${Object.keys(presets).join("|")})`);
       process.exit(2);
     }
+  }
+
+  // -CandidatesJson: inject runtime skill shortlist into a choice question's
+  // criteria. Target: the first choice question that already contains a
+  // "none" key (the skill-match convention). LLM proposes candidates from
+  // installed skill descriptions, Jev disposes.
+  if (opts.candidatesJson) {
+    let candidates;
+    try {
+      candidates = JSON.parse(opts.candidatesJson);
+    } catch (e) {
+      console.error(`Jev: invalid -CandidatesJson: ${e.message}`);
+      process.exit(2);
+    }
+    if (!candidates || typeof candidates !== "object" || Array.isArray(candidates)) {
+      console.error("Jev: -CandidatesJson must be an object of { name: one-line evidence }");
+      process.exit(2);
+    }
+    if (Object.keys(candidates).length === 0) {
+      console.error("Jev: -CandidatesJson is empty — shortlist at least one skill (or skip the call)");
+      process.exit(2);
+    }
+    if (Object.keys(candidates).length > 12) {
+      console.error("Jev: -CandidatesJson over 12 candidates — shortlist harder (5-8 ideal)");
+      process.exit(2);
+    }
+    for (const [k, v] of Object.entries(candidates)) {
+      if (k.trim() === "none") {
+        console.error("Jev: -CandidatesJson must not override the built-in 'none' option");
+        process.exit(2);
+      }
+      if (!k.trim()) {
+        console.error("Jev: -CandidatesJson has an empty or whitespace-only skill name");
+        process.exit(2);
+      }
+      if (typeof v !== "string" || !v.trim()) {
+        console.error(`Jev: candidate '${k}' needs a non-empty string evidence line`);
+        process.exit(2);
+      }
+    }
+    let target = null;
+    for (const q of Object.values(questions)) {
+      if (q && q.type === "choice" && q.criteria && "none" in q.criteria) {
+        target = q;
+        break;
+      }
+    }
+    if (!target) {
+      console.error("Jev: -CandidatesJson needs a choice question with a 'none' criteria key (use -Preset skill-match)");
+      process.exit(2);
+    }
+    target.criteria = { ...target.criteria, ...candidates };
   }
 
   const body = {

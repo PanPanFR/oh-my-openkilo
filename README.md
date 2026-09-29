@@ -6,7 +6,7 @@
 
 **A team of AI specialists for OpenCode. You describe the task, they do the work.**
 
-This pack gives OpenCode 6 specialist agents, 53 how-to guides, and 4 house rules. It works with free models, so there is nothing to pay and no API key to set up.
+This pack gives OpenCode 6 specialist agents, 53 how-to guides, and 5 house rules. It works with free models, so there is nothing to pay and no API key to set up.
 
 <sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's team workflow</sub>
 
@@ -58,7 +58,7 @@ That is the whole setup. Future updates are just `/update-pack` inside OpenCode.
 OpenCode on its own is one general assistant. This pack turns it into a small team:
 
 - **Specialists for each job.** A builder that does the coding, a planner that thinks before anyone codes, plus experts for UI, tests, code review, and docs. You talk to the builder; the builder calls in the experts when needed.
-- **How-to guides for common tasks.** 54 short playbooks (debugging, testing, code review, planning, and more). The right guide loads automatically when your task matches it. You never open them yourself.
+- **How-to guides for common tasks.** 53 short playbooks (debugging, testing, code review, planning, and more). The right guide loads automatically when your task matches it. You never open them yourself.
 - **Memory + a map of your code.** The pack remembers what happened in past sessions and keeps a searchable map of your codebase, so answers are based on your actual code, not guesses.
 
 Technically it is just files: plain-text prompts plus a few tiny plugins. There is nothing to compile and no installer to run. It works on Windows (tested) and on macOS/Linux (same steps, not tested by the maintainer, see [Compatibility](#-compatibility)).
@@ -72,9 +72,9 @@ The workflow ideas come from [Kilo Code](https://github.com/Kilo-Org/kilocode), 
 | Piece | Count | Plain meaning |
 |-----------|-------|--------------|
 | Agents    | 6     | The team members (see below). |
-| Skills    | 54    | How-to guides the agents follow automatically. Full list: [docs/SKILLS.md](docs/SKILLS.md). |
-| Rules     | 3     | House rules applied to every session (check memory, write in English, keep replies short). Details: [docs/RULES.md](docs/RULES.md). |
-| Plugins   | 7     | Small extras (auto-save notes, code map sync, short-reply mode, token-saving shell output). All optional, remove any to disable. |
+| Skills    | 53    | How-to guides the agents follow automatically. Full list: [docs/SKILLS.md](docs/SKILLS.md). |
+| Rules     | 5     | House rules applied to every session (check memory, write in English, keep replies short, route via Jev). Details: [docs/RULES.md](docs/RULES.md). |
+| Plugins   | 7     | Small extras (auto-save notes, code map sync, short-reply mode, token-saving shell output, Jev routing). All optional, remove any to disable. |
 | Commands  | 12    | Shortcuts like `/update-pack` and `/recall`. All optional. List: [docs/COMMANDS.md](docs/COMMANDS.md). |
 
 ```mermaid
@@ -334,7 +334,7 @@ Then restart OpenCode or run `/reload`. Changed files are backed up automaticall
 
 ## 📏 Rules
 
-Four house rules, active in every session:
+Five house rules, active in every session:
 
 | Rule | What it means |
 |------|---------|
@@ -342,6 +342,7 @@ Four house rules, active in every session:
 | `language` | Files are written in English; chat can be any language |
 | `communication-style` | Replies stay short, code stays minimal |
 | `ui-tooling` | UI component tooling router: CLI vs MCP decision map |
+| `jev-routing` | Jev classifies agent, skill, and subagent routing before work starts (fail-open, advisory) |
 
 > **Full rule guide:** [docs/RULES.md](docs/RULES.md)
 
@@ -356,10 +357,10 @@ Start with install, then jump to whatever you need:
 | [docs/INSTALL.md](docs/INSTALL.md) | Step-by-step install, uninstall, troubleshooting |
 | [docs/WORKFLOWS.md](docs/WORKFLOWS.md) | Full worked examples (audit, debug, new feature, arch review, code map) |
 | [docs/AGENTS.md](docs/AGENTS.md) | All 6 agents: when to use each, how to edit, model table |
-| [docs/SKILLS.md](docs/SKILLS.md) | All 54 guides grouped by category, with descriptions |
+| [docs/SKILLS.md](docs/SKILLS.md) | All 53 guides grouped by category, with descriptions |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, `/update-pack` mechanics |
 | [docs/STRUCTURE.md](docs/STRUCTURE.md) | Every folder and file in the repo, explained |
-| [docs/RULES.md](docs/RULES.md) | The 3 house rules in detail |
+| [docs/RULES.md](docs/RULES.md) | The 5 house rules in detail |
 | [docs/CONFIGURATION.md](docs/CONFIGURATION.md) | Settings file explained block by block, keys, per-tool setup |
 
 ---

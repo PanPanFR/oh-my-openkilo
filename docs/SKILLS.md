@@ -66,7 +66,7 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `handoff`                 | "Where were we", resume the most recent session                            |
 | `handoff-compact`         | Compact the current conversation into a handoff document                   |
 | `i-have-adhd`             | Output structure: action-first, numbered steps, progress visibility        |
-| `jev-decision`            | Fast structured decisions via Jev 1.13: triage, delegation, review, test gates |
+| `jev-decision`            | Fast structured decisions via Jev 1.13: triage, routing (agent/skill/subagent), delegation, review, test, ui, verify gates |
 | `lesson`                  | Save a correction as a confidence-weighted rule                            |
 | `memory-discipline`       | Session loop: recall before work, save at decision points                  |
 | `recall`                  | Search past observations, sessions, and learnings                          |
