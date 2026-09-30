@@ -2,7 +2,7 @@
 
 oh-my-openkilo ships **6 agents** in `agents/`. Each is a single markdown file: YAML frontmatter at the top (name, mode, model, variant, permissions) and a prompt body. Edit the file to change behavior, edit the `model:` line to swap models, edit `permissions:` to change the allowlist. No build step.
 
-The pack divides the team into **2 primary agents** (you talk to them directly) and **4 subagents** (primaries fan out work to them in parallel). Two of OpenCode's built-in agents are disabled to avoid duplication: `build` (replaced by `builder`) and `plan` (replaced by `planner`).
+The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 dual-role agent** (`designer`, `mode: all`), and **3 subagents** (`tester`, `reviewer`, `documenter`). Two of OpenCode's built-in agents are disabled to avoid duplication: `build` (replaced by `builder`) and `plan` (replaced by `planner`).
 
 ## Quick reference
 
@@ -10,7 +10,7 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 |---|-------|------|---------------|-------------|
 | 01 | `builder` | primary | `opencode/muse-spark-1.3-contributor-free` | Default implementation. Triage, fan-out. |
 | 02 | `planner` | primary | `opencode/muse-spark-1.3-contributor-free` | Pre-impl design, architecture, plan files. |
-| 03 | `designer` | subagent | `opencode/muse-spark-1.3-contributor-free` | UI/UX, design system, a11y. Multimodal preferred for visual work. |
+| 03 | `designer` | all | `opencode/muse-spark-1.3-contributor-free` | UI/UX, design system, a11y, frontend planning. Multimodal preferred for visual work. |
 | 04 | `tester` | subagent | `opencode/muse-spark-1.3-contributor-free` | Test suites: write, run, isolate failures. |
 | 05 | `reviewer` | subagent | `opencode/muse-spark-1.3-contributor-free` | Diff + security review. Read-only. |
 | 06 | `documenter` | subagent | `opencode/muse-spark-1.3-contributor-free` | README, runbook, API docs in `docs/`. |
@@ -67,9 +67,9 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 ### 03. `designer` — The Frontend Specialist
 
-**Role:** UI/UX, React/Next.js, design systems, accessibility, frontend performance. Visual reviews and frontend polish via screenshots when available; falls back to text-only feedback otherwise.
+**Role:** UI/UX, React/Next.js, design systems, accessibility, frontend performance, and UI planning. Operates in `mode: all` (interactive primary agent for focused frontend sessions or subagent delegated by `builder`). Produces frontend plans for complex UI flows before implementing.
 
-**When to invoke:** new screen, design exploration, brand consistency check, frontend perf audit, accessibility review.
+**When to invoke:** frontend feature work, new screens, UI planning, design system setup, brand consistency, accessibility review.
 
 **Prompt:** [`agents/designer.md`](../agents/designer.md)
 
@@ -79,11 +79,13 @@ The pack divides the team into **2 primary agents** (you talk to them directly) 
 
 **Model guidance:** Choose a model that is strong at UI/UX judgment, frontend implementation, and visual polish. Multimodal is a plus because the agent reviews screenshots and mockups.
 
-**Permissions:** allowlist in frontmatter — `read`, `edit`, `shell`, `glob`, `grep`, `todowrite`, `chrome-devtools_*`, `agentmemory_*`, `shadcn_*`, `reactbits_*`, `magicuidesign*`, `webfetch`, `websearch`, `lsp`, `skill`; no subagents, everything else denied.
+**Permissions:** allowlist in frontmatter — `read`, `edit`, `shell`, `glob`, `grep`, `todowrite`, `subagent` (`reviewer` only), `chrome-devtools_*`, `agentmemory_*`, `shadcn_*`, `reactbits_*`, `magicuidesign*`, `magicuidesign-mcp_*`, `context7_*`, `webfetch`, `websearch`, `lsp`, `skill`.
 
-**Required MCP:** none. Multimodal model recommended for visual work; text-only is fine for design review and a11y.
+**Required MCP:** none required by default (skills + CLI first). MCPs (`shadcn`, `reactbits`, `magicuidesign-mcp`, `chrome-devtools`) are enabled on-demand via user toggle and `/reload`.
 
-**Dispatched by:** `builder` or `planner` when the task involves UI/UX work.
+**Dispatched by:** you directly (via Tab / agent picker) or by `builder` when the task involves UI/UX work.
+
+**Dispatches to:** `reviewer` (for security/a11y code audit when running as primary).
 
 ---
 

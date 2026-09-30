@@ -1,3 +1,11 @@
+# v0.15.0 (2026-09-30)
+
+## Added
+- **Designer promoted to `mode: all`** (`agents/designer.md`): runs either as an interactive primary agent for focused frontend/UI/UX design sessions or as a subagent delegated by `builder`.
+- **Frontend Planning & Jev Decision Gate** (`agents/designer.md`): complex UI tasks formulate a Frontend Implementation Plan before writing code; supported by `plans`, `ui-design`, `ui-ux-pro-max`, `impeccable`, `antislop`, `web-design-guidelines`, `shadcn`, `vercel-react`, `vite`, `pwa-development`, and `web-perf`. Jev triage gate (`-Preset triage`) resolves planning necessity on ambiguous tasks.
+- **MCP Awareness & Activation Protocol** (`agents/designer.md`): designer recognizes standby UI MCPs (`shadcn`, `reactbits`, `magicuidesign-mcp`, `chrome-devtools`) and prompts user to toggle standby status in `opencode.json` + `/reload` when on-demand discovery or live debugging is required.
+- **Permissions expanded in Designer** (`agents/designer.md`): added `chrome-devtools_*` and `context7_*` tool permissions, plus delegation allowlist for `reviewer` subagent when primary.
+
 # v0.14.1 (2026-09-29)
 
 ## Changed
