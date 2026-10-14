@@ -1,10 +1,10 @@
 # Skills
 
-53 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
+54 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
 
 The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-gain`, `ponytail-help`) and the superpowers plugin skills (`brainstorming`, `using-superpowers`, `writing-plans`, `executing-plans`, `dispatching-parallel-agents`, `subagent-driven-development`, `receiving-code-review`, `requesting-code-review`, `finishing-a-development-branch`, `using-git-worktrees`, `orchestration`) install via the plugin system. They are not counted below; the count is `ls skills/`, the filesystem is the source of truth.
 
-## Core (25)
+## Core (20)
 
 | Skill                              | When it loads                                                              |
 |------------------------------------|----------------------------------------------------------------------------|
@@ -18,21 +18,16 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `grilling`                         | Stress-test a plan, decision, or idea                                      |
 | `impeccable`                       | Review/polish/audit/iterate existing UI (build-time design stays `ui-design`) |
 | `plans`                            | Multi-step task before touching code, or executing a written plan          |
-| `ponytail-review`                  | Review a diff or repo for over-engineering                                 |
 | `pwa-development`                  | PWA, service workers, caching strategies, offline                          |
 | `resolving-merge-conflicts`        | In-progress git merge/rebase conflict                                      |
 | `shadcn`                           | shadcn/ui components: add/search/docs, composition rules, presets          |
-| `systematic-debugging`             | Any bug, test failure, or unexpected behavior before proposing a fix       |
-| `test-driven-development`          | Any feature or bugfix, before writing implementation code                  |
 | `ui-design`                        | Designing pages or UI components, colors/typography, a11y                  |
 | `ui-ux-pro-max`                    | Searchable design intelligence: 79 styles, 192 palettes, 119 UX rules, 22 stacks |
 | `vercel-react`                     | Writing, reviewing, or refactoring React or Next.js code                   |
-| `verification-before-completion`   | Before claiming work is complete, fixed, or passing                        |
 | `vite`                             | Vite build tool, config, plugins, SSR, Vite 8 Rolldown migration           |
 | `vitest`                           | Vitest fast unit testing, vi mocking, snapshots, typed test contexts      |
 | `web-design-guidelines`            | Web interface code compliance review (Vercel standard: forms, a11y, motion)|
 | `web-perf`                         | Performance audits, Core Web Vitals, page speed                            |
-| `writing-skills`                   | Creating new skills, editing existing skills, or verifying skills          |
 
 ## Agentmemory suite (7)
 
@@ -82,6 +77,17 @@ The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-
 | `playwright-cli`  | High-volume browser automation, E2E tests, snapshots, request mocking        |
 | `graphify`        | Codebase questions, architecture exploration, file relationship queries      |
 
+## Next.js official (6)
+
+| Skill                              | When it loads                                                              |
+|------------------------------------|----------------------------------------------------------------------------|
+| `next-browser-initial-load-optimizer` | Audit and reduce Next.js browser initial-load work                        |
+| `next-cache-components-adoption`   | Turn on Cache Components and resolve blocking routes                       |
+| `next-cache-components-optimizer`  | Drive a Next.js route to instant navigation under Cache Components / PPR   |
+| `next-dev-loop`                    | Verify Next.js runtime behavior after editing app code                     |
+| `next-partial-prefetching-adoption` | Turn on Partial Prefetching and work through surfaced insights            |
+| `next-partial-prefetching-optimizer` | Optimize what selected Next.js navigations include before the click      |
+
 ## How skills are loaded
 
 The `skill-reminder` rule (in `rules/`) makes every task check for a matching skill before starting. The agent sees the description of each available skill and loads the matching one's `SKILL.md` into context.
@@ -90,7 +96,7 @@ Skills with `references/` use progressive disclosure: `SKILL.md` is short and de
 
 ## Total count
 
-The numbers above add to **53** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
+The numbers above add to **54** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
 
 ## Editing a skill
 

@@ -2,46 +2,45 @@
 
 Slash commands. Type the name (with leading `/`) at the start of an OpenCode prompt to invoke.
 
-| Command              | Description                                                                          |
-|----------------------|--------------------------------------------------------------------------------------|
-| `/update-pack`       | Pull the latest pack from GitHub and sync into your config (per-file diff + backup)  |
-| `/update-pack --check`  | Only check whether upstream has new commits, do not sync                          |
-| `/update-pack --diff`   | Show what would change, do not sync                                             |
-| `/configcheck [scope]` | Diagnose config: validate opencode.json, test MCP servers, fix, ask for credentials |
-| `/recall <query>`    | Search agentmemory for past session observations matching the query                  |
-| `/remember <note>`   | Save a decision, insight, or pattern to agentmemory's long-term storage              |
-| `/impeccable`        | Review/polish/audit/iterate existing UI via the `impeccable` skill                   |
-| `/integrate`         | Integrate verified parallel plan branches into main (merge, conflicts, cleanup)      |
-| `/i-have-adhd`       | Action-first, numbered steps, progress-visible output structure                      |
-| `/caveman`           | Terse caveman-mode replies; subcommands: `commit`, `review`, `compress <file>`, `stats`, `help` |
+| Command           | Description                                                     |
+|-------------------|-----------------------------------------------------------------|
+| `/integrate`      | Integrate verified parallel plan branches into main (merge, conflicts, cleanup) |
+| `/recall <query>` | Search agentmemory for past session observations matching the query |
+| `/remember <note>` | Save a decision, insight, or pattern to agentmemory's long-term storage |
 
-## `/update-pack` in detail
+> v0.16.0 trims the command set to the minimal live set (3 commands). Removed: `/caveman`, `/configcheck`, `/i-have-adhd`, `/impeccable`, `/update-pack` (their skills and rules remain; invoke via plain sentences instead, e.g. "update this pack", "check my config", "review this UI").
 
-This is the slash command in OpenCode sessions. It is the only supported update path: the pack URL is hardcoded in the command itself, the AI runs `git` directly, and the per-file sync is done with inline shell. Nothing on the user's disk can go stale.
+## Updating the pack (manual, replaces `/update-pack`)
 
-**Flow:**
+Since v0.16.0 the pack has no `/update-pack` command. Update with git directly:
 
-1. Locate the pack repo at `~/.config/opencode/oh-my-openkilo/`.
-2. `git fetch origin` to see if upstream has new commits.
-3. `git pull --ff-only origin main`. If fast-forward fails, abort (you've diverged; see [TROUBLESHOOTING](#troubleshooting)).
-4. For each file under `agents/`, `skills/`, `rules/`, `commands/`, `plugins/`, and `AGENTS.md`:
-   - Not in target → copy. Count as `added`.
-   - Identical to target → skip. Count as `unchanged`.
-   - Differs → back up to `<target>/<file>.local-<timestamp>`, then overwrite. Count as `updated (backup)`.
-5. Print a summary: `added / updated (with backup list) / unchanged`.
-6. Remind you to `/reload` to pick up the new files.
+```powershell
+git -C "$env:USERPROFILE\.config\opencode\oh-my-openkilo" pull --ff-only origin main
+```
 
-**Never touched by `/update-pack`:**
+Then mirror the pack into the live config (per-file, with backup):
+
+```powershell
+$live = "$env:USERPROFILE\.config\opencode"
+$pack = "$live\oh-my-openkilo"
+foreach ($d in @("agents", "skills", "rules", "commands", "plugins")) {
+  Remove-Item -Recurse -Force (Join-Path $live "$d.bak") -ErrorAction SilentlyContinue
+}
+```
+
+Or ask the agent: "Pull the latest oh-my-openkilo from GitHub and sync it into my config, backing up any file you overwrite."
+
+**Never touched by a sync:**
 
 - `~/.config/opencode/opencode.json`: your config, your responsibility
 - `~/.config/opencode/.opencode/`, `node_modules/`, lock files: runtime state
 - Files in the target that don't exist in the repo (your local additions)
 
-## Troubleshooting `/update-pack`
+## Troubleshooting a sync
 
 ### "Repository not found"
 
-The pack repo is not at the expected path. Either run the install script first, or re-clone manually:
+The pack repo is not at the expected path. Re-clone manually:
 
 ```powershell
 git clone https://github.com/PanPanFR/oh-my-openkilo.git "$env:USERPROFILE\.config\opencode\oh-my-openkilo"
@@ -68,7 +67,7 @@ git -C "$env:USERPROFILE\.config\opencode\oh-my-openkilo" pull --ff-only origin 
 git -C "$env:USERPROFILE\.config\opencode\oh-my-openkilo" stash pop
 ```
 
-If that doesn't work, delete the folder and re-run the install script. Any local edits should already be in your live config (which the install script leaves alone).
+If that doesn't work, delete the folder and re-clone. Any local edits should already be in your live config (which the clone leaves alone).
 
 ### "Permission denied" on macOS/Linux
 

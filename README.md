@@ -6,7 +6,7 @@
 
 **A team of AI specialists for OpenCode. You describe the task, they do the work.**
 
-This pack gives OpenCode 6 specialist agents, 53 how-to guides, and 5 house rules. It works with free models, so there is nothing to pay and no API key to set up.
+This pack gives OpenCode 6 specialist agents, 54 how-to guides, and 5 house rules. It works with free models, so there is nothing to pay and no API key to set up.
 
 <sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's team workflow</sub>
 
@@ -17,7 +17,7 @@ This pack gives OpenCode 6 specialist agents, 53 how-to guides, and 5 house rule
   <a href="https://github.com/PanPanFR/oh-my-openkilo/commits/main"><img src="https://img.shields.io/github/last-commit/PanPanFR/oh-my-openkilo?style=flat" alt="Last commit"></a>
   <br>
   <a href="#-meet-the-team"><img src="https://img.shields.io/badge/agents-6-orange" alt="6 agents"></a>
-  <a href="#-skills"><img src="https://img.shields.io/badge/skills-53-green" alt="53 skills"></a>
+  <a href="#-skills"><img src="https://img.shields.io/badge/skills-54-green" alt="54 skills"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/credentials-zero-brightgreen" alt="Zero credentials"></a>
   <img src="https://img.shields.io/badge/size-23_MB-blueviolet" alt="Pack size: 23 MB">
   <img src="https://img.shields.io/badge/no_build_step-brightgreen" alt="No build step">
@@ -33,7 +33,7 @@ This pack gives OpenCode 6 specialist agents, 53 how-to guides, and 5 house rule
 
 **Step 1.** Open OpenCode and paste this. The AI installs everything for you:
 
-> **"Install the oh-my-openkilo config pack for OpenCode: clone https://github.com/PanPanFR/oh-my-openkilo into `~/.config/opencode/oh-my-openkilo`, copy its `agents/`, `skills/`, `rules/`, `commands/`, `plugins/` folders and `AGENTS.md` into `~/.config/opencode/`, then run `/configcheck` and tell me what's missing."**
+> **"Install the oh-my-openkilo config pack for OpenCode: clone https://github.com/PanPanFR/oh-my-openkilo into `~/.config/opencode/oh-my-openkilo`, copy its `agents/`, `skills/`, `rules/`, `commands/`, `plugins/` folders and `AGENTS.md` into `~/.config/opencode/`, then validate my `opencode.json`, test every MCP server, and tell me what's missing."**
 
 The agent shows each command before running it, so nothing happens in the dark. Your existing settings, API keys, and extras are never touched.
 
@@ -45,7 +45,7 @@ The agent shows each command before running it, so nothing happens in the dark. 
 
 > **"Audit this repository's architecture and identify the biggest problems."**
 
-That is the whole setup. Future updates are just `/update-pack` inside OpenCode.
+That is the whole setup. Future updates are a `git pull` in the pack folder plus a mirror into the live config (see [Updating the pack](#-updating-the-pack)).
 
 > [!TIP]
 > Prefer doing it yourself in a terminal? The exact commands for Windows, macOS, and Linux are in [Installation](#-installation).
@@ -58,7 +58,7 @@ That is the whole setup. Future updates are just `/update-pack` inside OpenCode.
 OpenCode on its own is one general assistant. This pack turns it into a small team:
 
 - **Specialists for each job.** A builder that does the coding, a planner that thinks before anyone codes, plus experts for UI, tests, code review, and docs. You talk to the builder; the builder calls in the experts when needed.
-- **How-to guides for common tasks.** 53 short playbooks (debugging, testing, code review, planning, and more). The right guide loads automatically when your task matches it. You never open them yourself.
+- **How-to guides for common tasks.** 54 short playbooks (debugging, testing, code review, planning, and more). The right guide loads automatically when your task matches it. You never open them yourself.
 - **Memory + a map of your code.** The pack remembers what happened in past sessions and keeps a searchable map of your codebase, so answers are based on your actual code, not guesses.
 
 Technically it is just files: plain-text prompts plus a few tiny plugins. There is nothing to compile and no installer to run. It works on Windows (tested) and on macOS/Linux (same steps, not tested by the maintainer, see [Compatibility](#-compatibility)).
@@ -72,10 +72,10 @@ The workflow ideas come from [Kilo Code](https://github.com/Kilo-Org/kilocode), 
 | Piece | Count | Plain meaning |
 |-----------|-------|--------------|
 | Agents    | 6     | The team members (see below). |
-| Skills    | 53    | How-to guides the agents follow automatically. Full list: [docs/SKILLS.md](docs/SKILLS.md). |
+| Skills    | 54    | How-to guides the agents follow automatically. Full list: [docs/SKILLS.md](docs/SKILLS.md). |
 | Rules     | 5     | House rules applied to every session (check memory, write in English, keep replies short, route via Jev). Details: [docs/RULES.md](docs/RULES.md). |
-| Plugins   | 6     | Small extras (auto-save notes, code map sync, short-reply mode, token-saving shell output). All optional, remove any to disable. |
-| Commands  | 12    | Shortcuts like `/update-pack` and `/recall`. All optional. List: [docs/COMMANDS.md](docs/COMMANDS.md). |
+| Plugins   | 7     | Small extras (auto-save notes, code map sync, short-reply mode, token-saving shell output, subagent guard). All optional, remove any to disable. |
+| Commands  | 3    | Shortcuts like `/recall` and `/remember`. All optional. List: [docs/COMMANDS.md](docs/COMMANDS.md). |
 
 ```mermaid
 graph TD
@@ -245,7 +245,7 @@ npm i -g @agentmemory/mcp            # the piece OpenCode talks to
 agentmemory serve
 ```
 
-**Use a local install for the memory piece, not `npx`.** Point `mcp.agentmemory.command` in `opencode.json` at the installed file path. `npx` re-downloads on every start and breaks without internet. `/configcheck` warns you if the `npx` form is present; the full recipe is in [docs/INSTALL.md](docs/INSTALL.md).
+**Use a local install for the memory piece, not `npx`.** Point `mcp.agentmemory.command` in `opencode.json` at the installed file path. `npx` re-downloads on every start and breaks without internet. The full recipe is in [docs/INSTALL.md](docs/INSTALL.md).
 
 </details>
 
@@ -253,7 +253,7 @@ agentmemory serve
 
 1. Nothing to edit for free models. Only if you want a paid model: set it in `~/.config/opencode/opencode.json` (the example file uses `{env:VAR}` placeholders for keys).
 2. **Restart OpenCode** or run `/reload`.
-3. **Verify:** run `/configcheck`. It reports what works and what is missing.
+3. **Verify:** ask the agent to validate `opencode.json` and test every MCP server. It reports what works and what is missing.
 
 > [!IMPORTANT]
 > Installing overwrites `agents/`, `skills/`, `rules/`, `commands/`, `plugins/`, and `AGENTS.md` in your config folder. Your `opencode.json`, models, keys, and extras are NOT touched. Keeping local edits? See [docs/INSTALL.md](docs/INSTALL.md).
@@ -287,7 +287,7 @@ Both give OpenCode a team of agents. Different philosophy:
 | Team | 6 agents: you talk to builder/planner, they fan out to 4 specialists | 7 agents under one orchestrator, background dispatch |
 | Memory | Built-in: `recall`/`remember` across sessions via agentmemory | Workflow skills (deepwork, codemap, reflect) |
 | Replies | Caveman terse mode (~65% fewer output tokens) | Standard replies + council multi-model answers |
-| Update | `git pull` (or `/update-pack` in-session) | `git pull` + reinstall + rebuild |
+| Update | `git pull` plus mirror | `git pull` + reinstall + rebuild |
 | Debugging | Read the text file, fix the typo | Rebuild the bundle |
 
 Pick this pack if you want free models, zero build, and files you can read and edit directly. Pick slim if you want background orchestration with tmux panes, council answers, and paid-model presets.
@@ -298,37 +298,37 @@ Pick this pack if you want free models, zero build, and files you can read and e
 
 You can ignore this section at first. Plain sentences work too ("update this pack", "what did we do about X last week").
 
-- **`/update-pack`** keeps the pack fresh from GitHub. The one you will use, rarely.
 - **`/recall <query>`** searches past work ("what did we decide about auth?"). **`/remember <note>`** saves a note for later.
-- **`/configcheck`** verifies the install after setup.
+- **`/integrate`** merges verified parallel plan branches.
 
-The rest (`/caveman` subcommands for short replies, `/impeccable` for UI review, `/integrate` for merging parallel work) are covered in [docs/COMMANDS.md](docs/COMMANDS.md) when you need them.
+The rest is plain sentences ("update this pack", "check my config", "review this UI"). Full list: [docs/COMMANDS.md](docs/COMMANDS.md).
 
 ---
 
 ## 🔄 Updating the pack
 
-In an OpenCode session, run `/update-pack`, or say:
+In an OpenCode session, say:
 
 > **"Update the oh-my-openkilo pack: pull the latest from https://github.com/PanPanFR/oh-my-openkilo and sync it into my config, backing up any file you overwrite."**
 
-Then restart OpenCode or run `/reload`. Changed files are backed up automatically, so your edits are never lost silently. Terminal-only alternative and recovery steps: [docs/COMMANDS.md](docs/COMMANDS.md#update-pack-in-detail).
+Then restart OpenCode or run `/reload`. Changed files are backed up automatically, so your edits are never lost silently. Terminal-only alternative and recovery steps: [docs/COMMANDS.md](docs/COMMANDS.md#updating-the-pack-manual-replaces-update-pack).
 
 ---
 
 ## 🧩 Skills
 
-53 how-to guides in 5 groups. They load on their own when your task matches; you never open them.
+54 how-to guides in 6 groups. They load on their own when your task matches; you never open them.
 
 | Group | Count | Examples |
 |----------|-------|----------|
-| core | 25 | `antislop`, `clean-code`, `cloudflare`, `code-review`, `impeccable`, `plans`, `ui-design`, `ui-ux-pro-max`, `vite`, `vitest`, `web-design-guidelines`, `web-perf`, `shadcn` |
+| core | 20 | `antislop`, `clean-code`, `cloudflare`, `code-review`, `impeccable`, `plans`, `ui-design`, `ui-ux-pro-max`, `vite`, `vitest`, `web-design-guidelines`, `web-perf`, `shadcn` |
 | agentmemory | 7 | `agentmemory`, `agentmemory-architecture`, `agentmemory-config`, `agentmemory-mcp-tools`, `agentmemory-rest-api` |
 | caveman | 4 | `caveman`, `caveman-compress`, `caveman-help`, `caveman-stats` |
 | workflow, memory & decisions | 15 | `commit-context`, `delegation`, `handoff`, `i-have-adhd`, `jev-decision`, `lesson`, `recall`, `remember`, `recap` |
 | browser | 2 | `playwright-cli`, `graphify` |
+| next.js official | 6 | `next-dev-loop`, `next-cache-components-adoption`, `next-cache-components-optimizer`, `next-partial-prefetching-adoption`, `next-partial-prefetching-optimizer`, `next-browser-initial-load-optimizer` |
 
-> **All 53 with descriptions:** [docs/SKILLS.md](docs/SKILLS.md)
+> **All 54 with descriptions:** [docs/SKILLS.md](docs/SKILLS.md)
 
 ---
 
@@ -357,8 +357,8 @@ Start with install, then jump to whatever you need:
 | [docs/INSTALL.md](docs/INSTALL.md) | Step-by-step install, uninstall, troubleshooting |
 | [docs/WORKFLOWS.md](docs/WORKFLOWS.md) | Full worked examples (audit, debug, new feature, arch review, code map) |
 | [docs/AGENTS.md](docs/AGENTS.md) | All 6 agents: when to use each, how to edit, model table |
-| [docs/SKILLS.md](docs/SKILLS.md) | All 53 guides grouped by category, with descriptions |
-| [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, `/update-pack` mechanics |
+| [docs/SKILLS.md](docs/SKILLS.md) | All 54 guides grouped by category, with descriptions |
+| [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, manual update mechanics |
 | [docs/STRUCTURE.md](docs/STRUCTURE.md) | Every folder and file in the repo, explained |
 | [docs/RULES.md](docs/RULES.md) | The 5 house rules in detail |
 | [docs/CONFIGURATION.md](docs/CONFIGURATION.md) | Settings file explained block by block, keys, per-tool setup |

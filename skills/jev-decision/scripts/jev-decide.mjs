@@ -311,9 +311,10 @@ function resolveConfig(currentEndpoint, currentKey) {
     try {
       const raw = fs.readFileSync(cfgFile, "utf8");
       const cfg = JSON.parse(raw);
-      if (cfg?.providers) {
-        for (const provider of Object.values(cfg.providers)) {
-          const settings = provider?.settings;
+      const providersMap = cfg?.providers || cfg?.provider;
+      if (providersMap) {
+        for (const provider of Object.values(providersMap)) {
+          const settings = provider?.settings || provider?.options;
           if (!settings) continue;
 
           if (!endpoint && settings.baseURL) {

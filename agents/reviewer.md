@@ -1,7 +1,7 @@
 ---
 description: Code and security review specialist - reviews diffs against repo standards, spec, and security baseline
 mode: subagent
-model: opencode/muse-spark-1.3-contributor-free
+model: opencode/muse-spark-1.3-contributor-free#xhigh
 permissions:
   - action: read
     resource: "*"

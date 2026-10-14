@@ -1,3 +1,21 @@
+# v0.16.0 (2026-10-14)
+
+## Added
+- **6 official Next.js skills** (`skills/next-*`): `next-dev-loop`, `next-cache-components-adoption`, `next-cache-components-optimizer`, `next-partial-prefetching-adoption`, `next-partial-prefetching-optimizer`, `next-browser-initial-load-optimizer` (mirrored from the live config; installed via the skills CLI). Pack skills 53 -> 54 across 6 groups.
+- **Subagent guard plugin** (`plugins/subagent-guard.ts`): circuit breaker for failing subagent retries with half-open probe, fail-open by design.
+
+## Changed
+- **Live-synced runtime files**: `AGENTS.md` (OpenCode V2 shape), `agents/builder.md`, `agents/reviewer.md`, `agents/tester.md` (`#xhigh` reasoning variants), `skills/agentmemory/SKILL.md` (decoupled from the removed configcheck command), `skills/jev-decision/scripts/jev-decide.mjs` (supports both `providers`/`provider` and `settings`/`options` config shapes).
+- **Command set trimmed to the minimal live set** (8 -> 3): `integrate`, `recall`, `remember` remain. Removed `caveman`, `configcheck`, `i-have-adhd`, `impeccable`, `update-pack`; their skills and rules remain and are invoked via plain sentences. Update flow is now manual `git pull` plus mirror (see `docs/COMMANDS.md`).
+- **Docs resynced**: `README.md`, `docs/SKILLS.md` (Core 25 -> 20 plus new Next.js group), `docs/STRUCTURE.md`, `docs/COMMANDS.md` updated to 54 skills, 3 commands, 7 plugins.
+
+## Removed
+- **5 package-shadowed skills**: `ponytail-review`, `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `writing-skills` (live installs resolve them via package copies; the pack now matches the live filesystem).
+
+## Kept generic (not mirrored from live)
+- `agents/designer.md`, `agents/documenter.md`, `agents/planner.md` stay on the free default model; live personal `9router/*` models are not published.
+- `skills/jev-decision/SKILL.md` stays on the generic bring-your-own endpoint; live `9router` endpoint references are not published.
+
 # v0.15.0 (2026-09-30)
 
 ## Added

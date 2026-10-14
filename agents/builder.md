@@ -1,7 +1,7 @@
 ---
 description: Optimized implementation agent - minimal tools, MCP-first research, delegates to subagents
 mode: primary
-model: opencode/muse-spark-1.3-contributor-free
+model: opencode/muse-spark-1.3-contributor-free#xhigh
 permissions:
   - action: read
     resource: "*"

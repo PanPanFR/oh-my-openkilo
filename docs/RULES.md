@@ -41,4 +41,4 @@ If a particular session is fighting a rule, comment it out in `opencode.json` an
 
 ## Editing a rule
 
-Same flow as agents and skills: edit the file in the repo, commit, push, then `/update-pack` to pull the new version locally.
+Same flow as agents and skills: edit the file in the repo, commit, push, then pull and mirror the new version locally.

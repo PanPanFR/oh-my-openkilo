@@ -31,4 +31,4 @@ only routes. Load the one row that fits; never load all six.
 - starting the REST server: `agentmemory serve` (connection refused on 3111
   means the server is down, not a tool bug).
 - Prefer the global `node` install over `npx -y @agentmemory/mcp` (cold-start
-  re-download breaks offline). See `commands/configcheck.md` section 3.
+  re-download breaks offline). See `agentmemory-config` skill.

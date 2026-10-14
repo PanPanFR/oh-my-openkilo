@@ -1,6 +1,6 @@
 # Installation
 
-There is no installer. The pack is a Git repo and OpenCode's agent can install it from a prompt. The in-session `/update-pack` command is self-contained (it hardcodes the canonical URL, runs `git` directly, and syncs the files itself). One source of truth, no scripts that can go stale.
+There is no installer. The pack is a Git repo and OpenCode's agent can install it from a prompt. Updates are manual: `git pull` in the pack folder plus a mirror into the live config. One source of truth, no scripts that can go stale.
 
 ## Recommended: install by prompt
 
@@ -69,7 +69,7 @@ After `npm i -g @agentmemory/mcp`, replace the `mcp.agentmemory.command` in your
 - **macOS**: `["node", "/usr/local/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
 - **Linux**: `["node", "/usr/lib/node_modules/@agentmemory/mcp/bin.mjs"]`
 
-`/configcheck` flags the `npx` form automatically and tells you to switch.
+Agent validation flags the `npx` form automatically and tells you to switch.
 
 **What you lose without each:**
 
@@ -85,11 +85,11 @@ The example config ships two MCPs enabled: `agentmemory` (required for the memor
 | `agentmemory`          | Persistent cross-session memory (**required**)      | `AGENTMEMORY_SERVER_URL` (default `http://127.0.0.1:3111`) | No memory. Every session starts from zero. |
 | `chrome-devtools`      | Live browser debug (DOM, network, console, perf)    | none (uses installed Chrome)            | No live browser inspection; static fetch only |
 
-To enable any others, edit `opencode.json` to remove `"disabled": true` and fill in the required env vars. `/configcheck` validates your config and warns if any enabled MCP has a missing env var.
+To enable any others, edit `opencode.json` to remove `"disabled": true` and fill in the required env vars. Agent validation validates your config and warns if any enabled MCP has a missing env var.
 
 ## Verify the install
 
-Start OpenCode in any directory. Type `/configcheck`. It will tell you what is wired up and what is missing.
+Start OpenCode in any directory. Ask the agent to validate the config. It will tell you what is wired up and what is missing.
 
 ## Uninstall
 
@@ -110,17 +110,23 @@ rm -rf ~/.config/opencode/{agents,skills,rules,commands,plugins}
 rm -f ~/.config/opencode/AGENTS.md
 ```
 
-The pack repo clone at `~/.config/opencode/oh-my-openkilo/` is also safe to delete; it is the source `/update-pack` pulls from, but `/update-pack` re-clones if the folder is missing.
+The pack repo clone at `~/.config/opencode/oh-my-openkilo/` is also safe to delete; it is the source manual updates pull from, and a fresh clone restores it if the folder is missing.
 
 ## Update the pack
 
-In an OpenCode session, type:
+In an OpenCode session, say:
 
 ```
-/update-pack
+Update the oh-my-openkilo pack: pull the latest from https://github.com/PanPanFR/oh-my-openkilo and sync it into my config, backing up any file you overwrite.
 ```
 
-The command is self-contained. It clones or pulls from the canonical URL on its own, then syncs each file with per-file diff and backup of any local changes you made. Nothing on your disk can go stale. See [COMMANDS.md](COMMANDS.md) for the full mechanics.
+Or in a terminal:
+
+```powershell
+git -C "$env:USERPROFILE\.config\opencode\oh-my-openkilo" pull --ff-only origin main
+```
+
+Then mirror `agents/`, `skills/`, `rules/`, `commands/`, `plugins/`, and `AGENTS.md` into the live config with per-file backup of any local changes. Nothing on your disk can go stale. See [COMMANDS.md](COMMANDS.md) for the full mechanics.
 
 ## Troubleshooting
 

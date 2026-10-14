@@ -121,7 +121,7 @@ To enable:
 
 Anything beyond the rows above (`playwright`, `context7`, your own) is something you wire up yourself; the example just shows you the shape.
 
-`/configcheck` validates your config (parses the JSON, lists connected MCPs, checks each MCP can launch, and warns if any connected MCP has a missing env var). Run it after changing `opencode.json` to re-validate.
+Agent validation validates your config (parses the JSON, lists connected MCPs, checks each MCP can launch, and warns if any connected MCP has a missing env var). Run it after changing `opencode.json` to re-validate.
 
 ## Installing MCP servers
 
