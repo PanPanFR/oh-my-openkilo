@@ -13,8 +13,8 @@
 - **5 package-shadowed skills**: `ponytail-review`, `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `writing-skills` (live installs resolve them via package copies; the pack now matches the live filesystem).
 
 ## Kept generic (not mirrored from live)
-- `agents/designer.md`, `agents/documenter.md`, `agents/planner.md` stay on the free default model; live personal `9router/*` models are not published.
-- `skills/jev-decision/SKILL.md` stays on the generic bring-your-own endpoint; live `9router` endpoint references are not published.
+- `agents/designer.md`, `agents/documenter.md`, `agents/planner.md` stay on the free default model; live personal provider models are not published.
+- `skills/jev-decision/SKILL.md` stays on the generic bring-your-own endpoint; live personal endpoint references are not published.
 
 # v0.15.0 (2026-09-30)
 
