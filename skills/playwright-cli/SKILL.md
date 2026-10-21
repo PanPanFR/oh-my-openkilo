@@ -133,7 +133,7 @@ After each command, playwright-cli prints a snapshot of current state:
 - Page URL: https://example.com/
 - Page Title: Example Domain
 ### Snapshot
-[Snapshot](.playwright-cli/page-2026-02-14T19-22-42-679Z.yml)
+Snapshot: .playwright-cli/page-<timestamp>.yml
 ```
 
 Use refs from `snapshot` (`e1`, `e2`, ...) to target elements. CSS selectors and Playwright locators also work:

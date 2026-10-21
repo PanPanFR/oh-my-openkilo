@@ -1,3 +1,12 @@
+# v0.17.1 (2026-10-21)
+
+## Fixed
+- Repaired the broken WebSockets link in `skills/cloudflare/references/durable-objects/README.md`: it now points to `./api.md` instead of missing `../websockets/README.md`.
+- Replaced the illustrative markdown snapshot link in `skills/playwright-cli/SKILL.md` with plain output text, so link checkers no longer treat the runtime path as a repository link.
+
+## Measurements
+- Local link check: 2 broken links -> 0.
+
 # v0.17.0 (2026-10-21)
 
 ## Added
