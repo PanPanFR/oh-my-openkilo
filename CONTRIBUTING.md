@@ -10,13 +10,13 @@ When proposing changes, prefer the **minimal** diff that keeps these lineages co
 
 ## Scope
 
-oh-my-openkilo ships **agent prompt bodies and skill/rule files** that live under `~/.config/opencode/` on a single maintainer's machine (credentials redacted). Agent `model:` lines mirror the live install: all 6 agents use `opencode/muse-spark-1.3-contributor-free` (see [docs/STRUCTURE.md](docs/STRUCTURE.md)). It is not a generic OpenCode enhancement pack; every agent, skill, and rule has been used in real sessions and earned its place.
+oh-my-openkilo ships **agent prompt bodies and skill/rule files** that live under `~/.config/opencode/` on a single maintainer's machine (credentials redacted). Agent `model:` lines mirror the live install: builder, reviewer, and tester use free `opencode/*` models; planner, designer, and documenter use a 9router endpoint. See [docs/AGENTS.md](docs/AGENTS.md) for the table. It is not a generic OpenCode enhancement pack; every agent, skill, and rule has been used in real sessions and earned its place.
 
 Before opening a PR, ask: **does this add a new agent/skill/rule, or change an existing one?**
 
 ### Adding a new agent / skill / rule
 
-1. Open an issue first with: use case, why none of the existing 6 agents / 54 skills / 4 rules cover it, and one or two example prompts.
+1. Open an issue first with: use case, why none of the existing 6 agents / 38 skills / 2 rules cover it, and one or two example prompts.
 2. After issue approval, open a PR following the structure of the closest existing file.
 3. Skill files must be progressive-disclosure where applicable: `SKILL.md` short, references in `references/`.
 
@@ -28,7 +28,7 @@ Before opening a PR, ask: **does this add a new agent/skill/rule, or change an e
 ## Style
 
 - File contents: **English only**. Indonesian is chat-only.
-- Code: lazy where possible (see `rules/communication-style.md` for the caveman/ponytail philosophy baked into the agents themselves).
+- Code: lazy where possible (see `AGENTS.md` for the caveman density and minimal-code policy).
 - Commit messages: conventional commits, subject ≤ 50 chars.
 
 ## Versioning policy

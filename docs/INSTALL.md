@@ -40,7 +40,7 @@ cp ~/.config/opencode/oh-my-openkilo/AGENTS.md ~/.config/opencode/AGENTS.md
 ## After install: required dependencies
 
 > [!IMPORTANT]
-> **Install these BEFORE the first session.** Without them the pack loads fine but the `/graphify` workflow and every memory skill (`recall`, `remember`, `recap`, `memory-discipline`) are unavailable. The pack degrades to a much weaker version of itself.
+> **Install these BEFORE the first session.** Without them the pack loads fine but the `graphify` workflow and the agentmemory skills (`agentmemory`, `agentmemory-history`, `agentmemory-ops`) are unavailable. The pack degrades to a much weaker version of itself.
 
 The pack needs two external tools. Install in this order:
 
@@ -74,11 +74,11 @@ Agent validation flags the `npx` form automatically and tells you to switch.
 **What you lose without each:**
 
 - **No `graphify`** → codebase navigation falls back to manual `grep` and `read`. Slower on large repos, but the rest of the pack still works.
-- **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `memory-discipline`/`recall` skills and the `recall`/`remember`/`recap` commands all depend on it.
+- **No `agentmemory`** → no cross-session memory. Every session starts from zero. The `agentmemory`, `agentmemory-history`, and `agentmemory-ops` skills all depend on it.
 
 ### MCPs (enable per-need, not all auto-on)
 
-The example config ships two MCPs enabled: `agentmemory` (required for the memory skills) and `chrome-devtools` (quick browser screenshots and inspection). Anything else you want — `playwright` for the `playwright-cli` skill, `context7` for live library docs, your own — you add yourself by following the same shape: drop the entry into `mcp` in `opencode.json`, remove `"disabled": true`, and provide any env vars the server needs. Don't need the browser tools? Add `"disabled": true` to the `chrome-devtools` entry (see [CONFIGURATION.md](CONFIGURATION.md#turn-it-off-when-you-dont-need-it)) — every enabled MCP costs context in every session.
+The example config ships two MCPs enabled: `agentmemory` (required for the memory skills) and `context7` (remote docs). Anything else you want - `chrome-devtools` for browser screenshots, `shadcn`, `playwright` for the `playwright-cli` skill, your own - you add yourself by following the same shape: drop the entry into `mcp` in `opencode.json`, remove `"disabled": true`, and provide any env vars the server needs. Add `"disabled": true` to any server you do not need; every enabled MCP costs context in every session.
 
 | MCP                    | Capability                                          | Required env / key                      | Risk if disabled |
 |------------------------|-----------------------------------------------------|-----------------------------------------|------------------|

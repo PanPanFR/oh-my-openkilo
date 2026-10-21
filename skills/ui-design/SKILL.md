@@ -1,6 +1,6 @@
 ---
 name: ui-design
-description: Use when designing pages or UI components, choosing colors/typography, reviewing UX/accessibility, or implementing navigation, animations, responsive behavior, dark mode - web and mobile
+description: Use when designing pages or UI components, choosing colors/typography, reviewing UX/accessibility, implementing navigation, animations, responsive behavior, or dark mode (web and mobile), auditing generic AI slop, or checking UI against Web Interface Guidelines.
 ---
 
 # UI Design
@@ -164,3 +164,9 @@ Before coding, check if any part reads like an AI default template:
 - [ ] Verified across small phone, tablet (600-1024px), and desktop
 - [ ] 4/8dp spacing rhythm maintained
 - [ ] Empty, loading, and error states provide clear cause and next action
+
+## Merged references
+
+- `references/antislop.md` - negative design filter, rules R-01 to R-38, Delivery Gate. Load for build and audit passes.
+- `references/web-interface-review.md` - Vercel Web Interface Guidelines review workflow (`file:line` findings).
+- `scripts/contrast-check.js` / `scripts/contrast-check.py` - WCAG contrast checks used by the anti-slop gate.

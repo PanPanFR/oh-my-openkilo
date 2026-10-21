@@ -2,7 +2,7 @@
 
 `opencode.json` is the brain of your OpenCode install. It lives at `~/.config/opencode/opencode.json` and is **never committed** to this repo (it contains your secrets, not ours).
 
-[`examples/opencode.example.json`](../examples/opencode.example.json) is the brain we ship, and it ships **ready to use**: plugin loaders wired, global AGENTS.md rules auto-loaded, MCP servers declared, provider template in place, sensible permission defaults. You don't need to write `opencode.json` from scratch. Copy the example, swap the `{env:VAR}` placeholders for your real env vars, and save it as `~/.config/opencode/opencode.json`. Done.
+[`examples/opencode.example.json`](../examples/opencode.example.json) is the brain we ship, and it ships **ready to use**: plugin directory present, AGENTS.md policy, MCP servers declared, provider template in place, sensible permission defaults. You don't need to write `opencode.json` from scratch. Copy the example, swap the `{env:VAR}` placeholders for your real env vars, and save it as `~/.config/opencode/opencode.json`. Done.
 
 Below is a tour of every block in that example so you know what you're editing. For the full OpenCode schema reference, see [opencode.ai/v2/docs/config/](https://opencode.ai/v2/docs/config/).
 
@@ -16,20 +16,26 @@ Below is a tour of every block in that example so you know what you're editing. 
 | `permissions`       | array    | Ordered `{action, resource, effect}` rules. See below.                                                    |
 | `disabled_providers`| string[] | Providers to exclude from auto-discovery.                                               |
 | `agents`            | object   | Built-in agent overrides. Use `disabled: true` to hide an agent.                         |
-| `plugins`           | string[] | Plugin loaders. See below.                                                              |
-| `providers`         | object   | External LLM provider configs (`package` + `settings` + `models`).                                                          |
+| `plugins/`          | folder   | Plugin files are discovered from this directory. See below.                              |
+| `provider`          | object   | External LLM provider configs (`npm` + `options` + `models`).                                                            |
 | `mcp`               | object   | MCP servers under `mcp.servers`; `disabled: true` keeps one off.                                                                     |
 | `instructions`      | string[] | Accepted but ignored by OpenCode V2; use the global `AGENTS.md` instead.                             |
 | `lsp`               | boolean  | Enable Language Server Protocol. Recommended `true`.                                    |
 
 ## Per-agent model selection
 
-The `model` and `small_model` fields above are **fallback defaults** for OpenCode's built-in agents. The agents in this pack (`builder`, `planner`, `designer`, etc.) have their own `model:` field in their frontmatter, which **overrides** the top-level default for that agent.
+The top-level `model` and `small_model` are fallback defaults for OpenCode's built-in agents. The pack's agents carry their own `model:` frontmatter, which overrides the top-level default.
 
-The pack ships with all 6 agents set to a **free model** from OpenCode (`opencode/muse-spark-1.3-contributor-free`). You can use the pack with no provider configuration, but you can also override per agent by editing the frontmatter in `agents/<name>.md`.
+| Agent | Default model |
+|-------|---------------|
+| `builder` | `opencode/deepseek-v4.1-flash-free#max` |
+| `planner` | `9router/ag/claude-opus-4-6-thinking` |
+| `designer` | `9router/ag/gemini-3.8-flash-high` |
+| `tester` | `opencode/mimo-v2.6-flash-free` |
+| `reviewer` | `opencode/glm-5.3-flash-free#max` |
+| `documenter` | `9router/ag/gemini-3.8-flash-high` |
 
-See [docs/AGENTS.md](AGENTS.md#changing-the-model) for the default model table and how to switch.
-
+Builder, reviewer, and tester use free OpenCode models. Planner, designer, and documenter need the `9router` provider, or a per-agent `model:` override. See [docs/AGENTS.md](AGENTS.md#changing-the-model).
 ## Permissions
 
 The example ships with an allow-all `permissions` list. This is the maintainer's preference (max automation). For a stricter setup, change to `deny` and explicitly allow only what you want:
@@ -63,38 +69,36 @@ A more balanced setup for security-sensitive work:
 
 ## Plugins
 
-`plugins` is an array of plugin specifiers. Each can be:
+The example does not declare a `plugins` array. OpenCode discovers files under `plugins/`. The pack ships four loaders plus the caveman package:
 
-- A relative path to a `.ts` or `.js` file: `./plugins/agentmemory-capture.ts`
-- A relative path to a directory: `./plugins/caveman/plugin.js`
-- An npm package name: `@dietrichgebert/ponytail`
-- A git URL: `superpowers@git+https://github.com/obra/superpowers.git`
+- `agentmemory-capture.ts`: captures session observations.
+- `caveman.ts` plus `plugins/caveman/`: terse-mode state and style.
+- `rtk.ts`: rewrites git output (`git log`, `diff`, `show`, `blame`, `branch`) to compact form. Needs `rtk` in PATH; disables itself otherwise.
+- `subagent-guard.ts`: circuit breaker for failing subagent retries.
 
-The example lists the 6 plugin specifiers the pack ships: 5 small files we own (`agentmemory-capture`, `recall-first`, `caveman`, `graphify`, `rtk`) plus 1 package (`superpowers`). (`ponytail` and friends are npm-hosted **skills**, not plugins — see [SKILLS.md](SKILLS.md).) Drop any you don't want to load — the pack degrades gracefully without them, the only required one being `agentmemory-capture` if you use the memory skills. `rtk` needs the `rtk` binary in PATH (token-saving bash rewrite); without it the plugin disables itself and commands pass through untouched. On Windows, `rtk ls`/`tree`/`find` additionally need Git's `usr\bin` on the user PATH (`C:\Program Files\Git\usr\bin`); PowerShell's `ls` is an alias rtk cannot resolve (symptom: `Failed to resolve 'ls' via PATH`). Restart the terminal after changing PATH. The maintainer's live install additionally wires the third-party `i-have-adhd` plugin (ADHD response structure, always-on via flag file) with an absolute local path, so it stays out of this portable example; the `communication-style` rule already carries the one-line precedence (ADHD owns structure, Caveman owns density) for installs that add it.
+Drop a file to disable that plugin. The pack degrades gracefully; `agentmemory-capture` is the only one the memory skills depend on. `rtk` on Windows also needs Git's `usr\bin` on PATH (`C:\Program Files\Git\usr\bin`) for `ls`/`tree`/`find`; PowerShell aliases cannot be resolved by rtk.
 
-The shipped plugins target the **v2 plugin contract** — a `default` export of `{ id, setup }`, with hooks registered through `ctx.tool.hook`, `ctx.event.subscribe`, and `ctx.session.hook`. opencode v1 does not call `setup()` for these files, so on v1 none of the plugin extras load (memory capture, recall gate, graphify reminder, rtk rewrite); the pack's text rules and skills still work there. `agentmemory-capture` keeps a v1 event factory internally, but the v2 loader only drives `setup()`. Hooks with no v2 equivalent (`chat.message`, `chat.params`, `config`) degrade on v2 with a single console warning naming every skipped hook. What remains active under v2: full event capture (`rtk` rewrite, `recall-first` gate, `graphify` reminder/poller, `agentmemory-capture` observations with lazy session init), tool hooks, caveman's session flag state, best-effort caveman reinforcement and agentmemory compaction context injection via the `context`/`compaction` session hooks.
-
+The shipped plugins target the **v2 plugin contract**: a `default` export of `{ id, setup }`, with hooks registered through `ctx.tool.hook`, `ctx.event.subscribe`, and `ctx.session.hook`. On v1 none of the plugin extras load; the text policy and skills still work. Hooks with no v2 equivalent degrade with a single console warning. Caveman state and agentmemory capture use the v2 session hooks.
 ## Provider
 
-External LLM providers. Each provider has:
+External LLM providers live under `provider` (singular). Each provider has:
 
-- `package`: the runtime provider package (e.g. `@opencode/ai/providers/openai-compatible`)
-- `settings`: provider-specific config (API key, base URL, headers)
+- `npm`: the runtime provider package (for example `@ai-sdk/openai-compatible`)
+- `options`: provider-specific config (base URL, API key, headers)
 - `models`: model definitions (`modelID`, display name, `limit`, `capabilities`)
 
-The example has one provider placeholder (`your-provider`). Add your own providers here, e.g. `opencode`, `anthropic`, `openai`, `google`, or any OpenAI-compatible endpoint.
+The example defines `9router` with `{env:NINE_ROUTER_BASE_URL}` and `{env:NINE_ROUTER_API_KEY}`. Three agents default to models on that endpoint; builder, reviewer, and tester use free `opencode/*` models and need no provider block. Remove or replace the provider if you override every agent.
 
 **Credentials:** use the `{env:VAR}` placeholder pattern. Set the env var in your shell, or in a `.env` file (which is gitignored):
 
 ```jsonc
-"settings": {
+"options": {
   "baseURL": "https://your-provider.example.com/v1",
   "apiKey": "{env:YOUR_PROVIDER_API_KEY}"
 }
 ```
 
-The `{env:VAR}` placeholder is resolved by OpenCode from the shell environment. **Never** put a literal API key in `opencode.json` if you plan to commit it.
-
+The `{env:VAR}` placeholder is resolved from the environment. **Never** put a literal API key in `opencode.json` if you plan to commit it.
 ## MCP servers
 
 Each MCP server is one of two types:
@@ -102,7 +106,7 @@ Each MCP server is one of two types:
 - `"type": "local"`: runs a command on your machine via `npx` or `python`
 - `"type": "remote"`: connects to a remote URL
 
-The example ships a small starter set: `agentmemory` (always on, you need it for the memory skills) and `chrome-devtools` (on by default, for quick browser screenshots and inspection). Anything else (`playwright`, `context7`, `reactbits`, your own) is opt-in: the first three ship in the example with `"disabled": true`, your own you add yourself by following the same shape.
+The example ships a small starter set: `agentmemory` (always on, needed by the memory skills) and `context7` (remote docs, enabled). `chrome-devtools`, `shadcn`, `magicuidesign-mcp`, and `reactbits` ship with `"disabled": true`; enable the ones you need.
 
 To enable:
 
@@ -115,17 +119,17 @@ To enable:
 
 | MCP                    | Required env / file                                | Free? | Used by                                |
 |------------------------|----------------------------------------------------|-------|----------------------------------------|
-| `agentmemory`          | `AGENTMEMORY_SERVER_URL` (default: local server)    | yes (npm global) | memory skills, `recall`/`remember` |
+| `agentmemory`          | `AGENTMEMORY_SERVER_URL` (default: local server)    | yes (npm global) | memory skills |
 | `chrome-devtools`      | none (uses installed Chrome)                       | yes   | quick screenshots, page inspection     |
 | `reactbits`            | none (optional `GITHUB_TOKEN` for rate limits)     | yes   | ReactBits animated components          |
 
-Anything beyond the rows above (`playwright`, `context7`, your own) is something you wire up yourself; the example just shows you the shape.
+`context7` ships enabled in the example (remote, no key by default). Anything beyond the rows above (`playwright`, your own) is something you wire up yourself; the example just shows you the shape.
 
 Agent validation validates your config (parses the JSON, lists connected MCPs, checks each MCP can launch, and warns if any connected MCP has a missing env var). Run it after changing `opencode.json` to re-validate.
 
 ## Installing MCP servers
 
-Two MCPs ship enabled in the example: `agentmemory` (memory skills) and `chrome-devtools` (quick browser screenshots and inspection). Everything else (`playwright`, `context7`, `reactbits`, your own) is opt-in — the first three ship with `"disabled": true`, your own you add by copying the shape and setting the env var.
+Two MCPs ship enabled in the example: `agentmemory` (memory skills) and `context7` (remote docs). Everything else (`chrome-devtools`, `shadcn`, `magicuidesign-mcp`, `reactbits`, your own) ships with `"disabled": true`; enable the ones you need.
 
 Most MCPs in this pack are `npx`-based; OpenCode downloads the package on first use. None of them require a separate install step before enabling in `opencode.json`, but several need a one-time setup after the first run.
 
@@ -143,7 +147,7 @@ agentmemory serve
 
 The `mcp.agentmemory` entry in `opencode.json` already points to `http://localhost:3111` via the `AGENTMEMORY_SERVER_URL` env var. If you change the port, update that env var to match.
 
-### `context7` (opt-in, remote, no install)
+### `context7` (enabled, remote, no install)
 
 ```jsonc
 {
@@ -161,7 +165,7 @@ The `mcp.agentmemory` entry in `opencode.json` already points to `http://localho
 
 Get a free API key at [context7.com](https://context7.com), set `CONTEXT7_API_KEY` in your shell or `.env`, then enable. No local install.
 
-### `chrome-devtools` (enabled by default, npm, no setup)
+### `chrome-devtools` (disabled by default, npm, no setup)
 
 ```jsonc
 {
@@ -254,8 +258,7 @@ Most MCP issues come from the env var not being visible to OpenCode's process. S
 
 ## Instructions (V2 ignores this key)
 
-OpenCode V2 accepts the `instructions` array but never loads it. Rules live in the global `AGENTS.md`, which OpenCode loads automatically. The maintainer's order (protocol rules first) is what the example uses. Reorder to taste, but put first-action protocols early; earlier entries get better model compliance.
-
+OpenCode V2 accepts but never loads the `instructions` array, so the pack does not use it. Always-on policy lives in `AGENTS.md`, with two on-demand rule files referenced from its Rules map. Keep it that way: a second always-on layer duplicates context every turn.
 ## LSP
 
 `"lsp": true` flips on the Language Server Protocol integration. Recommended on. If you turn it off, agents lose type-aware code navigation and refactor.

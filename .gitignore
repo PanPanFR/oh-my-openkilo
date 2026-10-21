@@ -36,3 +36,6 @@ Thumbs.db
 # Python bytecode
 __pycache__/
 *.pyc
+
+# Local decision logs
+skills/jev-decision/logs/

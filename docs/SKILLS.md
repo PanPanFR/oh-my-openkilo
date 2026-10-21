@@ -1,102 +1,82 @@
 # Skills
 
-54 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
+38 skills ship in oh-my-openkilo. Skills are prompt-based playbooks loaded into an agent's context when a task matches their description. They run no process; just focused instructions.
 
-The npm-hosted skills (`ponytail`, `ponytail-audit`, `ponytail-debt`, `ponytail-gain`, `ponytail-help`) and the superpowers plugin skills (`brainstorming`, `using-superpowers`, `writing-plans`, `executing-plans`, `dispatching-parallel-agents`, `subagent-driven-development`, `receiving-code-review`, `requesting-code-review`, `finishing-a-development-branch`, `using-git-worktrees`, `orchestration`) install via the plugin system. They are not counted below; the count is `ls skills/`, the filesystem is the source of truth.
+External package skills are not counted here. The count is `ls skills/`; the filesystem is the source of truth.
 
-## Core (20)
+## Core workflow (14)
 
-| Skill                              | When it loads                                                              |
-|------------------------------------|----------------------------------------------------------------------------|
-| `antislop`                       | Anti-slop negative design filter, 3 dials (energy, rhythm, motion), delivery gate |
-| `clean-code`                       | Writing new code, reviewing PRs, refactoring legacy code                   |
-| `cloudflare`                       | Any Cloudflare task: Workers, DO, Wrangler, KV, D1, R2, AI, Turnstile      |
-| `code-review`                      | Reviewing a branch, PR, or work-in-progress since a fixed point            |
-| `codebase-design`                  | Designing or improving a module's interface, seam placement, testability   |
-| `documentation`                    | Writing README, CHANGELOG, runbooks, API docs                              |
-| `git-commit`                       | User says commit, /commit, generate commit                                 |
-| `grilling`                         | Stress-test a plan, decision, or idea                                      |
-| `impeccable`                       | Review/polish/audit/iterate existing UI (build-time design stays `ui-design`) |
-| `plans`                            | Multi-step task before touching code, or executing a written plan          |
-| `pwa-development`                  | PWA, service workers, caching strategies, offline                          |
-| `resolving-merge-conflicts`        | In-progress git merge/rebase conflict                                      |
-| `shadcn`                           | shadcn/ui components: add/search/docs, composition rules, presets          |
-| `ui-design`                        | Designing pages or UI components, colors/typography, a11y                  |
-| `ui-ux-pro-max`                    | Searchable design intelligence: 79 styles, 192 palettes, 119 UX rules, 22 stacks |
-| `vercel-react`                     | Writing, reviewing, or refactoring React or Next.js code                   |
-| `vite`                             | Vite build tool, config, plugins, SSR, Vite 8 Rolldown migration           |
-| `vitest`                           | Vitest fast unit testing, vi mocking, snapshots, typed test contexts      |
-| `web-design-guidelines`            | Web interface code compliance review (Vercel standard: forms, a11y, motion)|
-| `web-perf`                         | Performance audits, Core Web Vitals, page speed                            |
+| Skill | When it loads |
+|-------|---------------|
+| `code-review` | Reviewing a branch, PR, diff, or work-in-progress against standards and spec |
+| `codebase-design` | Designing a module interface, finding deepening opportunities, choosing seams |
+| `delegation` | Deciding when to dispatch subagents, run parallel work, or stay inline |
+| `documentation` | Writing README, CHANGELOG, runbooks, onboarding, API, or architecture docs |
+| `git-commit` | User asks to commit, mentions `/commit`, or stages changes |
+| `graphify` | Questions about a codebase, architecture, file relationships, or project content |
+| `grilling` | Stress-testing a plan, decision, or idea |
+| `i-have-adhd` | Multi-step work or any answer that risks burying the next action |
+| `jev-decision` | Torn between costly options, routing, review/test/UI gates, or loop-breaker |
+| `plans` | Multi-step task before touching code, or executing a written plan |
+| `playwright-cli` | Browser automation, E2E tests, scraping, snapshots, request mocking |
+| `resolving-merge-conflicts` | Resolving an in-progress git merge or rebase conflict |
+| `vite` | Vite config, plugins, SSR, or Vite 8 Rolldown migration |
+| `vitest` | Writing tests, mocking, coverage, fixtures, or test filtering |
 
-## Agentmemory suite (7)
+## Agentmemory (3)
 
-| Skill                       | When it loads                                                        |
-|-----------------------------|----------------------------------------------------------------------|
-| `agentmemory`               | Routing and index for agentmemory skills suite                       |
-| `agentmemory-agents`        | Installing agentmemory into a host agent, connect adapter issues     |
-| `agentmemory-architecture`  | How memory is stored/retrieved end to end, extending the system      |
-| `agentmemory-config`        | Ports, env vars, feature flags, auth                                 |
-| `agentmemory-hooks`         | How observations get captured automatically, missing observations    |
-| `agentmemory-mcp-tools`     | Choosing a memory MCP tool, argument details                         |
-| `agentmemory-rest-api`      | Talking to the memory server over HTTP, MCP fallback                 |
+| Skill | When it loads |
+|-------|---------------|
+| `agentmemory` | Installing or debugging agentmemory internals, ports, hooks, or MCP tools |
+| `agentmemory-history` | Resume a session, recap recent work, trace a line, or compact for handoff |
+| `agentmemory-ops` | Recall observations, save decisions, record lessons, or delete memories |
 
-## Caveman family (4)
+## Caveman (1)
 
-| Skill               | When it loads                                                       |
-|---------------------|---------------------------------------------------------------------|
-| `caveman`           | Toggle terse mode in chat                                            |
-| `caveman-compress`  | Compress natural-language memory files (CLAUDE.md, todos, prefs)     |
-| `caveman-help`      | Quick-reference card for caveman modes and commands                  |
-| `caveman-stats`     | Real token usage and savings from the session log                    |
+| Skill | When it loads |
+|-------|---------------|
+| `caveman` | User asks for caveman mode, less tokens, brief replies, or `/caveman` |
 
-## Workflow, memory & decisions (15)
+## Cloudflare (9)
 
-| Skill                     | When it loads                                                              |
-|---------------------------|----------------------------------------------------------------------------|
-| `commit-context`          | "Why is this code here", history of a specific location                     |
-| `commit-history`          | List agent commits with session context                                    |
-| `delegation`              | Task dispatch, parallel subagents, inline-vs-delegate decisions            |
-| `forget`                  | Delete specific memory observations after confirmation                     |
-| `handoff`                 | "Where were we", resume the most recent session                            |
-| `handoff-compact`         | Compact the current conversation into a handoff document                   |
-| `i-have-adhd`             | Output structure: action-first, numbered steps, progress visibility        |
-| `jev-decision`            | Fast structured decisions via Jev 1.13: triage, routing (agent/skill/subagent), delegation, review, test, ui, verify gates |
-| `lesson`                  | Save a correction as a confidence-weighted rule                            |
-| `memory-discipline`       | Session loop: recall before work, save at decision points                  |
-| `recall`                  | Search past observations, sessions, and learnings                          |
-| `recap`                   | Summarize the last N sessions for the project                              |
-| `remember`                | Save an insight or decision to long-term memory                            |
-| `session-history`         | Timeline of what happened in past sessions                                 |
-| `write-agentmemory-skill` | House format for writing or updating agentmemory skills                    |
+| Skill | When it loads |
+|-------|---------------|
+| `agents-sdk` | Building, debugging, or reviewing Cloudflare Agents SDK apps |
+| `cloudflare` | Choosing Cloudflare products, including K2, Basin, Email, and Next.js on Workers |
+| `cloudflare-cli` | Running `cf` or Wrangler, signing in, deploying, or migrating between them |
+| `cloudflare-one` | Zero Trust, SASE, Gateway, Access, WARP, or migration planning |
+| `cloudflare-sandbox` | Building or migrating apps with `@cloudflare/sandbox` |
+| `durable-objects` | Durable Objects state, coordination, alarms, or storage |
+| `gateway-workers` | Workers invoked by Gateway HTTP policy Forward actions |
+| `turnstile-spin` | Setting up, repairing, or migrating Turnstile verification |
+| `workers-best-practices` | Writing, reviewing, configuring, or profiling Workers and Durable Objects |
 
-## Browser (2)
+## Frontend and UI (7)
 
-| Skill             | When it loads                                                                |
-|-------------------|------------------------------------------------------------------------------|
-| `playwright-cli`  | High-volume browser automation, E2E tests, snapshots, request mocking        |
-| `graphify`        | Codebase questions, architecture exploration, file relationship queries      |
+| Skill | When it loads |
+|-------|---------------|
+| `impeccable` | Designing, redesigning, critiquing, auditing, or polishing a frontend interface |
+| `pwa-development` | Service workers, caching strategies, offline behavior, or Workbox |
+| `shadcn` | Adding, searching, fixing, or composing shadcn/ui components |
+| `ui-design` | Designing pages or components, choosing type and color, reviewing UX/a11y |
+| `ui-ux-pro-max` | Searching local design intelligence: styles, palettes, fonts, UX rules, stacks |
+| `vercel-react` | Writing, reviewing, or refactoring React or Next.js code |
+| `web-perf` | Auditing loading and interaction performance, Core Web Vitals, Lighthouse |
 
-## Next.js official (6)
+## Next.js (4)
 
-| Skill                              | When it loads                                                              |
-|------------------------------------|----------------------------------------------------------------------------|
-| `next-browser-initial-load-optimizer` | Audit and reduce Next.js browser initial-load work                        |
-| `next-cache-components-adoption`   | Turn on Cache Components and resolve blocking routes                       |
-| `next-cache-components-optimizer`  | Drive a Next.js route to instant navigation under Cache Components / PPR   |
-| `next-dev-loop`                    | Verify Next.js runtime behavior after editing app code                     |
-| `next-partial-prefetching-adoption` | Turn on Partial Prefetching and work through surfaced insights            |
-| `next-partial-prefetching-optimizer` | Optimize what selected Next.js navigations include before the click      |
+| Skill | When it loads |
+|-------|---------------|
+| `next-browser-initial-load-optimizer` | Slow route startup, oversized client bundles, or duplicate browser dependencies |
+| `next-cache-components` | Enabling Cache Components or PPR, clearing blocking-prerender errors |
+| `next-dev-loop` | Verifying Next.js runtime behavior after editing app code |
+| `next-partial-prefetching` | Enabling or tuning Partial Prefetching and instant navigation |
 
 ## How skills are loaded
 
-The `skill-reminder` rule (in `rules/`) makes every task check for a matching skill before starting. The agent sees the description of each available skill and loads the matching one's `SKILL.md` into context.
+`AGENTS.md` requires every task to check for a matching skill before implementation. The agent sees each skill's name and description, then loads the matching `SKILL.md` into context.
 
 Skills with `references/` use progressive disclosure: `SKILL.md` is short and decision-oriented, with deep dives loaded only when relevant.
-
-## Total count
-
-The numbers above add to **54** skills. If the count in the repo differs, run `ls skills/` to verify; the source of truth is the filesystem, not this document.
 
 ## Editing a skill
 

@@ -1,37 +1,106 @@
 # OpenCode Global Instructions
 
-## Always-loaded (global AGENTS.md, auto-loaded by OpenCode V2)
+Single source of truth for behavior. Agent files hold only agent-specific
+details; rules files hold on-demand protocols.
 
-- Language: file contents English, Indonesian chat-only -> `rules/language.md`
-- Comms/code style: Caveman + Ponytail -> `rules/communication-style.md`
-- Skill check: load matching skill before implementing -> `rules/skill-reminder.md`
-- Jev routing: agent/skill/subagent classification for complex decisions only -> `rules/jev-routing.md` (manual calls, no auto-plugin; obvious decisions skip Jev)
+## Rules map (read on demand)
 
-## On-demand (skills, `skill` tool when task matches)
+| Rule | Load when |
+|------|-----------|
+| `rules/jev-routing.md` | Genuinely torn between costly options, high-risk/irreversible decision, or after 2 failed attempts (loop-breaker) |
+| `rules/ui-tooling.md` | Task touches component registries, shadcn CLI, or a UI MCP |
 
-- Memory: recall before work, save after outcomes -> `memory-discipline` (+ `recall`, `remember`, `lesson`)
-- Graphify: knowledge graph before manual code browsing -> `graphify`
-- Delegation: parallel subagents for independent subtasks -> `delegation`
-- Workers/Cloudflare: doc-first via Context7 or `cloudflare` skill
-- Structure: action-first numbered output -> `i-have-adhd` skill, auto-loaded from triage/delegation signals on multi-step work (no keyword needed, complements Caveman density)
-- Decisions: structured routing via `jev-decision` (triage/verify/review/test/ui gates, no slash, fail-open)
-- Routing: `-Preset route` (agent owner + needs_planner + needs_subagent), `-Preset skill-match -CandidatesJson` (LLM shortlists 2-8 skills, Jev picks), `delegation` extended with needs_subagent + context_isolation. Complex-only: obvious decisions skip Jev. Uncertain needs_subagent -> inline; uncertain needs_planner -> plan first. See `rules/jev-routing.md`.
+Everything else that applies every turn lives below. No duplication.
 
-## Jev gates (mandatory, no slash)
 
-- Builder triage + verify (skip triage on pure read-only Q&A) + loop-breaker on repeated failure, planner delegation + verify, reviewer review gate, tester test-scope gate, designer ui gate, remember curation gate. See each agent file and skill for the exact `jev-decide.mjs -Preset` call. Script failure -> proceed with LLM judgment, never block.
+## Language
 
-## Agent workflow
+All file contents English. Indonesian is chat-only, never on disk. Exception:
+user explicitly asks for another language in a specific file.
 
-- builder executes directly (simple + complex). User switches to `planner` for upfront design; planner is never Task-spawned.
-- Bulk / mechanical edits: patterned or multi-file changes (>2 files, e.g. updating model across configs, batch string replacement) -> execute via single shell command / script (PowerShell, Node.js) in one step. NEVER edit file-by-file with LLM edit tool, NEVER spawn subagents for mechanical changes.
-- Tool balance & RTK: use native tools (`read`, `grep`, `glob`) for fast in-process file reading and discovery. Use `shell` for Git inspection (`git log`, `git diff`, `git status`), test suites (`vitest`, `npm test`), build/compiler runs, and process logs — the global RTK plugin automatically intercepts and compresses them to save tokens.
-- Parallel plans: 1 plan = 1 builder session. Branches never self-merge; integration runs via `/integrate` in the main checkout.
-- Plan completion: whenever finishing a plan or implementation plan (sequential single plan or via `/integrate`), always delete the plan file (`plan/<slug>.md` or root plan file) once all steps and verifications are verified green. Never leave completed plan files in the repository.
+## Communication (Caveman)
 
-## graphify
+Compressed fragments, technical terms exact, code/commands/errors byte-exact.
+Drop filler and pleasantries. No em dash in prose or UI strings; use comma,
+period, colon, or restructure. Precedence: `i-have-adhd` owns response
+structure when loaded, Caveman owns density. Off: "stop caveman" / "normal mode".
 
-Knowledge graph at `graphify-out/`. For codebase questions, run `graphify query "<question>"` first (or `graphify path`/`graphify explain`) before grep/read. Only skip when the task is about stale/incorrect graph output or the user opts out. After modifying code, `graphify update .` (AST-only, no API cost).
+## Memory (agentmemory)
 
-- Wiki: if `graphify-out/wiki/index.md` exists, use it for broad navigation.
-- Cross-project: `graphify query "..." --graph <global-graph-path>`. Refresh: `graphify global add <project>\graphify-out\graph.json --as <tag>`.
+- **First tool call of a nontrivial task:** `memory_smart_search` with the task
+  topic and project. One call. Skip only for trivial or read-only questions.
+- Save a settled decision with its reason at the moment it settles, not in an
+  end-of-session batch.
+- User corrects your approach: save a lesson (`memory_lesson_save`), not a plain
+  memory.
+- Never fabricate observations, session ids, or scores. Report what the tool
+  returned.
+- Skills: `agentmemory-ops` (read/write), `agentmemory-history` (resume, recap,
+  commits). Detail in `skills/agentmemory/SKILL.md`.
+
+## Graphify (on-demand, no background work)
+
+- `graphify-out/` present: use `graphify query` for architecture, data flow,
+  callers, or cross-file questions (normally >2 files). Skip it for reading a
+  known file or a 1-2 file edit; read/grep directly.
+- After completing a code change in a repo with `graphify-out/`, run
+  `graphify update .` once (AST-only, no API cost). Not after every edit.
+- No timer, no poller, no automatic update while idle. The plugin was removed
+  by design: fixed cost with no on-demand benefit.
+- Missing graph in a nontrivial task: ask before extracting, it costs time.
+
+## Skills
+
+- Load the matching skill before implementing. Most specific wins; independent
+  concerns load together. Unsure: load the closest one.
+- Multi-step work (>2 steps) or an answer that risks burying the action: load
+  `i-have-adhd` for numbered, action-first output.
+- UI build: `ui-design`; design-system search: `ui-ux-pro-max`; existing UI
+  polish/audit: `impeccable`; component install: `shadcn`. Substantial UI work:
+  delegate to `designer`.
+- Library or API docs: Context7 first (`resolve-library-id` then `query-docs`),
+  websearch/webfetch as fallback.
+- Tool choice for UI components: `rules/ui-tooling.md`.
+
+## Jev (optional decision check)
+
+Call Jev only when torn between 2+ plausible options AND a wrong pick is costly.
+Obvious, single-option, explicit-instruction, or trivial tasks: skip, no note.
+
+Useful presets: `route` (plan vs code, owner unclear), `skill-match` (2+ real
+skill candidates), `delegation` (inline vs subagent), `verify` (irreversible or
+high-risk approach), `review`/`test`/`ui` gates when genuinely uncertain.
+
+**Loop-breaker (mandatory):** after 2 consecutive failed attempts at the same
+problem (failing test, build error, syntax loop), stop editing. Run
+`node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset
+loop-breaker -State "<error + attempts + recent diff>"`. If `is_stuck >= 0.7`,
+execute `action`: `rollback-git`, `fresh-approach`, or `ask-human`. Never a
+third blind edit.
+
+Fail-open: script error, timeout, auth failure: use LLM judgment, one-line note,
+never block. Details in `rules/jev-routing.md`.
+
+## Workflow
+
+- Bulk or mechanical edits (>2 files, repetitive patterns, batch rename,
+  find-replace): one shell command or short script. Never file-by-file LLM
+  edits. Never a subagent.
+- Simple fix (1-2 targeted edits): do it directly. Complex work: decompose and
+  execute stepwise; the user switches to `planner` for upfront design (planner
+  is never Task-spawned).
+- Specialist work: `designer`, `documenter`, `reviewer`, `tester`. Merge and
+  conflict resolution stay inline.
+- Plans: one branch `feature/<slug>`, plan file in `plan/`, delete the plan file
+  once every step is verified green.
+- Parallel plans never self-merge. Integration runs via `/integrate` in the main
+  checkout.
+- Verify each step (tests, lint, build). Commit before refactors. Review your own
+  diff.
+
+## Tooling
+
+- Native `read`/`grep`/`glob` for discovery. `shell` for git inspection, test
+  suites, builds, and process logs.
+- MCP servers are registered in `opencode.json`. Disabled servers cost nothing;
+  enable per task and re-disable after.

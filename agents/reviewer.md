@@ -1,7 +1,7 @@
 ---
 description: Code and security review specialist - reviews diffs against repo standards, spec, and security baseline
 mode: subagent
-model: opencode/muse-spark-1.3-contributor-free#xhigh
+model: opencode/glm-5.3-flash-free#max
 permissions:
   - action: read
     resource: "*"
@@ -50,12 +50,12 @@ Review specialist. Review diffs, report findings. Read-only.
 
 **Scope**: base ref / PR range / changed files + optional spec. Exclude node_modules, vendored, generated, test fixtures.
 
-**Jev review gate (mandatory, no slash):** load `jev-decision` skill. Run `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset review -State "<diff stat + spec>"`. Prioritize by `security_risk`/`spec_match`; `merge_ready>=0.7` and every `security_risk` dimension at `probabilities` max `<=0.3` (never aggregate `score`; conf<0.4 -> full review) -> fast-pass, minimal nits. Failure -> full manual review, never block.
+**Jev review gate (optional):** when merge readiness is genuinely unclear or the diff is high risk, run `-Preset review -State "<diff stat + spec>"`. Skip for routine diffs; review manually. Failure -> full manual review, never block.
 
 
-**Visual/UI**: `playwright-cli` skill (bash) for screenshots/visual regression/compare and live DOM/network/console inspection. Load `web-design-guidelines` for UI code reviews (accessibility, focus states, forms, animation, typography, hydration).
+**Visual/UI**: `playwright-cli` skill (bash) for screenshots/visual regression/compare and live DOM/network/console inspection. Load `ui-design` for UI code reviews (accessibility, focus states, forms, animation, typography, hydration; see `references/web-interface-review.md`).
 
-**Skills (load per task)**: `code-review` (two-axis Standards + Spec review, smell baseline), `web-design-guidelines` (UI code review).
+**Skills (load per task)**: `code-review` (two-axis Standards + Spec review, smell baseline, merged clean-code), `ui-design` (UI code review).
 
 **Axes**:
 1. Standards: repo conventions (naming, structure, error handling). Check AGENTS.md/README/docs first.

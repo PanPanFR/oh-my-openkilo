@@ -1,6 +1,6 @@
 # Agents
 
-oh-my-openkilo ships **6 agents** in `agents/`. Each is a single markdown file: YAML frontmatter at the top (name, mode, model, variant, permissions) and a prompt body. Edit the file to change behavior, edit the `model:` line to swap models, edit `permissions:` to change the allowlist. No build step.
+oh-my-openkilo ships **6 agents** in `agents/`. Each is a single markdown file: YAML frontmatter at the top (name, mode, model, permissions) and a prompt body. Edit the file to change behavior, edit the `model:` line to swap models, edit `permissions:` to change the allowlist. No build step.
 
 The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 dual-role agent** (`designer`, `mode: all`), and **3 subagents** (`tester`, `reviewer`, `documenter`). Two of OpenCode's built-in agents are disabled to avoid duplication: `build` (replaced by `builder`) and `plan` (replaced by `planner`).
 
@@ -8,12 +8,12 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 | # | Agent | Mode | Default model | When to use |
 |---|-------|------|---------------|-------------|
-| 01 | `builder` | primary | `opencode/muse-spark-1.3-contributor-free` | Default implementation. Triage, fan-out. |
-| 02 | `planner` | primary | `opencode/muse-spark-1.3-contributor-free` | Pre-impl design, architecture, plan files. |
-| 03 | `designer` | all | `opencode/muse-spark-1.3-contributor-free` | UI/UX, design system, a11y, frontend planning. Multimodal preferred for visual work. |
-| 04 | `tester` | subagent | `opencode/muse-spark-1.3-contributor-free` | Test suites: write, run, isolate failures. |
-| 05 | `reviewer` | subagent | `opencode/muse-spark-1.3-contributor-free` | Diff + security review. Read-only. |
-| 06 | `documenter` | subagent | `opencode/muse-spark-1.3-contributor-free` | README, runbook, API docs in `docs/`. |
+| 01 | `builder` | primary | `opencode/deepseek-v4.1-flash-free#max` | Default implementation. Triage, fan-out. |
+| 02 | `planner` | primary | `9router/ag/claude-opus-4-6-thinking` | Pre-impl design, architecture, plan files. |
+| 03 | `designer` | all | `9router/ag/gemini-3.8-flash-high` | UI/UX, design system, a11y, frontend planning. Multimodal preferred for visual work. |
+| 04 | `tester` | subagent | `opencode/mimo-v2.6-flash-free` | Test suites: write, run, isolate failures. |
+| 05 | `reviewer` | subagent | `opencode/glm-5.3-flash-free#max` | Diff + security review. Read-only. |
+| 06 | `documenter` | subagent | `9router/ag/gemini-3.8-flash-high` | README, runbook, API docs in `docs/`. |
 
 ---
 
@@ -27,7 +27,7 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 **Prompt:** [`agents/builder.md`](../agents/builder.md)
 
-**Default model:** `opencode/muse-spark-1.3-contributor-free`
+**Default model:** `opencode/deepseek-v4.1-flash-free#max`
 
 **Recommended models:** any strong instruction-following coding model. Swap to `anthropic/claude-sonnet-4-5`, `openai/gpt-5` if you have provider credentials and want higher quality on complex tasks.
 
@@ -49,13 +49,13 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 **Prompt:** [`agents/planner.md`](../agents/planner.md)
 
-**Default model:** `opencode/muse-spark-1.3-contributor-free`
+**Default model:** `9router/ag/claude-opus-4-6-thinking`
 
 **Recommended models:** strong reasoning and planning models. Worth paying for: `anthropic/claude-sonnet-4-5`, `openai/gpt-5` (or any long-context model for big repos).
 
 **Model guidance:** `planner` does the high-leverage work — it decides what to build and how. A weak model here means a weak plan, which means wasted implementation time downstream. If you mix free + paid, this is the agent to upgrade first.
 
-**Permissions:** allowlist in frontmatter — `read`, `edit`, `glob`, `grep`, `todowrite`, `subagent` (reviewer only), `chrome-devtools_*`, `agentmemory_*`, `perplexity_*`, `webfetch`, `websearch`, `lsp`, `skill`, `question`; `shell` limited to graphify/git/rm commands, everything else denied (no direct `shell`; planning happens in markdown files)
+**Permissions:** allowlist in frontmatter — `read`, `edit`, `shell`, `glob`, `grep`, `todowrite`, `subagent` (reviewer only), `agentmemory_*`, `webfetch`, `websearch`, `context7_*`, `lsp`, `skill`; everything else denied
 
 **Dispatched by:** you, directly, or by `builder` when it judges a task is too complex to implement without design.
 
@@ -73,7 +73,7 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 **Prompt:** [`agents/designer.md`](../agents/designer.md)
 
-**Default model:** `opencode/muse-spark-1.3-contributor-free`
+**Default model:** `9router/ag/gemini-3.8-flash-high`
 
 **Recommended models:** strong UI/UX judgment + frontend implementation. Good fits: `anthropic/claude-sonnet-4-5`, `google/gemini-2.5-pro`.
 
@@ -97,7 +97,7 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 **Prompt:** [`agents/tester.md`](../agents/tester.md)
 
-**Default model:** `opencode/muse-spark-1.3-contributor-free`
+**Default model:** `opencode/mimo-v2.6-flash-free`
 
 **Recommended models:** reliable test-running model. Good fits: any `opencode/*` or `anthropic/*` model with solid bash execution. No need for a frontier model.
 
@@ -117,13 +117,13 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 **Prompt:** [`agents/reviewer.md`](../agents/reviewer.md)
 
-**Default model:** `opencode/muse-spark-1.3-contributor-free`
+**Default model:** `opencode/glm-5.3-flash-free#max`
 
 **Recommended models:** strong reasoning + security awareness. Worth paying for on auth/data paths: `anthropic/claude-sonnet-4-5`, `openai/gpt-5`.
 
 **Model guidance:** `reviewer` reads code and produces a verdict, not a fix. It benefits from a model that's good at finding edge cases and security smells, not from raw code generation speed. For security-sensitive work (auth, crypto, payments), upgrade to your strongest model.
 
-**Permissions:** allowlist in frontmatter — `read`, `glob`, `grep`, `shell`, `webfetch`, `websearch`, `lsp`, `skill`; read-only by design (no `edit`, no subagents, no MCP tools)
+**Permissions:** allowlist in frontmatter — `read`, `glob`, `grep`, `shell`, `agentmemory_*`, `webfetch`, `websearch`, `context7_*`, `lsp`, `skill`; read-only by design (no `edit`, no subagents)
 
 **Dispatched by:** `builder` and `planner` for sanity checks, or by you via "Ask `reviewer` to look at this diff".
 
@@ -137,7 +137,7 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 **Prompt:** [`agents/documenter.md`](../agents/documenter.md)
 
-**Default model:** `opencode/muse-spark-1.3-contributor-free`
+**Default model:** `9router/ag/gemini-3.8-flash-high`
 
 **Recommended models:** long-context writing model. Good fits: `anthropic/claude-sonnet-4-5` (or any long-context model for big codebases).
 
@@ -182,19 +182,18 @@ Free models are good for everyday work but slower and less capable than paid one
 
 ## Reasoning effort
 
-Agent frontmatter sets `variant` (how much the model reasons before answering) per agent. The pack ships it tuned per role:
+Reasoning effort is encoded in the model suffix where the provider supports it. `builder` and `reviewer` use `#max`; the other agents use their provider defaults. OpenCode V2 ignores the legacy `temperature` key.
 
-| Agent | `variant` | Why |
-|-------|-----------|-----|
-| `builder` | `xhigh` | Max reasoning depth for build quality. |
-| `planner` | `xhigh` | Deep reasoning for architecture. |
-| `reviewer` | `high` | One notch down for speed; stable, repeatable findings. |
-| `tester` | `medium` | Iteration speed matters in test-fix loops. |
-| `documenter` | `low` | Docs need fluency, not deep reasoning; cheapest and fastest. |
-| `designer` | `medium` | Medium reasoning for a11y and system calls. |
+| Agent | Effort |
+|-------|--------|
+| `builder` | `#max` suffix |
+| `reviewer` | `#max` suffix |
+| `planner` | provider default |
+| `designer` | provider default |
+| `tester` | provider default |
+| `documenter` | provider default |
 
-Reasoning effort is a direct latency and cost multiplier: every notch down means fewer reasoning tokens per turn. Raise `variant` back to `xhigh` on any agent where the output quality drops. Restart OpenCode after editing, since frontmatter is read at session start.
-
+Higher effort is a direct latency and cost multiplier. Add or remove the suffix in the agent's `model:` line only when output quality or speed demands it. Restart OpenCode after editing.
 ## Adding a new agent
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md#adding-a-new-agent--skill--rule). New agents are typically subagents specialized for one job that the existing 6 don't cover well.

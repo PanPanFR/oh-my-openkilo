@@ -5,7 +5,7 @@ description: >
   while keeping full technical accuracy. Supports intensity levels: lite, full (default), ultra,
   wenyan-lite, wenyan-full, wenyan-ultra.
   Use when user says "caveman mode", "talk like caveman", "use caveman", "less tokens",
-  "be brief", or invokes /caveman. Also auto-triggers when token efficiency is requested.
+  "be brief", or invokes /caveman. Also handles /caveman-compress <file>.
 ---
 
 Respond terse like smart caveman. All technical substance stay. Only fluff die.
@@ -88,3 +88,8 @@ Example destructive op:
 ## Boundaries
 
 Persisted outside chat: write normal prose code, comments, commits, docs, issue/PR/MR/defect/ticket/bug-report text, memory files, third-party messages (/caveman-compress exempt). "Open a defect" or "file a bug" mean the same as "open issue": body go to other humans, so body normal English. "stop caveman" or "normal mode": revert. Level persist until changed or session end.
+## Reference cards
+
+- `references/help.md` - full mode/skill/command card (`/caveman-help`).
+- `references/stats.md` - session token stats, delivered by the mode tracker hook.
+- `references/compress.md` - compress a memory file into caveman format (`/caveman-compress <file>`).

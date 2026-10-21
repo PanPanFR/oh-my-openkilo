@@ -2,13 +2,11 @@
 
 Slash commands. Type the name (with leading `/`) at the start of an OpenCode prompt to invoke.
 
-| Command           | Description                                                     |
-|-------------------|-----------------------------------------------------------------|
-| `/integrate`      | Integrate verified parallel plan branches into main (merge, conflicts, cleanup) |
-| `/recall <query>` | Search agentmemory for past session observations matching the query |
-| `/remember <note>` | Save a decision, insight, or pattern to agentmemory's long-term storage |
+| Command      | Description |
+|--------------|-------------|
+| `/integrate` | Integrate verified parallel plan branches into main (merge, conflicts, cleanup) |
 
-> v0.16.0 trims the command set to the minimal live set (3 commands). Removed: `/caveman`, `/configcheck`, `/i-have-adhd`, `/impeccable`, `/update-pack` (their skills and rules remain; invoke via plain sentences instead, e.g. "update this pack", "check my config", "review this UI").
+> v0.17.0 keeps the minimal live set: one command. Memory recall and save are plain sentences handled by the `agentmemory-ops` skill. Other former commands (`/caveman`, `/configcheck`, `/i-have-adhd`, `/impeccable`, `/update-pack`, `/recall`, `/remember`) are gone; their skills remain and load from descriptions.
 
 ## Updating the pack (manual, replaces `/update-pack`)
 

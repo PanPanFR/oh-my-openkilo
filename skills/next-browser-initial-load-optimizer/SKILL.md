@@ -10,7 +10,7 @@ description: >
 
 ## 1. Set the scope
 
-Choose a route and **audit** or **fix** mode. Audit is the default: generate analyzer artifacts and report candidates while leaving application source, dependencies and lockfiles unchanged. Fix mode requires an explicit request to change the app. Ask before changing visible behavior, timing, compatibility or a trust boundary. For a route's static App Shell, use `next-cache-components-optimizer`; for navigation prefetch work, use `next-partial-prefetching-optimizer`.
+Choose a route and **audit** or **fix** mode. Audit is the default: generate analyzer artifacts and report candidates while leaving application source, dependencies and lockfiles unchanged. Fix mode requires an explicit request to change the app. Ask before changing visible behavior, timing, compatibility or a trust boundary. For a route's static App Shell, use `next-cache-components` (optimizer reference); for navigation prefetch work, use `next-partial-prefetching` (optimizer reference).
 
 **Done:** the route, mode and intended behavior are recorded. A request to capture or export data is audit mode, not permission to fix.
 

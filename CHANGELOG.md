@@ -1,3 +1,34 @@
+# v0.17.0 (2026-10-21)
+
+## Added
+- **`cloudflare-cli` skill**: one hub for `cf` and Wrangler, with `references/cf.md` and `references/wrangler.md`. Replaces the separate `cf-cli` and `wrangler` skills.
+- **Cloudflare reference hub**: `cloudflare` now routes to `references/k2.md`, `references/basin/`, `references/email/`, `references/nextjs.md`, and `references/profiling.md`.
+- **Caveman compress reference**: `/caveman-compress` protocol now lives in `caveman/references/compress.md` with scripts alongside it.
+
+## Changed
+- **Live config synced**: 6 agents, 38 skills, 2 rules, 1 command, 4 plugin loaders plus the caveman package.
+- **Skills 54 -> 38** (-29.6%). Seven overlaps merged: `cf-cli` + `wrangler` -> `cloudflare-cli`; `workers-profiling` -> `workers-best-practices`; `k2`, `basin`, `cloudflare-email-service`, `nextjs-on-cloudflare` -> `cloudflare`; `caveman-compress` -> `caveman`.
+- **Skill descriptions 14,318 -> 10,048 chars** (-29.8%, about 1,068 fewer input tokens per turn). No trigger words were removed; the reduction comes from fewer skills, not thinner descriptions.
+- **Rules 5 -> 2**: `language`, `communication-style`, and `skill-reminder` were already folded into `AGENTS.md`. Only `jev-routing` and `ui-tooling` remain as on-demand files. Always-on policy plus rules dropped from 14,236 to 9,772 bytes (about 1,116 fewer tokens per turn).
+- **Commands 3 -> 1**: `/integrate` remains. `/recall` and `/remember` are plain sentences handled by `agentmemory-ops`.
+- **Plugins 7 -> 5**: removed `graphify.ts` (10s poller, no on-demand benefit) and `recall-first.ts` (duplicate recall gate). `rtk` is now git-only.
+- **Agent prompts slimmed**: 28,653 -> 20,742 bytes across the 6 files. Jev is optional everywhere; the loop-breaker stays mandatory.
+- **Model defaults documented**: builder, reviewer, and tester use free `opencode/*` models; planner, designer, and documenter use `9router` defaults. No credential is stored.
+- **Docs resynced**: README, STRUCTURE, SKILLS, RULES, COMMANDS, CONFIGURATION, INSTALL, and the example config now match the live shape.
+
+## Removed
+- **16 skill folders net removed** (54 -> 38). Deleted stale entries include the old agentmemory suite, caveman family, antislop, clean-code, web-design-guidelines, and the superseded Next.js names.
+- **Deleted rules**: `communication-style.md`, `language.md`, `skill-reminder.md`.
+- **Deleted commands**: `recall.md`, `remember.md`.
+- **Deleted plugins**: `graphify.ts`, `recall-first.ts`.
+
+## Measurements
+- Unique skill metadata: 54 -> 38.
+- Skill description payload: 14,318 -> 10,048 chars (~3,580 -> ~2,512 tokens).
+- Always-on policy: ~3,559 -> ~2,443 tokens.
+- Estimated per-turn input reduction: ~2,100-2,200 tokens before conversation history.
+- Pack size: 23.19 -> 23.08 MB (large reference trees dominate; skill count is not a size proxy).
+
 # v0.16.0 (2026-10-14)
 
 ## Added

@@ -1,7 +1,7 @@
 ---
 description: Technical writing specialist - creates and improves documentation
 mode: subagent
-model: opencode/muse-spark-1.3-contributor-free
+model: 9router/ag/gemini-3.8-flash-high
 permissions:
   - action: read
     resource: "*"
@@ -77,4 +77,3 @@ Templates: PRD = Problem/Users/Goals-Nongoals/User stories/Success metrics/Out o
 **Rules**: never document non-existent behavior. Flag gaps, mark "unclear". Match repo conventions.
 
 **Report**: files written/changed (scope per line); gaps found not filled.
-

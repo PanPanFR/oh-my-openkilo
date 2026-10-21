@@ -66,6 +66,10 @@ export default {
       if (typeof command !== "string" || !command) return;
       // Already an rtk invocation — nothing to rewrite.
       if (/^\s*rtk(\.exe)?\b/.test(command)) return;
+      // Git-only rewrite. Every other command passes through untouched so the
+      // ~0.35s `rtk rewrite` subprocess cost is paid only where the token
+      // savings are real (large git log/diff/show output).
+      if (!/^\s*git\s+(log|diff|show|blame|branch)\b/.test(command)) return;
       try {
         // `rtk rewrite` exits nonzero when there is no equivalent;
         // stdout empty there too. Non-empty stdout that differs = rewrite.

@@ -1,44 +1,27 @@
 # Rules
 
-Five global rules shape every session. Rules are registered in `opencode.json` under `instructions`, or referenced from `AGENTS.md`:
+Two on-demand rule files ship in `rules/`. They are not always loaded. `AGENTS.md` carries the always-on policy and points to each rule only when the task needs it.
 
-```jsonc
-{
-  "instructions": [
-    "rules/skill-reminder.md",
-    "rules/jev-routing.md",
-    "rules/language.md",
-    "rules/communication-style.md",
-    "rules/ui-tooling.md"
-  ]
-}
-```
-
-Order matters: earlier entries get better model compliance, so the first-action protocols come first. Reorder to taste.
-
-## The five rules
-
-| Rule                  | What it does                                                                                            |
-|-----------------------|---------------------------------------------------------------------------------------------------------|
-| `skill-reminder`      | Before any implementation task: check for a matching skill via the `skill` tool, and recall agentmemory first. |
-| `jev-routing`         | Jev (decision-only) classifies agent, skill, and subagent routing before work starts. Fail-open, advisory. |
-| `language`            | All file content in English. Chat can be any language.                                                  |
-| `communication-style` | Caveman (terse) replies and Ponytail (minimal) code style in every session.                              |
-| `ui-tooling`          | UI component tooling decision map: CLI vs MCP servers vs skills.                                         |
-
-Everything else (memory recall, graphify navigation, parallel delegation, Cloudflare doc-first) is handled by the matching skill, loaded on demand. See [SKILLS.md](SKILLS.md).
+| Rule | Load when |
+|------|-----------|
+| `jev-routing.md` | Genuinely torn between costly options, a high-risk or irreversible decision, or after two failed attempts (loop-breaker) |
+| `ui-tooling.md` | Task touches component registries, the shadcn CLI, or a UI MCP |
 
 ## How rules differ from skills
 
-- **Skills** are loaded on demand when a task matches their description. They inject a focused playbook into the agent's context for the duration of that task.
-- **Rules** are always in context. They shape every message, every turn, every tool call.
+- **Rules** are short protocols referenced from `AGENTS.md` when a decision is genuinely uncertain.
+- **Skills** are playbooks loaded when a task matches their description.
 
-Both are plain markdown files. The difference is the `instructions` array in `opencode.json` (rules) versus the `skill` tool call (skills).
+Both are plain markdown files. OpenCode V2 does not load an `instructions` array, so the pack does not use one.
 
-## Disabling a rule temporarily
+## Always-on policy lives in AGENTS.md
 
-If a particular session is fighting a rule, comment it out in `opencode.json` and restart. Don't edit the rule file itself; rules are shared across the whole pack.
+Language, communication density, memory discipline, graphify usage, skill selection, Jev policy, workflow, and tooling rules live directly in `AGENTS.md`. Keeping them there avoids a second always-on layer and keeps the per-turn context small.
+
+## Disabling a rule
+
+Remove or rename the file, then remove its row from the Rules map in `AGENTS.md`. Restart OpenCode.
 
 ## Editing a rule
 
-Same flow as agents and skills: edit the file in the repo, commit, push, then pull and mirror the new version locally.
+Edit the live file first, verify it in a real session, then mirror it into `rules/` and release.

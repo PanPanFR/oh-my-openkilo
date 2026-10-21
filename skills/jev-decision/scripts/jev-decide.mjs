@@ -238,7 +238,9 @@ function parseArgs() {
     model: process.env.JEV_MODEL || "openrouter/typesafe/jev-1.13",
     endpoint: process.env.JEV_ENDPOINT || "",
     apiKey: process.env.JEV_API_KEY || "",
-    timeoutSec: 8
+    timeoutSec: 8,
+    noLog: false,
+    logFile: ""
   };
 
   for (let i = 0; i < args.length; i++) {
@@ -271,6 +273,11 @@ function parseArgs() {
       i++;
     } else if (rawKey === "timeoutsec" || rawKey === "timeout" || rawKey === "timeout-sec") {
       options.timeoutSec = parseInt(val, 10) || 8;
+      i++;
+    } else if (rawKey === "nolog" || rawKey === "no-log") {
+      options.noLog = true;
+    } else if (rawKey === "logfile" || rawKey === "log-file") {
+      options.logFile = val;
       i++;
     }
   }
@@ -341,8 +348,35 @@ function resolveConfig(currentEndpoint, currentKey) {
   return { endpoint, key };
 }
 
+function resolveLogTarget(opts) {
+  if (opts.noLog) return null;
+  if (opts.logFile) return opts.logFile;
+  const env = (process.env.JEV_LOG || "").trim();
+  if (env.toLowerCase() === "off" || env === "0") return null;
+  if (env) return env;
+  return path.resolve(__dirname, "..", "logs", "jev-decisions.jsonl");
+}
+
+function hostOnly(url) {
+  try {
+    return new URL(url).host;
+  } catch {
+    return url;
+  }
+}
+
+function appendLog(logFile, record) {
+  if (!logFile) return;
+  try {
+    fs.mkdirSync(path.dirname(logFile), { recursive: true });
+    fs.appendFileSync(logFile, JSON.stringify(record) + "\n");
+  } catch {}
+}
+
 async function main() {
   const opts = parseArgs();
+  const logFile = resolveLogTarget(opts);
+  const startedAt = Date.now();
 
   // Handle state from file, argument, or stdin
   let state = opts.state;
@@ -445,6 +479,17 @@ async function main() {
     questions
   };
 
+  const logRecord = (extra) => ({
+    ts: new Date().toISOString(),
+    preset: opts.questionsJson ? "custom" : opts.preset,
+    model: opts.model,
+    endpoint: hostOnly(endpoint),
+    latencyMs: Date.now() - startedAt,
+    state,
+    questions,
+    ...extra
+  });
+
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), opts.timeoutSec * 1000);
 
@@ -463,15 +508,18 @@ async function main() {
 
     if (!res.ok) {
       const errText = await res.text().catch(() => "");
+      appendLog(logFile, logRecord({ status: "http-error", httpStatus: res.status, error: errText.slice(0, 500) }));
       console.error(`Jev call failed: HTTP ${res.status} - ${errText}`);
       process.exit(3);
     }
 
     const data = await res.json();
+    appendLog(logFile, logRecord({ status: "ok", answers: data.answers }));
     console.log(JSON.stringify(data.answers));
   } catch (err) {
     clearTimeout(timer);
     const msg = err.name === "AbortError" ? `Timeout after ${opts.timeoutSec}s` : err.message;
+    appendLog(logFile, logRecord({ status: err.name === "AbortError" ? "timeout" : "network-error", error: msg }));
     console.error(`Jev call failed: ${msg}`);
     process.exit(3);
   }

@@ -1,30 +1,20 @@
 ---
 name: jev-decision
-description: "Fast structured decisions via System One decision endpoint (Jev jev-1.13). Use for routing, triage, delegation, review/test/UI gates. Returns typed choice/noul/score with probabilities, not text. Triggers: jev, systemone, triage, route, delegation gate, review gate, test scope."
+description: "Fast structured decisions via 9router System One (Jev jev-1.13). Use for routing, triage, delegation, review/test/UI gates. Returns typed choice/noul/score with probabilities, not text. Triggers: jev, systemone, triage, route, delegation gate, review gate, test scope."
 ---
 
-# Jev Decision (System One, bring-your-own endpoint)
+# Jev Decision (System One, via 9router)
 
 Jev is a decision-only model. It never generates text or code. It scores a `state` string against typed `questions` and returns calibrated answers in ~100-500ms. Use it at decision points; keep the chat LLM for generation.
 
-- Endpoint: `POST <JEV_ENDPOINT>` (full decision URL, e.g. `https://<YOUR_PROVIDER_BASE_URL>/systemone`). Supply via `-Endpoint` param, `JEV_ENDPOINT` env var, or `providers.<your-provider>.settings.baseURL` in opencode.json (script appends `/systemone`).
-- Model: `openrouter/typesafe/jev-1.13` default (verified live 2026-09-23, context 200k). Override via `-Model` param or `JEV_MODEL` env var.
-- Auth: `Authorization: Bearer <your key>` - supply via `-ApiKey` param, `JEV_API_KEY` env var, or `providers.<your-provider>.settings.apiKey` in opencode.json.
-- Wrapper: `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset <name> -State "<state>"`
+- Endpoint: `POST <baseURL>/systemone` (configured via `providers.9router.settings.baseURL` in opencode.json, or `JEV_ENDPOINT` env var)
+- Model: `openrouter/typesafe/jev-1.13` (verified live 2026-09-23, context 200k)
+- Auth: `Authorization: Bearer <9router key>` (same key as `providers.9router.settings.apiKey`)
+- Wrapper: `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset <name> -State "<state>"` (recommended, ~50ms startup) or pwsh `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset <name> -State "<state>"`
 - State structure: `Goal: <request> | Files: <git status --short> | Diff: <git diff --stat> | Risks: <known risks>`. Dense, structured facts maximize confidence.
 - Pure Q&A / read-only chat: skip triage gate entirely.
 - State with quotes/newlines/backticks: pipe via stdin to node script, or pass `-StateFile <path>` (CLI quoting breaks otherwise)
 
-## Setup (fill in your own endpoint + key)
-
-This repo ships **no endpoint and no key**. Fill in your own before calling:
-
-1. Pick a System One-compatible decision provider and create a key.
-2. Set env vars in your shell profile (or pass `-Endpoint` / `-ApiKey` per call):
-   - `JEV_ENDPOINT` = full decision URL (e.g. `https://<YOUR_PROVIDER_BASE_URL>/systemone`)
-   - `JEV_API_KEY` = your key (optional `JEV_MODEL` overrides the default model)
-3. Or configure `providers.<your-provider>.settings.baseURL` + `settings.apiKey` in `opencode.json` (the script reads the first provider with both set; `{env:VAR}` placeholders are resolved).
-4. Test: `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset triage -State "hello"`. Missing values fail fast with a Setup pointer, never with a credential.
 ## Question schema (verified against live endpoint)
 
 - `choice`: `{ "type": "choice", "instructions": "...", "criteria": { "<opt>": "<what it means>" } }` -> `{ "choice": "<opt>", "probabilities": {...}, "confidence": 0..1 }`
@@ -32,13 +22,21 @@ This repo ships **no endpoint and no key**. Fill in your own before calling:
 - `score`: `{ "type": "score", "instructions": "...", "criteria": ["<dim1>", "<dim2>"] }` -> `{ "score": 0..1, "legend": {...}, "confidence": 0..1 }`
 - Multiple questions in one call run in parallel. Keep `state` dense: request + diff stat + risk signals, 2-6 sentences.
 
+## Logging (eval trail)
+
+Every call appends one JSONL line to `skills/jev-decision/logs/jev-decisions.jsonl` — the eval set for threshold tuning (review accuracy per confidence band before moving thresholds).
+
+- Path override: `-LogFile <path>` or `JEV_LOG=<path>`. Disable: `-NoLog` or `JEV_LOG=off`.
+- Fields: `ts`, `preset`, `model`, `endpoint` (host only), `latencyMs`, `status` (`ok|http-error|timeout|network-error`), full `state`, full `questions`, `answers` on success.
+- API key never logged. Log write failures never block a decision (best-effort, fail-open).
+
 ## Presets (wrapper `-Preset`, fixed questions, agent only supplies `-State`)
 
 | Preset | Questions |
 |---|---|
 | `triage` | `task_type` choice[simple-edit, feature, ui, refactor, bug, docs, recon], `needs_plan` noul, `risk` score[security, blast-radius] |
-| `route` | `agent` choice[builder, planner, designer, tester, reviewer, documenter], `needs_planner` noul, `needs_subagent` noul, `fit` score[domain-match, context-cost] |
 | `delegation` | `owner` choice[builder-inline, designer, reviewer, tester, documenter], `can_parallel` noul, `complexity` score[coordination-cost, domain-risk], `needs_subagent` noul, `context_isolation` score[coordination-cost, context-cost] |
+| `route` | `agent` choice[builder, planner, designer, tester, reviewer, documenter], `needs_planner` noul, `needs_subagent` noul, `fit` score[domain-match, context-cost] |
 | `skill-match` | `skill_pick` choice[runtime candidates + none], `load_now` noul, `mismatch_risk` score[context-waste, guidance-mismatch] |
 | `review` | `spec_match` score[spec-coverage, scope-discipline], `security_risk` score[injection, auth, exposure], `merge_ready` noul, `needs_tester` noul |
 | `test` | `needs_tests` noul, `test_scope` choice[unit, integration, e2e, all], `bug_risk` score[regression-likelihood, blast-radius] |
@@ -79,4 +77,3 @@ Picking among candidates (custom choice, options filled by the agent from its ow
 ## Fallback (hard rule)
 
 Script failure (network, 401/403/429, 400, timeout) -> proceed with LLM judgment, never block, note `Jev unavailable, used LLM judgment` in one line. Never retry more than once per decision point. Never use Jev as `model`/`small_model`/`agents.*.model` (it cannot generate text or call tools).
-

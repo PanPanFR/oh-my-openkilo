@@ -1,7 +1,7 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "<YOUR_DEFAULT_MODEL>",
-  "small_model": "<YOUR_SMALL_MODEL>",
+  "model": "opencode/deepseek-v4.1-flash-free#max",
+  "small_model": "opencode/deepseek-v4.1-flash-free#max",
   "permissions": [
     {
       "action": "read",
@@ -55,60 +55,143 @@
     },
     "plan": {
       "disabled": true
+    },
+    "title": {
+      "model": "opencode/deepseek-v4.1-flash-free#max"
     }
   },
-  "plugins": [
-    "./plugins/agentmemory-capture.ts",
-    "./plugins/recall-first.ts",
-    "./plugins/caveman/plugin.js",
-    "./plugins/graphify.ts",
-    "./plugins/rtk.ts",
-    "superpowers@git+https://github.com/obra/superpowers.git"
-  ],
-  "providers": {
-    "your-provider": {
-      "package": "@opencode/ai/providers/openai-compatible",
-      "settings": {
-        "baseURL": "https://<YOUR_PROVIDER_BASE_URL>/v1",
-        "apiKey": "{env:YOUR_PROVIDER_API_KEY}"
+  "provider": {
+    "9router": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "{env:NINE_ROUTER_BASE_URL}",
+        "apiKey": "{env:NINE_ROUTER_API_KEY}"
       },
-      "models": {}
+      "models": {
+        "ag/gemini-3.8-flash-high": {
+          "name": "gemini-3.8-flash-high",
+          "limit": {
+            "context": 1048576,
+            "output": 65536
+          },
+          "capabilities": {
+            "tools": true,
+            "input": [
+              "text",
+              "image",
+              "video",
+              "audio"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "modelID": "ag/gemini-3.8-flash-high"
+        },
+        "ag/claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6",
+          "limit": {
+            "context": 1000000,
+            "output": 128000
+          },
+          "capabilities": {
+            "tools": true,
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "modelID": "ag/claude-sonnet-4-6"
+        },
+        "ag/claude-opus-4-6-thinking": {
+          "name": "claude-opus-4-6-thinking",
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          },
+          "capabilities": {
+            "tools": true,
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "modelID": "ag/claude-opus-4-6-thinking"
+        }
+      }
     }
   },
   "mcp": {
     "servers": {
       "agentmemory": {
         "type": "local",
-        "command": ["npx", "-y", "@agentmemory/mcp"],
+        "command": [
+          "npx",
+          "-y",
+          "@agentmemory/mcp"
+        ],
         "environment": {
           "AGENTMEMORY_SERVER_URL": "http://127.0.0.1:3111",
           "AGENTMEMORY_TOOLS": "core"
         }
       },
-      "chrome-devtools": {
-        "type": "local",
-        "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
-      },
       "context7": {
         "type": "remote",
-        "url": "https://mcp.context7.com/mcp",
-        "headers": {
-          "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
-        },
+        "url": "https://mcp.context7.com/mcp"
+      },
+      "shadcn": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "shadcn@latest",
+          "mcp"
+        ],
         "disabled": true
       },
-      "playwright": {
+      "chrome-devtools": {
         "type": "local",
-        "command": ["npx", "@playwright/mcp@latest"],
+        "command": [
+          "npx",
+          "-y",
+          "chrome-devtools-mcp@latest"
+        ],
+        "disabled": true
+      },
+      "magicuidesign-mcp": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "@magicuidesign/mcp@latest"
+        ],
         "disabled": true
       },
       "reactbits": {
         "type": "local",
-        "command": ["npx", "-y", "reactbits-dev-mcp-server"],
+        "command": [
+          "npx",
+          "-y",
+          "reactbits-dev-mcp-server"
+        ],
         "disabled": true
       }
     }
   },
+  "experimental": {
+    "policies": [
+      {
+        "action": "provider.use",
+        "resource": "openai",
+        "effect": "deny"
+      }
+    ]
+  },
   "lsp": true
 }
-
