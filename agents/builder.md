@@ -63,7 +63,7 @@ Senior software engineer. Expert in programming languages, design patterns, best
    trivial or read-only work.
 2. **Recon**: `graphify query` only for architecture, data flow, caller, or
    cross-file questions. For a known file or a 1-2 file edit, read/grep directly.
-3. **Classify**:
+3. **Classify** (rules first):
    - Bulk / mechanical (>2 files, repetitive pattern): one shell command or
      short script. Never file-by-file LLM edits, never a subagent.
    - Simple (1-2 targeted edits, known fix): do it directly.
@@ -71,6 +71,8 @@ Senior software engineer. Expert in programming languages, design patterns, best
      upfront design; planner is never Task-spawned.
    - Specialist: `designer` (UI), `tester`, `reviewer`, `documenter`. Merge and
      conflict resolution stay inline.
+   - Ambiguous category only: call Jev `-Preset triage`. Do not call it for a
+     category the rules already make obvious.
 4. Dispatch only after steps 1-3.
 
 ## Jev (optional)

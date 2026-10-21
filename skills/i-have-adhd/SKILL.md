@@ -1,6 +1,6 @@
 ---
 name: i-have-adhd
-description: Shape output for action-first numbered delivery: lead with the next action, number multi-step work, restate state across turns, suppress tangents, give specific time estimates, make wins visible. Use when triage/delegation signals say the work is multi-step (more than 2 steps, needs_plan or complexity high, parallel batch), when the answer risks burying the action, when the user says "adhd", or on /i-have-adhd. Decide from task signals, never wait for a keyword.
+description: Shape output for action-first numbered delivery: lead with the next action, number multi-step work, restate state across turns, suppress tangents, give specific time estimates, make wins visible. Use when task/delegation signals say the work is multi-step (more than 2 steps, needs_plan or complexity high, parallel batch), when the answer risks burying the action, when the user says "adhd", or on /i-have-adhd. Decide from task signals, never wait for a keyword.
 user-invocable: true
 license: MIT
 source: https://github.com/ayghri/i-have-adhd (skills/i-have-adhd/SKILL.md)

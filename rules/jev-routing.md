@@ -19,6 +19,8 @@ mention.
 
 - `-Preset route`: plan-first vs code-now, or owner unclear, on a non-trivial
   task. Once at task start.
+- `-Preset triage`: task category genuinely ambiguous after the deterministic
+  simple/bulk/complex/specialist rules. Not a default gate.
 - `-Preset skill-match -CandidatesJson '<shortlist>'`: 2+ genuinely plausible
   skills. No candidates or one obvious winner: load or skip directly.
 - `-Preset delegation`: inline vs subagent genuinely unclear. Spawn only on

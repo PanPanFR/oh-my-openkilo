@@ -382,7 +382,7 @@ Start with install, then jump to whatever you need:
 
 ## 🙏 Credits
 
-oh-my-openkilo is the OpenCode adaptation of **[oh-my-kilo](https://github.com/PanPanFR/oh-my-kilo)** (same maintainer). The structure and file-sharing style are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)** by [alvinunreal](https://github.com/alvinunreal). The team workflow ideas (triage, delegation, guides as protocols, map-first navigation) come from **[Kilo Code](https://github.com/Kilo-Org/kilocode)**.
+oh-my-openkilo is the OpenCode adaptation of **[oh-my-kilo](https://github.com/PanPanFR/oh-my-kilo)** (same maintainer). The structure and file-sharing style are inspired by **[oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim)** by [alvinunreal](https://github.com/alvinunreal). The team workflow ideas (task routing, delegation, guides as protocols, map-first navigation) come from **[Kilo Code](https://github.com/Kilo-Org/kilocode)**.
 
 For a visual control room on top of OpenCode, **[OpenChamber](https://openchamber.dev/)** (VS Code Marketplace, [github.com/openchamber/openchamber](https://github.com/openchamber/openchamber)) composes naturally with this pack.
 

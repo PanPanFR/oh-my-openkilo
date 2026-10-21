@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const presets = {
+  // Optional task classification. Rules first; call only when the category is ambiguous.
   triage: {
     task_type: {
       type: "choice",

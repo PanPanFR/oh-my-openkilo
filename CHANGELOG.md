@@ -1,3 +1,13 @@
+# v0.17.2 (2026-10-21)
+
+## Changed
+- **Language policy generalized**: `AGENTS.md` now requires English for all repository content (files, comments, commit messages, docs, test names). Chat language is unrestricted. The Indonesian-specific chat rule is gone.
+- **Triage concept clarified**: builder `Classify` stays deterministic (bulk/simple/complex/specialist). Jev `-Preset triage` is optional and only for a genuinely ambiguous category; it is not a gate. Removed "triage gate" wording from the `jev-decision` skill, the `i-have-adhd` trigger text, and pack docs. The preset stays available, and stays the script default, because it is still a valid manual classification call.
+- **Rules/docs aligned**: `rules/jev-routing.md` lists `triage` as optional; pack `docs/AGENTS.md` says "Classify", not "Triage"; README lineage says "task routing".
+
+## Measurements
+- Always-on policy size unchanged; semantics clarified.
+
 # v0.17.1 (2026-10-21)
 
 ## Fixed

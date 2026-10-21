@@ -8,7 +8,7 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 | # | Agent | Mode | Default model | When to use |
 |---|-------|------|---------------|-------------|
-| 01 | `builder` | primary | `opencode/deepseek-v4.1-flash-free#max` | Default implementation. Triage, fan-out. |
+| 01 | `builder` | primary | `opencode/deepseek-v4.1-flash-free#max` | Default implementation. Classify, fan-out. |
 | 02 | `planner` | primary | `9router/ag/claude-opus-4-6-thinking` | Pre-impl design, architecture, plan files. |
 | 03 | `designer` | all | `9router/ag/gemini-3.8-flash-high` | UI/UX, design system, a11y, frontend planning. Multimodal preferred for visual work. |
 | 04 | `tester` | subagent | `opencode/mimo-v2.6-flash-free` | Test suites: write, run, isolate failures. |
@@ -21,7 +21,7 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 ### 01. `builder` — The Architect
 
-**Role:** Default implementation agent. Triage incoming work: trivial fixes get done directly, anything that needs design gets routed to `planner`, anything that needs specialized hands gets fanned out to subagents.
+**Role:** Default implementation agent. Classify incoming work with deterministic rules: trivial fixes get done directly, anything that needs design gets routed to `planner`, anything that needs specialized hands gets fanned out to subagents. Jev `-Preset triage` is optional, only when the category is genuinely ambiguous.
 
 **When to invoke:** any coding task, especially anything that touches more than one file or has multiple valid approaches.
 

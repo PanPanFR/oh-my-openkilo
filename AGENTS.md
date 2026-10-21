@@ -15,7 +15,8 @@ Everything else that applies every turn lives below. No duplication.
 
 ## Language
 
-All file contents English. Indonesian is chat-only, never on disk. Exception:
+All repository content must be written in English: files, comments, commit
+messages, docs, and test names. Chat language is unrestricted. Exception: the
 user explicitly asks for another language in a specific file.
 
 ## Communication (Caveman)
@@ -67,9 +68,14 @@ structure when loaded, Caveman owns density. Off: "stop caveman" / "normal mode"
 Call Jev only when torn between 2+ plausible options AND a wrong pick is costly.
 Obvious, single-option, explicit-instruction, or trivial tasks: skip, no note.
 
-Useful presets: `route` (plan vs code, owner unclear), `skill-match` (2+ real
-skill candidates), `delegation` (inline vs subagent), `verify` (irreversible or
-high-risk approach), `review`/`test`/`ui` gates when genuinely uncertain.
+Useful presets: `triage` (task category genuinely ambiguous), `route` (plan vs
+code, owner unclear), `skill-match` (2+ real skill candidates), `delegation`
+(inline vs subagent), `verify` (irreversible or high-risk approach),
+`review`/`test`/`ui` gates when genuinely uncertain.
+
+Invocation: load the `jev-decision` skill, or run
+`node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset <name> -State "<state>"`.
+Presets are flags, not standalone commands.
 
 **Loop-breaker (mandatory):** after 2 consecutive failed attempts at the same
 problem (failing test, build error, syntax loop), stop editing. Run

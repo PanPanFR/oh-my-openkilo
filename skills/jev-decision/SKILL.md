@@ -1,6 +1,6 @@
 ---
 name: jev-decision
-description: "Fast structured decisions via 9router System One (Jev jev-1.13). Use for routing, triage, delegation, review/test/UI gates. Returns typed choice/noul/score with probabilities, not text. Triggers: jev, systemone, triage, route, delegation gate, review gate, test scope."
+description: "Fast structured decisions via 9router System One (Jev jev-1.13). Use for routing, task classification, delegation, review/test/UI gates. Returns typed choice/noul/score with probabilities, not text. Triggers: jev, systemone, triage, route, delegation gate, review gate, test scope."
 ---
 
 # Jev Decision (System One, via 9router)
@@ -12,7 +12,7 @@ Jev is a decision-only model. It never generates text or code. It scores a `stat
 - Auth: `Authorization: Bearer <9router key>` (same key as `providers.9router.settings.apiKey`)
 - Wrapper: `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset <name> -State "<state>"` (recommended, ~50ms startup) or pwsh `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset <name> -State "<state>"`
 - State structure: `Goal: <request> | Files: <git status --short> | Diff: <git diff --stat> | Risks: <known risks>`. Dense, structured facts maximize confidence.
-- Pure Q&A / read-only chat: skip triage gate entirely.
+- Pure Q&A / read-only chat: skip Jev entirely.
 - State with quotes/newlines/backticks: pipe via stdin to node script, or pass `-StateFile <path>` (CLI quoting breaks otherwise)
 
 ## Question schema (verified against live endpoint)
@@ -34,7 +34,7 @@ Every call appends one JSONL line to `skills/jev-decision/logs/jev-decisions.jso
 
 | Preset | Questions |
 |---|---|
-| `triage` | `task_type` choice[simple-edit, feature, ui, refactor, bug, docs, recon], `needs_plan` noul, `risk` score[security, blast-radius] |
+| `triage` (optional classification) | `task_type` choice[simple-edit, feature, ui, refactor, bug, docs, recon], `needs_plan` noul, `risk` score[security, blast-radius] |
 | `delegation` | `owner` choice[builder-inline, designer, reviewer, tester, documenter], `can_parallel` noul, `complexity` score[coordination-cost, domain-risk], `needs_subagent` noul, `context_isolation` score[coordination-cost, context-cost] |
 | `route` | `agent` choice[builder, planner, designer, tester, reviewer, documenter], `needs_planner` noul, `needs_subagent` noul, `fit` score[domain-match, context-cost] |
 | `skill-match` | `skill_pick` choice[runtime candidates + none], `load_now` noul, `mismatch_risk` score[context-waste, guidance-mismatch] |
@@ -68,7 +68,7 @@ Picking among candidates (custom choice, options filled by the agent from its ow
 ## Thresholds (apply everywhere, deterministic)
 
 - noul: `>=0.7` = YES, `<=0.3` = NO, else UNCERTAIN -> take the safer branch (needs_plan=true, needs_tester=true, needs_tests=true). (verify preset uses its own strict bar, see Verify pattern).
-- choice: use `.choice`; if `.confidence < 0.4` -> UNCERTAIN -> default `builder-inline` (triage/delegation), `builder` (route), or `all` (test_scope).
+- choice: use `.choice`; if `.confidence < 0.4` -> UNCERTAIN -> default `builder-inline` (classification/delegation), `builder` (route), or `all` (test_scope).
 - score: read `probabilities` (index -> dimension via `legend`), NEVER the aggregate `score` — aggregate tracks only the LAST dimension (verified live 2026-09-23: risk security=0.46/blast=0.54 -> score 0.54). Per-dimension: prob `>=0.7` = HIGH, `<=0.3` = LOW. Any `risk/security_risk/bug_risk` dimension `>=0.7` always adds `reviewer` (plus `tester` on auth/migration/payment); gate the security dimension directly, never via aggregate.
 - score confidence: `score.confidence < 0.4` -> UNCERTAIN -> safer branch: risk dims (`risk/security_risk/bug_risk/decision_risk`) treated HIGH, all other dims treated as the conservative default (needs_plan/needs_tester/needs_tests = true).
 - curate-memory: `is_durable <= 0.3` or `action == "drop"` -> abort save, echo reason; `action == "lesson"` -> route to `memory_lesson_save`.
