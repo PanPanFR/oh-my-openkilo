@@ -59,4 +59,4 @@ appending to `GET /agentmemory/commits`.
 
 ## Troubleshooting
 
-See ../_shared/TROUBLESHOOTING.md if `memory_commits` is not available.
+See ../../_shared/TROUBLESHOOTING.md if `memory_commits` is not available.

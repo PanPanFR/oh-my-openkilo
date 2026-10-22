@@ -18,7 +18,7 @@ oh-my-openkilo/
 │   ├── reviewer.md
 │   └── documenter.md
 │
-├── skills/                            # 38 skill packs
+├── skills/                            # 48 skill packs plus _shared/
 │   └── <skill-name>/
 │       ├── SKILL.md                   # always present
 │       ├── README.md                  # optional
@@ -32,14 +32,14 @@ oh-my-openkilo/
 ├── commands/                          # 1 slash command
 │   └── integrate.md                   # integrate parallel plan branches
 │
-├── plugins/                           # 4 files plus the caveman directory
+├── plugins/                           # 3 files plus the caveman directory
 │   ├── agentmemory-capture.ts         # capture session observations
 │   ├── caveman/                       # terse-mode style pack
 │   │   ├── plugin.js
+│   │   ├── server.js                  # OpenCode v2 entry point
 │   │   ├── caveman-config.cjs
 │   │   ├── caveman-parse.cjs
 │   │   └── package.json
-│   ├── caveman.ts                     # caveman loader shim
 │   ├── rtk.ts                         # git-only output rewrite
 │   └── subagent-guard.ts              # failing subagent circuit breaker
 │
@@ -50,7 +50,7 @@ oh-my-openkilo/
     ├── INSTALL.md                     # install guide
     ├── STRUCTURE.md                   # this file
     ├── AGENTS.md                      # 6 agents in detail
-    ├── SKILLS.md                      # 38 skills table
+    ├── SKILLS.md                      # 48 skills table
     ├── RULES.md                       # 2 rules in detail
     ├── COMMANDS.md                    # command reference
     ├── CONFIGURATION.md               # opencode.json breakdown
@@ -108,4 +108,4 @@ Once an agent, skill, rule, or command is published, the corresponding live file
 3. Mirror it into the repo.
 4. Commit, tag, and release.
 
-This applies to **all 6 agents, 38 skills, 2 rules, and 1 command**. For a personal fork, copy the file under a new name (for example `agents/builder.local.md`); a manual sync will not touch local files.
+This applies to **all 6 agents, 48 skills, 2 rules, and 1 command**. For a personal fork, copy the file under a new name (for example `agents/builder.local.md`); a manual sync will not touch local files.

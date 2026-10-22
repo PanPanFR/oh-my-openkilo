@@ -27,7 +27,7 @@ Watch observations land live at `http://localhost:3113`.
 ## Important
 
 - Capture is on by default and is zero-LLM. Turning observations into LLM summaries (`AGENTMEMORY_AUTO_COMPRESS`) and injecting them back into context (`AGENTMEMORY_INJECT_CONTEXT`) are separate opt-ins because they spend tokens.
-- If observations are missing, confirm the plugin is enabled and the server is running. See ../_shared/TROUBLESHOOTING.md.
+- If observations are missing, confirm the plugin is enabled and the server is running. See ../../_shared/TROUBLESHOOTING.md.
 
 ## See also
 

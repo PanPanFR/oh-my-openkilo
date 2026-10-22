@@ -21,7 +21,7 @@ plugin/skills/<name>/
 - Description is two sentences and the only thing the agent sees when deciding to load the skill. Sentence one states the capability. Sentence two starts "Use when" and lists concrete triggers. Keep it distinct from sibling skills, under 1024 chars, third person.
 - Body order: Quick start (one concrete example), Why (the governing principle), Workflow (numbered steps with decision gates), Anti-patterns (a WRONG vs RIGHT callout for the top mistake), Checklist, See also (cross-link siblings), Reference or Troubleshooting pointer.
 - Stay under 100 lines. Move dense facts to REFERENCE.md and examples to EXAMPLES.md.
-- Cross-references link one level deep only. Shared recovery steps live in `../_shared/TROUBLESHOOTING.md`, never inlined.
+- Cross-references to sibling references stay one level deep. Shared recovery steps live in `../../_shared/TROUBLESHOOTING.md`, never inlined.
 
 ## Keep it current
 
@@ -37,4 +37,4 @@ No external or competitor product names. No emojis. No em-dashes. No filler. Sta
 - SKILL.md is under 100 lines.
 - No time-sensitive claims and no duplicated troubleshooting block.
 - Concrete example present; generated facts come from the generator.
-- Cross-links resolve and go one level deep.
+- Cross-links resolve and sibling links stay one level deep.

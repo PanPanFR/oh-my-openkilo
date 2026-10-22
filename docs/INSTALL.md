@@ -148,8 +148,9 @@ Restart OpenCode after changing this.
 
 Plugin errors usually show in OpenCode startup logs. Common causes:
 
-- Missing `node_modules` in `plugins/caveman/`. Run `cd ~/.config/opencode/plugins/caveman && npm install`
-- Plugin path in `opencode.json` is wrong. Should be `./plugins/caveman/plugin.js` and `./plugins/agentmemory-capture.ts` (relative to the dir containing `opencode.json`)
+- OpenCode v2 auto-discovers `plugins/caveman/` and loads `server.js`; v1 loads `plugin.js` through `package.json`. If caveman does not activate, check that the whole `plugins/caveman/` folder was copied (not just the markdown skills).
+- Plugin path in `opencode.json` is wrong. For v1, point at `./plugins/caveman/plugin.js`; `agentmemory-capture.ts` loads from the `plugins/` directory.
+- Optional Ponytail banner missing: install `@dietrichgebert/ponytail` in the config dir and add `"plugins": ["@dietrichgebert/ponytail"]` to `opencode.json`. See [CONFIGURATION.md](CONFIGURATION.md#optional-npm-plugin-ponytail).
 
 ### "credential not set" errors
 

@@ -27,6 +27,9 @@ permissions:
   - action: agentmemory_*
     resource: "*"
     effect: allow
+  - action: context7_*
+    resource: "*"
+    effect: allow
   - action: webfetch
     resource: "*"
     effect: deny

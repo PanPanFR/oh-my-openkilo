@@ -24,7 +24,16 @@ user explicitly asks for another language in a specific file.
 Compressed fragments, technical terms exact, code/commands/errors byte-exact.
 Drop filler and pleasantries. No em dash in prose or UI strings; use comma,
 period, colon, or restructure. Precedence: `i-have-adhd` owns response
-structure when loaded, Caveman owns density. Off: "stop caveman" / "normal mode".
+structure when loaded, Caveman owns density. Always on, no command to type: the
+plugin reads plain language ("compress harder", "wenyan") and shifts density per
+turn. Off: "stop caveman" / "normal mode".
+
+## Engineering discipline (Ponytail)
+
+Lazy senior dev. Smallest complete change that fully works: reuse what the repo
+already has, no speculative abstraction, no "for later" code, no new dependency
+for a few lines. Always on, no command to type: the plugin states the level per
+turn. Off: "stop ponytail" / "normal mode".
 
 ## Memory (agentmemory)
 
@@ -59,6 +68,10 @@ structure when loaded, Caveman owns density. Off: "stop caveman" / "normal mode"
 - UI build: `ui-design`; design-system search: `ui-ux-pro-max`; existing UI
   polish/audit: `impeccable`; component install: `shadcn`. Substantial UI work:
   delegate to `designer`.
+- Award-grade site build: `awwwards`; score or review a live site: `jury`.
+  Both trigger from the request itself, no explicit mention needed.
+- Multi-agent coordination: `orchestration`. Next.js 16 cache and prefetch:
+  `next-cache-components`, `next-partial-prefetching`.
 - Library or API docs: Context7 first (`resolve-library-id` then `query-docs`),
   websearch/webfetch as fallback.
 - Tool choice for UI components: `rules/ui-tooling.md`.
@@ -92,6 +105,8 @@ never block. Details in `rules/jev-routing.md`.
 - Bulk or mechanical edits (>2 files, repetitive patterns, batch rename,
   find-replace): one shell command or short script. Never file-by-file LLM
   edits. Never a subagent.
+- Locate work ("where is X", "what calls Y"): grep or read, then answer with a
+  file:line table, one row per hit. Read-only, no fix proposals.
 - Simple fix (1-2 targeted edits): do it directly. Complex work: decompose and
   execute stepwise; the user switches to `planner` for upfront design (planner
   is never Task-spawned).

@@ -6,7 +6,7 @@
 
 **A team of AI specialists for OpenCode. You describe the task, they do the work.**
 
-This pack gives OpenCode 6 specialist agents, 38 how-to guides, and 2 on-demand rules. Builder, reviewer, and tester run on free OpenCode models; planner, designer, and documenter default to a 9router endpoint.
+This pack gives OpenCode 6 specialist agents, 48 how-to guides, and 2 on-demand rules. Builder, reviewer, and tester run on free OpenCode models; planner, designer, and documenter default to a 9router endpoint.
 
 <sub>by <b>PanPanFR</b> · OpenCode adaptation of Kilo Code's team workflow</sub>
 
@@ -17,7 +17,7 @@ This pack gives OpenCode 6 specialist agents, 38 how-to guides, and 2 on-demand 
   <a href="https://github.com/PanPanFR/oh-my-openkilo/commits/main"><img src="https://img.shields.io/github/last-commit/PanPanFR/oh-my-openkilo?style=flat" alt="Last commit"></a>
   <br>
   <a href="#-meet-the-team"><img src="https://img.shields.io/badge/agents-6-orange" alt="6 agents"></a>
-  <a href="#-skills"><img src="https://img.shields.io/badge/skills-38-green" alt="38 skills"></a>
+  <a href="#-skills"><img src="https://img.shields.io/badge/skills-48-green" alt="48 skills"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/credentials-zero-brightgreen" alt="Zero credentials"></a>
   <img src="https://img.shields.io/badge/size-23_MB-blueviolet" alt="Pack size: 23 MB">
   <img src="https://img.shields.io/badge/no_build_step-brightgreen" alt="No build step">
@@ -58,7 +58,7 @@ That is the whole setup. Future updates are a `git pull` in the pack folder plus
 OpenCode on its own is one general assistant. This pack turns it into a small team:
 
 - **Specialists for each job.** A builder that does the coding, a planner that thinks before anyone codes, plus experts for UI, tests, code review, and docs. You talk to the builder; the builder calls in the experts when needed.
-- **How-to guides for common tasks.** 38 short playbooks (debugging, testing, code review, planning, and more). The right guide loads automatically when your task matches it. You never open them yourself.
+- **How-to guides for common tasks.** 48 short playbooks (debugging, testing, code review, planning, and more). The right guide loads automatically when your task matches it. You never open them yourself.
 - **Memory + a map of your code.** The pack remembers what happened in past sessions and keeps a searchable map of your codebase, so answers are based on your actual code, not guesses.
 
 Technically it is just files: plain-text prompts plus a few tiny plugins. There is nothing to compile and no installer to run. It works on Windows (tested) and on macOS/Linux (same steps, not tested by the maintainer, see [Compatibility](#-compatibility)).
@@ -72,9 +72,9 @@ The workflow ideas come from [Kilo Code](https://github.com/Kilo-Org/kilocode), 
 | Piece | Count | Plain meaning |
 |-----------|-------|--------------|
 | Agents    | 6     | The team members (see below). |
-| Skills    | 38    | How-to guides the agents follow automatically. Full list: [docs/SKILLS.md](docs/SKILLS.md). |
+| Skills    | 48    | How-to guides the agents follow automatically. Full list: [docs/SKILLS.md](docs/SKILLS.md). |
 | Rules     | 2     | On-demand protocols referenced from AGENTS.md (Jev routing, UI tooling). Details: [docs/RULES.md](docs/RULES.md). |
-| Plugins   | 5     | Small extras (memory capture, caveman mode, token-saving shell output, subagent guard). All optional. |
+| Plugins   | 4     | Small extras (memory capture, caveman mode, token-saving shell output, subagent guard). All optional. |
 | Commands  | 1    | `/integrate` for parallel plan branches. Memory recall and save are plain sentences. List: [docs/COMMANDS.md](docs/COMMANDS.md). |
 
 ```mermaid
@@ -317,18 +317,19 @@ Then restart OpenCode or run `/reload`. Changed files are backed up automaticall
 
 ## 🧩 Skills
 
-38 how-to guides in 6 groups. They load on their own when your task matches; you never open them.
+48 how-to guides in 7 groups. They load on their own when your task matches; you never open them.
 
 | Group | Count | Examples |
 |----------|-------|----------|
 | core workflow | 14 | `code-review`, `delegation`, `git-commit`, `graphify`, `i-have-adhd`, `jev-decision`, `plans`, `playwright-cli`, `vite`, `vitest` |
 | agentmemory | 3 | `agentmemory`, `agentmemory-history`, `agentmemory-ops` |
-| caveman | 1 | `caveman` |
+| caveman | 7 | `caveman`, `caveman-commit`, `caveman-compress`, `caveman-review`, `caveman-stats`, `megacave`, `ultracave` |
 | cloudflare | 9 | `cloudflare`, `cloudflare-cli`, `cloudflare-one`, `cloudflare-sandbox`, `durable-objects`, `workers-best-practices` |
-| frontend and UI | 7 | `impeccable`, `shadcn`, `ui-design`, `ui-ux-pro-max`, `vercel-react`, `web-perf` |
+| frontend and UI | 10 | `awwwards`, `jury`, `impeccable`, `shadcn`, `ui-design`, `ui-ux-pro-max`, `vercel-react`, `vite-react-best-practices`, `web-perf` |
 | next.js | 4 | `next-dev-loop`, `next-cache-components`, `next-partial-prefetching`, `next-browser-initial-load-optimizer` |
+| multi-agent | 1 | `orchestration` |
 
-> **All 38 with descriptions:** [docs/SKILLS.md](docs/SKILLS.md)
+> **All 48 with descriptions:** [docs/SKILLS.md](docs/SKILLS.md)
 
 ---
 
@@ -356,7 +357,7 @@ Start with install, then jump to whatever you need:
 | [docs/INSTALL.md](docs/INSTALL.md) | Step-by-step install, uninstall, troubleshooting |
 | [docs/WORKFLOWS.md](docs/WORKFLOWS.md) | Full worked examples (audit, debug, new feature, arch review, code map) |
 | [docs/AGENTS.md](docs/AGENTS.md) | All 6 agents: when to use each, how to edit, model table |
-| [docs/SKILLS.md](docs/SKILLS.md) | All 38 guides grouped by category, with descriptions |
+| [docs/SKILLS.md](docs/SKILLS.md) | All 48 guides grouped by category, with descriptions |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Command reference, manual update mechanics |
 | [docs/STRUCTURE.md](docs/STRUCTURE.md) | Every folder and file in the repo, explained |
 | [docs/RULES.md](docs/RULES.md) | The 2 on-demand rules in detail |

@@ -14,6 +14,9 @@ argument-hint: "[last N | today | this week | file:line | branch=...]"
 Session archaeology over agentmemory. Every workflow reads `memory_sessions`,
 `memory_recall`, or `memory_commits`; pick the row that matches the question.
 
+In `AGENTMEMORY_TOOLS=core` mode, `memory_commits` and `memory_commit_lookup`
+are hidden. Use the REST fallback in `../_shared/TROUBLESHOOTING.md`.
+
 ## Route
 
 | Question | Workflow |

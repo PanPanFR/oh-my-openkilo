@@ -67,7 +67,7 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 ### 03. `designer` — The Frontend Specialist
 
-**Role:** UI/UX, React/Next.js, design systems, accessibility, frontend performance, and UI planning. Operates in `mode: all` (interactive primary agent for focused frontend sessions or subagent delegated by `builder`). Produces frontend plans for complex UI flows before implementing.
+**Role:** UI/UX, React/Next.js, design systems, accessibility, frontend performance, and UI planning. Operates in `mode: all` (interactive primary agent for focused frontend sessions or subagent delegated by `builder`). Produces frontend plans for complex UI flows before implementing. Builds award-grade sites with `awwwards` and scores live sites with `jury`.
 
 **When to invoke:** frontend feature work, new screens, UI planning, design system setup, brand consistency, accessibility review.
 
@@ -103,7 +103,7 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 **Model guidance:** `tester` runs shell commands a lot (test runners, fixtures, isolation). Pick a model that handles `bash` reliably and is comfortable reading test output, not one that's good at "creative" reasoning.
 
-**Permissions:** allowlist in frontmatter — `read`, `edit`, `shell`, `glob`, `grep`, `todowrite`, `agentmemory_*`, `skill`; no subagents, no web, everything else denied.
+**Permissions:** allowlist in frontmatter — `read`, `edit`, `shell`, `glob`, `grep`, `todowrite`, `agentmemory_*`, `context7_*`, `skill`; no subagents, no web, everything else denied.
 
 **Dispatched by:** `builder` after implementation, or by you when a test fails.
 

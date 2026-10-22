@@ -6,7 +6,7 @@ Slash commands. Type the name (with leading `/`) at the start of an OpenCode pro
 |--------------|-------------|
 | `/integrate` | Integrate verified parallel plan branches into main (merge, conflicts, cleanup) |
 
-> v0.17.0 keeps the minimal live set: one command. Memory recall and save are plain sentences handled by the `agentmemory-ops` skill. Other former commands (`/caveman`, `/configcheck`, `/i-have-adhd`, `/impeccable`, `/update-pack`, `/recall`, `/remember`) are gone; their skills remain and load from descriptions.
+> v0.18.0 keeps the minimal live set: one command. Memory recall and save are plain sentences handled by the `agentmemory-ops` skill. Caveman behavior (`/caveman`, compressed review, commit, stats, compress) comes from the `caveman*` skills and the caveman plugin, not from command files. Other former commands (`/configcheck`, `/i-have-adhd`, `/impeccable`, `/update-pack`, `/recall`, `/remember`) are gone; their skills remain and load from descriptions.
 
 ## Updating the pack (manual, replaces `/update-pack`)
 

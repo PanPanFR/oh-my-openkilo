@@ -69,14 +69,24 @@ A more balanced setup for security-sensitive work:
 
 ## Plugins
 
-The example does not declare a `plugins` array. OpenCode discovers files under `plugins/`. The pack ships four loaders plus the caveman package:
+The example does not declare a `plugins` array. OpenCode discovers files under `plugins/`. The pack ships three loaders plus the caveman package:
 
 - `agentmemory-capture.ts`: captures session observations.
-- `caveman.ts` plus `plugins/caveman/`: terse-mode state and style.
+- `plugins/caveman/`: terse-mode state and style. OpenCode v2 loads `server.js`; v1 loads `plugin.js` through `package.json`.
 - `rtk.ts`: rewrites git output (`git log`, `diff`, `show`, `blame`, `branch`) to compact form. Needs `rtk` in PATH; disables itself otherwise.
 - `subagent-guard.ts`: circuit breaker for failing subagent retries.
 
 Drop a file to disable that plugin. The pack degrades gracefully; `agentmemory-capture` is the only one the memory skills depend on. `rtk` on Windows also needs Git's `usr\bin` on PATH (`C:\Program Files\Git\usr\bin`) for `ls`/`tree`/`find`; PowerShell aliases cannot be resolved by rtk.
+
+### Optional npm plugin: Ponytail
+
+`AGENTS.md` carries the always-on engineering-discipline policy, and the optional `@dietrichgebert/ponytail` plugin states the active level per turn. It is not shipped in the pack because the pack has no root `package.json`. Install it in your config dir and declare it:
+
+```jsonc
+"plugins": ["@dietrichgebert/ponytail"]
+```
+
+Without it, the policy still applies; you just lose the per-turn level banner.
 
 The shipped plugins target the **v2 plugin contract**: a `default` export of `{ id, setup }`, with hooks registered through `ctx.tool.hook`, `ctx.event.subscribe`, and `ctx.session.hook`. On v1 none of the plugin extras load; the text policy and skills still work. Hooks with no v2 equivalent degrade with a single console warning. Caveman state and agentmemory capture use the v2 session hooks.
 ## Provider

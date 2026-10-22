@@ -60,4 +60,4 @@ RIGHT: "No sessions in the last 7 days for this project."
 
 ## Troubleshooting
 
-See ../_shared/TROUBLESHOOTING.md if `memory_sessions` or `memory_recall` is not available.
+See ../../_shared/TROUBLESHOOTING.md if `memory_sessions` or `memory_recall` is not available.

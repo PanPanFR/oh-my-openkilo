@@ -1,3 +1,28 @@
+# v0.18.0 (2026-10-22)
+
+## Added
+- **10 new skills (38 -> 48)**: `awwwards` and `jury` for award-grade site builds and evidence-based site scoring, the full caveman family (`caveman-commit`, `caveman-compress`, `caveman-review`, `caveman-stats`, `megacave`, `ultracave`), `orchestration` for multi-agent coordination, and `vite-react-best-practices`.
+- **Caveman v4.0.1 payload**: `plugins/caveman/server.js` is the OpenCode v2 entry point; v1 keeps loading `plugin.js` through `package.json`.
+- **`skills/_shared/TROUBLESHOOTING.md`**: shared support notes used by skills.
+
+## Changed
+- **Live sync**: agents, rules, commands, plugins, and skills mirrored from the live config.
+- **AGENTS.md**: adds the Ponytail engineering-discipline policy; Caveman is always-on and reads plain-language toggles; skill routing covers `awwwards`, `jury`, `orchestration`, `next-cache-components`, and `next-partial-prefetching`; workflow adds the Locate class (read-only `file:line` table).
+- **Agent prompts**: `builder` gains the Locate rule; `designer` covers `awwwards` and `jury`; `tester` gains `context7_*` permission; `documenter` resynced.
+- **Agentmemory skills**: `agentmemory` references plus the `agentmemory-history` and `agentmemory-ops` playbooks refreshed from live.
+- **Caveman plugin**: `plugin.js`, `caveman-config.cjs`, and `caveman-parse.cjs` updated; 14 stale `skills/caveman/references/*` files removed.
+- **Docs resynced**: README, SKILLS, STRUCTURE, COMMANDS, CONFIGURATION, INSTALL, AGENTS, WORKFLOWS, and CONTRIBUTING. Counts now 48 skills in 7 groups and 4 plugin entries; the optional `@dietrichgebert/ponytail` npm plugin is documented.
+- **`i-have-adhd`**: quoted YAML description fixes the frontmatter parse error.
+
+## Removed
+- **`plugins/caveman.ts`**: loader shim no longer needed; v2 discovers `plugins/caveman/server.js`.
+- **Stale caveman references**: compress, help, and stats markdown plus the bundled Python scripts, superseded by the v4 payload and the dedicated caveman skills.
+
+## Measurements
+- Skills: 38 -> 48.
+- Top-level plugin files: 4 -> 3 (plus the caveman package).
+- Pack size: 23.1 -> 23.5 MB.
+
 # v0.17.2 (2026-10-21)
 
 ## Changed

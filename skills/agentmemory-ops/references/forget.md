@@ -66,4 +66,4 @@ an explicit yes.
 
 ## Troubleshooting
 
-See ../_shared/TROUBLESHOOTING.md if `memory_smart_search` or `memory_governance_delete` is not available.
+See ../../_shared/TROUBLESHOOTING.md if `memory_smart_search` or `memory_governance_delete` is not available.

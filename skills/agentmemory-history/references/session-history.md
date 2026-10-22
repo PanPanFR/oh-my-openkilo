@@ -58,4 +58,4 @@ observation count.
 
 ## Troubleshooting
 
-See ../_shared/TROUBLESHOOTING.md if `memory_sessions` is not available.
+See ../../_shared/TROUBLESHOOTING.md if `memory_sessions` is not available.

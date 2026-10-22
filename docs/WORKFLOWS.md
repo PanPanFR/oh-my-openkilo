@@ -7,7 +7,7 @@ What does the pack actually *do*? Five real prompts with the agent, skills, rule
 > "Add a new feature: [description]."
 
 - **Agent:** `builder` → spawns `planner` for design, `tester` for tests, `reviewer` for security analysis when auth/data is involved
-- **Skills:** `plans` (write structured plan first), `test-driven-development` (tests before implementation), `verification-before-completion` (evidence before "done")
+- **Skills:** `plans` (write structured plan first), `code-review` (standards and spec check before merge)
 - **Rules:** plan-file protocol for complex tasks, TDD before implementation, verify before claiming done
 - **Result:** structured plan you confirm first, tests written first, evidence-backed completion, security review on the auth path.
 

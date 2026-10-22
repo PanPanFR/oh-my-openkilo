@@ -67,4 +67,4 @@ RIGHT: `concepts: "jwt-refresh-rotation, token-revocation"` (specific, retrievab
 
 ## Troubleshooting
 
-See ../_shared/TROUBLESHOOTING.md if `memory_save` is not available.
+See ../../_shared/TROUBLESHOOTING.md if `memory_save` is not available.

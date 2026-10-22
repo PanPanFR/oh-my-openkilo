@@ -60,4 +60,4 @@ or `auth rotation`."
 
 ## Troubleshooting
 
-See ../_shared/TROUBLESHOOTING.md if `memory_smart_search` is not available.
+See ../../_shared/TROUBLESHOOTING.md if `memory_smart_search` is not available.

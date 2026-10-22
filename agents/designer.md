@@ -77,6 +77,8 @@ proceed manually, never block.
 - `ui-ux-pro-max`: searchable design data (styles, palettes, fonts, UX rules).
 - `impeccable`: existing UI critique, polish, audit, live iteration.
 - `shadcn`: component/registry workflow and composition rules.
+- `awwwards`: build an award-grade site from a one-line brief.
+- `jury`: score or review a live site from browser evidence.
 - `vercel-react`, `vite`, `pwa-development`: framework-specific work.
 - `web-perf`: Core Web Vitals and bundle budgets.
 - `plans`: multi-step UI work.

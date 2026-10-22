@@ -45,7 +45,7 @@ import path from 'node:path';
 const here = dirname(fileURLToPath(import.meta.url));
 
 // When installed: caveman-config.cjs sits next to plugin.js (copied by
-// bin/install.js, renamed to .cjs because this directory's package.json
+// installer/install.js, renamed to .cjs because this directory's package.json
 // declares "type": "module" — bare .js would be loaded as ESM). When loaded
 // from the source tree (tests, dev): fall back to the canonical
 // src/hooks/caveman-config.js, which lives in a directory whose own
@@ -76,6 +76,43 @@ const config = loadConfig();
 
 const { getDefaultMode, safeWriteFlag, readFlag } = config;
 
+// Resolved defensively, NOT destructured with the three above. loadConfig()
+// reads whatever caveman-config.cjs sits in the installed plugin directory,
+// which can predate this file (#848). recordModeChange is the newest of these
+// exports, and handleSessionCreated() runs at factory time below, outside any
+// try — so destructuring an absent one would throw during plugin construction
+// and take caveman on opencode from "mode works, history missing" to "plugin
+// does not load at all". The history log is best-effort by design (its own
+// body silent-fails), so the no-op stub is the honest fallback.
+const recordModeChange = config.recordModeChange || function () {};
+
+// Displaced-prose-mode memory for the one-shot independent modes (#599),
+// resolved defensively for the same reason recordModeChange is: the installed
+// caveman-config.cjs is a COPY and can predate these exports (#848).
+//
+// All three or none. No-op stubs are NOT a safe fallback here, unlike
+// recordModeChange's: a stubbed read returns null, the restore path reads that
+// as "caveman was off when the one-shot started" and DELETES the flag, so a
+// single /caveman-commit would deactivate caveman for the rest of the session
+// on an older copy — worse than both the old behavior and the new one. When
+// any helper is missing, one-shot bookkeeping is skipped entirely and the
+// plugin behaves exactly as it did before this feature: the one-shot sticks
+// until the next session.created re-derives the default.
+//
+// opencode has no per-session id to scope by (its flag is one machine-wide
+// file already), so every call passes `null` and the shared helpers fall
+// through to <opencodeDir>/.caveman-active.prev. That is exactly the legacy
+// branch caveman-config documents for a caller with no session id.
+const oneShotMemory = typeof config.writeSessionPrev === 'function'
+  && typeof config.readSessionPrev === 'function'
+  && typeof config.clearSessionPrev === 'function'
+  ? {
+    write: (mode) => config.writeSessionPrev(opencodeDir, null, mode),
+    read: () => config.readSessionPrev(opencodeDir, null),
+    clear: () => config.clearSessionPrev(opencodeDir, null),
+  }
+  : null;
+
 // Load the shared mode-change parser (#602) the same way loadConfig() loads
 // caveman-config.js — see the doc comment above loadConfig() for why this
 // can't go through require()/import() in a compiled Bun binary.
@@ -103,7 +140,8 @@ function opencodeConfigDir() {
   return path.join(os.homedir(), '.config', 'opencode');
 }
 
-const flagPath = path.join(opencodeConfigDir(), '.caveman-active');
+const opencodeDir = opencodeConfigDir();
+const flagPath = path.join(opencodeDir, '.caveman-active');
 
 function removeFlag() {
   try {
@@ -115,18 +153,120 @@ function removeFlag() {
   }
 }
 
-function reinforcementLine(mode) {
+function reinforcementBanner(mode) {
   return 'CAVEMAN MODE ACTIVE (' + mode + ') — session ruleset applies.';
 }
 
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Derived from reinforcementBanner() itself (split on a sentinel) rather than
+// re-spelling the banner text as a second regex literal: one source of truth,
+// and it stays in sync if the wording above ever changes.
+const [bannerPrefix, bannerSuffix] = reinforcementBanner('\0').split('\0');
+const staleBlock = new RegExp(
+  escapeRegExp(bannerPrefix) + '[a-z-]+' + escapeRegExp(bannerSuffix) + '[\\s\\S]*$'
+);
+
+// skills/<mode>/SKILL.md is the single source of truth for each mode, loaded
+// whole the same way caveman-activate.js and caveman-mode-tracker.js do. The
+// loader itself is NOT re-implemented here: it lives in caveman-config.js,
+// which loadConfig() already evaluates, so all three loaders share one copy.
+// A local copy here is the exact drift risk CLAUDE.md's "keep it in
+// caveman-config.js" rule exists to prevent.
+//
+// Resolved off `config` rather than destructured at module scope because the
+// installed caveman-config.cjs is a COPY: a user whose opencode plugin dir
+// still holds an older copy gets a config without these exports, and the
+// stand-ins below degrade to the banner alone rather than throwing inside a
+// system-prompt hook.
+function loadRuleset(mode) {
+  if (typeof config.loadRuleset !== 'function') return null;
+  // The shared loader probes <base>/../../skills and <base>/../skills. opencode
+  // has no CLAUDE_PLUGIN_ROOT equivalent and two layouts to cover, so it is
+  // called once per base — `here` resolves the installed tree
+  // (~/.config/opencode/plugins/caveman → ~/.config/opencode/skills) and the
+  // parent resolves the dev tree (src/plugins/opencode → repo-root skills).
+  for (const base of [here, join(here, '..')]) {
+    const ruleset = config.loadRuleset(mode, base);
+    if (ruleset) return ruleset.trimEnd();
+  }
+  return null;
+}
+
+function reinforcementLine(mode) {
+  const banner = reinforcementBanner(mode);
+  const ruleset = loadRuleset(mode);
+  if (ruleset) return banner + '\n\n' + ruleset;
+  // No SKILL.md reachable from the plugin install: the mode's thesis line
+  // (caveman-config's built-in fallback map), else the banner alone.
+  const thesis = typeof config.thesisLine === 'function' ? config.thesisLine(mode) : null;
+  return thesis ? banner + '\n\n' + thesis : banner;
+}
+
+// Returns true when this change set a one-shot independent mode, so the caller
+// knows not to immediately restore it on the very turn it was requested.
 function applyModeChange(change) {
-  if (!change) return;
+  if (!change) return false;
   if (change.action === 'clear') {
+    recordModeChange(opencodeDir, null);
     removeFlag();
-    return;
+    if (oneShotMemory) oneShotMemory.clear();
+    return false;
   }
   if (change.action === 'set' && change.mode) {
+    if (INDEPENDENT_MODES.has(change.mode)) {
+      // Remember the prose mode being displaced so the next ordinary prompt
+      // can bring it back. Mirrors caveman-mode-tracker.js exactly:
+      //   - a prose mode is saved,
+      //   - an already-saved target survives a SECOND one-shot chained onto
+      //     the first (/caveman-commit then /caveman-review restores the
+      //     original, not `commit`),
+      //   - entering a one-shot from off saves the literal 'off', so a stale
+      //     return target from an earlier one-shot cannot switch caveman on.
+      // The flag file never holds 'off' on opencode (clear unlinks it), so a
+      // null read is exactly "caveman was off".
+      if (oneShotMemory) {
+        const before = readFlag(flagPath);
+        if (before && !INDEPENDENT_MODES.has(before)) oneShotMemory.write(before);
+        else if (!before) oneShotMemory.write('off');
+      }
+      recordModeChange(opencodeDir, change.mode);
+      safeWriteFlag(flagPath, change.mode);
+      return true;
+    }
+    recordModeChange(opencodeDir, change.mode);
     safeWriteFlag(flagPath, change.mode);
+  }
+  return false;
+}
+
+// One-shot restore (#599). An independent mode set on a PREVIOUS message has
+// served its turn: bring back the prose mode it displaced, or deactivate if
+// caveman was off then. Without this the plugin left the flag on `commit` and
+// experimental.chat.system.transform — which skips INDEPENDENT_MODES — stopped
+// reinforcing for the REST of the session, self-healing only at the next
+// session.created. Claude Code has restored on the next prompt since #599.
+function restoreAfterOneShot(setIndependentThisTurn) {
+  if (setIndependentThisTurn) return;
+  // No prev helpers means nothing was ever recorded, so there is no return
+  // target to read — restoring from that absence would read as "caveman was
+  // off" and deactivate. Leave the one-shot in place instead.
+  if (!oneShotMemory) return;
+  const active = readFlag(flagPath);
+  if (!active || !INDEPENDENT_MODES.has(active)) return;
+  const prev = oneShotMemory.read();
+  oneShotMemory.clear();
+  // `prev !== 'off'` is not redundant: 'off' is stored literally, and restoring
+  // it as a mode would reinforce "CAVEMAN MODE ACTIVE (off)" for a session that
+  // had deliberately turned caveman off.
+  if (prev && !INDEPENDENT_MODES.has(prev) && prev !== 'off') {
+    recordModeChange(opencodeDir, prev);
+    safeWriteFlag(flagPath, prev);
+  } else {
+    recordModeChange(opencodeDir, null);
+    removeFlag();
   }
 }
 
@@ -134,18 +274,21 @@ function applyModeChange(change) {
 // drives one shared implementation. Re-fires on every `session.created` event,
 // so a new session in a long-lived plugin process re-asserts the flag.
 function handleSessionCreated() {
-  const mode = getDefaultMode();
+  // Manual startup is currently a Claude Code policy. OpenCode's installer
+  // also ships static AGENTS.md activation, so a cleared flag alone cannot
+  // promise normal prose here. Preserve its existing caveman-mode default.
+  const configured = getDefaultMode();
+  const mode = configured === 'manual' ? 'caveman' : configured;
   if (mode === 'off') {
+    recordModeChange(opencodeDir, null);
     removeFlag();
     return;
   }
+  recordModeChange(opencodeDir, mode);
   safeWriteFlag(flagPath, mode);
 }
 
-// Internal hook factory — the v2 default export below instantiates it and
-// drives the returned hooks from v2 registrations. Not exported: v1-style
-// named plugin exports are dead in the opencode >= 2.0 loader.
-const CavemanPlugin = async (_ctx) => {
+export const CavemanPlugin = async (_ctx) => {
   // Assert the flag at plugin load as well: in one-shot `opencode run` the
   // first session.created publishes before plugin event dispatch is wired,
   // so the event handler alone misses it. The factory-time write covers that
@@ -160,7 +303,11 @@ const CavemanPlugin = async (_ctx) => {
   // here means the flag is rewritten on every new session, not just once when
   // the plugin module loads. See https://opencode.ai/docs/plugins#events.
   event: async ({ event } = {}) => {
-    if (event && event.type === 'session.created') handleSessionCreated();
+    // A subagent is a session too (opencode 2: data.parentID, 1.x:
+    // properties.info.parentID). Resetting the flag for one would undo the
+    // user's "stop caveman" or /ultracave every time the model delegates.
+    const parentID = event?.data?.parentID ?? event?.properties?.info?.parentID;
+    if (event && event.type === 'session.created' && !parentID) handleSessionCreated();
   },
 
   // Intercept user messages to detect /caveman commands and natural-language
@@ -172,12 +319,30 @@ const CavemanPlugin = async (_ctx) => {
   // `run` path delivers the message wrapped in literal quote characters.
   'chat.message': async (_input, output) => {
     if (!output || !output.parts) return;
+    // One message is one turn, so the one-shot bookkeeping spans the whole
+    // parts loop: a /caveman-commit in any part must not be restored away by
+    // the same message that requested it.
+    let setIndependentThisTurn = false;
+    // Status is observational — on Claude Code it returns before any state
+    // mutation, one-shot restore included. Keep that here: asking what mode is
+    // active must not be the thing that consumes a pending restore.
+    let statusThisTurn = false;
     for (const part of output.parts) {
       if (part && part.type === 'text' && part.text) {
         const change = parseModeChange(part.text, { getDefaultMode, expandedTpl: true, unwrapQuotes: true });
-        if (change) applyModeChange(change);
+        if (change && change.action === 'status') {
+          // readFlag maps a legacy level name to its current mode id.
+          const active = readFlag(flagPath);
+          // Replace the expanded activation template for this message only.
+          // No shared pending response: concurrent sessions cannot steal it.
+          part.text = 'Report this status verbatim without changing mode: Caveman mode: ' + (active || 'off');
+          statusThisTurn = true;
+          continue;
+        }
+        if (change && applyModeChange(change)) setIndependentThisTurn = true;
       }
     }
+    if (!statusThisTurn) restoreAfterOneShot(setIndependentThisTurn);
   },
 
   // Inject the reinforcement line into the system prompt when caveman is
@@ -193,15 +358,15 @@ const CavemanPlugin = async (_ctx) => {
       // append grows the system prompt without bound — silently eating the
       // context window. Rewrite any line we already left instead of stacking
       // another, so a mode switch updates in place rather than accumulating.
-      const stale = /CAVEMAN MODE ACTIVE \([a-z-]+\) — session ruleset applies\./g;
+      // staleBlock matches to end of string: `line` now carries the ruleset
+      // appended after the banner, and that content is always the last thing
+      // this hook writes into an entry, so replacing from the banner on is safe.
       let found = false;
       for (let i = 0; i < output.system.length; i++) {
-        if (typeof output.system[i] === 'string' && stale.test(output.system[i])) {
-          stale.lastIndex = 0;
-          output.system[i] = output.system[i].replace(stale, line);
+        if (typeof output.system[i] === 'string' && staleBlock.test(output.system[i])) {
+          output.system[i] = output.system[i].replace(staleBlock, line);
           found = true;
         }
-        stale.lastIndex = 0;
       }
       if (found) return;
       if (output.system.length > 0) {
@@ -214,137 +379,4 @@ const CavemanPlugin = async (_ctx) => {
   };
 };
 
-// v2 plugin contract (opencode >= 2.0): default export with id + setup.
-// The v1 factory above is instantiated and its hooks driven from v2
-// registrations. Mapping:
-//   event                                  → for-await pump over the async
-//                                            iterable from ctx.event.subscribe
-//   experimental.chat.system.transform     → ctx.session.hook("context"),
-//                                            best-effort (payload shape is
-//                                            undocumented; no array → no-op)
-//   chat.message (/caveman toggle parsing) → no v2 equivalent; name reported
-//                                            in the single skipped warning
-// The mode flag file is still asserted on every session.created event via the
-// pump; per-turn reinforcement rides the context session hook.
-export default {
-  id: "caveman",
-  setup: async (ctx) => {
-    const hooks = (await CavemanPlugin({})) || {};
-
-    const skipped = [];
-    if (hooks["chat.message"]) skipped.push("chat.message");
-    if (skipped.length > 0) {
-      console.error(
-        "[caveman] v2 runtime: hook(s) with no v2 equivalent: " + skipped.join(", ") +
-          " — in-session /caveman toggles are degraded. Session-start flag " +
-          "assertion and best-effort reinforcement (context session hook) remain active.",
-      );
-    }
-
-    // ── event pump ──
-    // ctx.event.subscribe() returns an async-iterable stream (each yielded
-    // item is a decoded event), not a callback API. Callback passing is kept
-    // only as a fallback for older runtime shapes.
-    let cleanup = null;
-    if (typeof ctx?.event?.subscribe === "function") {
-      let stream = null;
-      try {
-        stream = ctx.event.subscribe();
-      } catch (e) {
-        console.error(`caveman: event subscribe failed: ${e.message}`);
-      }
-      if (stream && typeof stream[Symbol.asyncIterator] === "function") {
-        const pump = (async () => {
-          try {
-            for await (const event of stream) {
-              try {
-                await hooks.event?.({ event });
-              } catch (e) {
-                if (process.env.CAVEMAN_DEBUG === "1") {
-                  console.error(`caveman: event handler failed: ${e.message}`);
-                }
-              }
-            }
-          } catch (e) {
-            if (process.env.CAVEMAN_DEBUG === "1") {
-              console.error(`caveman: event stream ended: ${e.message}`);
-            }
-          }
-        })();
-        cleanup = async () => {
-          try { await stream.return?.(); } catch { /* already closed */ }
-          try { await pump; } catch { /* settled above */ }
-        };
-      } else if (typeof stream === "function") {
-        // Fallback: subscribe(handler) — handler receives the event directly.
-        const sub = stream((event) => {
-          void Promise.resolve()
-            .then(() => hooks.event?.({ event }))
-            .catch((e) => {
-              if (process.env.CAVEMAN_DEBUG === "1") {
-                console.error(`caveman: event handler failed: ${e.message}`);
-              }
-            });
-        });
-        cleanup = async () => {
-          try { await sub?.return?.(); } catch { /* noop */ }
-        };
-      } else {
-        console.error("caveman: ctx.event.subscribe returned no async iterable — plugin disabled");
-      }
-    } else {
-      console.error("caveman: ctx.event.subscribe unavailable — plugin disabled");
-    }
-
-    // ── best-effort reinforcement via the context session hook ──
-    // The v2 payload shape is undocumented: if it exposes a `system` or
-    // `context` string array we apply the same idempotent line injection as
-    // the v1 system.transform; otherwise this silently no-ops.
-    if (typeof ctx?.session?.hook === "function") {
-      try {
-        await ctx.session.hook("context", async (input) => {
-          try {
-            const active = readFlag(flagPath);
-            if (!active || INDEPENDENT_MODES.has(active)) return;
-            const arr = Array.isArray(input?.system) ? input.system : Array.isArray(input?.context) ? input.context : null;
-            if (!arr) return;
-            const line = reinforcementLine(active);
-            const stale = /CAVEMAN MODE ACTIVE \([a-z-]+\) — session ruleset applies\./g;
-            let found = false;
-            for (let i = 0; i < arr.length; i++) {
-              if (typeof arr[i] === "string" && stale.test(arr[i])) {
-                stale.lastIndex = 0;
-                arr[i] = arr[i].replace(stale, line);
-                found = true;
-              } else if (arr[i] && typeof arr[i].text === "string" && stale.test(arr[i].text)) {
-                stale.lastIndex = 0;
-                arr[i].text = arr[i].text.replace(stale, line);
-                found = true;
-              }
-              stale.lastIndex = 0;
-            }
-            if (found) return;
-            if (arr.length > 0) {
-              const lastIdx = arr.length - 1;
-              if (typeof arr[lastIdx] === "string") {
-                arr[lastIdx] += "\n\n" + line;
-              } else if (arr[lastIdx] && typeof arr[lastIdx].text === "string") {
-                arr[lastIdx].text += "\n\n" + line;
-              }
-            } else {
-              arr.push(arr === input?.system ? { type: "text", text: line } : line);
-            }
-          } catch (e) {
-            if (process.env.CAVEMAN_DEBUG === "1") {
-              console.error(`caveman: context hook failed: ${e.message}`);
-            }
-          }
-        });
-      } catch (e) {
-        console.error(`caveman: session.hook("context") failed: ${e.message}`);
-      }
-    }
-
-    return cleanup;
-  },
-};
+export default CavemanPlugin;

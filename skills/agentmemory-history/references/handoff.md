@@ -65,4 +65,4 @@ a directory-boundary check that cannot cross sibling repos.
 
 ## Troubleshooting
 
-See ../_shared/TROUBLESHOOTING.md if `memory_sessions` or `memory_recall` is not available.
+See ../../_shared/TROUBLESHOOTING.md if `memory_sessions` or `memory_recall` is not available.
