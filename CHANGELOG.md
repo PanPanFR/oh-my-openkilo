@@ -1,3 +1,15 @@
+# v0.19.1 (2026-11-02)
+
+## Changed
+- **Agents multi-platform & execution role sync**:
+  - `builder.md`: streamlined execution role (direct inline implementation, plan execution, mutating subagent orchestration, parent MCP lifecycle ownership per `rules/ui-tooling.md`, loop-breaker after 2 failed attempts).
+  - `designer.md`: transformed from web-only frontend specialist to universal UI/UX designer (web, iOS/Android native, desktop); hardcoded UI MCPs removed from frontmatter permissions (parent-managed on-demand); skill references point to `archive/skills/` via `/install-skill`.
+  - `reviewer.md`: multi-platform inspection and review targets (Swift/iOS, Compose, Flutter, React Native, Rust, Android); explicit Jev gate script invocation.
+  - `tester.md`: multi-platform test layout and runner support; added Jev test gate; loop-breaker aligned to stop at 2 consecutive failed attempts.
+  - `documenter.md`: clarified subagent shell restriction (`shell: deny`), reports ambiguity/gaps to parent rather than running CLI scripts.
+  - `planner.md`: explicit Jev decision script paths for delegation and verification presets.
+- **`docs/AGENTS.md`**: updated `builder` execution role, `designer` universal role/permissions, and multi-platform alignment.
+
 # v0.19.0 (2026-11-02)
 
 ## Added

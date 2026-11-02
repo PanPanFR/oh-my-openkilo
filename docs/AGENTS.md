@@ -10,7 +10,7 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 |---|-------|------|---------------|-------------|
 | 01 | `builder` | primary | `opencode/deepseek-v4.1-flash-free#max` | Default implementation. Classify, fan-out. |
 | 02 | `planner` | primary | `9router/ag/claude-opus-4-6-thinking` | Pre-impl design, architecture, plan files. |
-| 03 | `designer` | all | `9router/ag/gemini-3.8-flash-high` | UI/UX, design system, a11y, frontend planning. Multimodal preferred for visual work. |
+| 03 | `designer` | all | `9router/ag/gemini-3.8-flash-high` | Universal UI/UX (web, mobile, desktop), design systems, a11y. Multimodal preferred for visual work. |
 | 04 | `tester` | subagent | `opencode/mimo-v2.6-flash-free` | Test suites: write, run, isolate failures. |
 | 05 | `reviewer` | subagent | `opencode/glm-5.3-flash-free#max` | Diff + security review. Read-only. |
 | 06 | `documenter` | subagent | `9router/ag/gemini-3.8-flash-high` | README, runbook, API docs in `docs/`. |
@@ -19,9 +19,9 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 ## Primary agents
 
-### 01. `builder` — The Architect
+### 01. `builder` — The Execution Agent
 
-**Role:** Default implementation agent. Classify incoming work with deterministic rules: trivial fixes get done directly, anything that needs design gets routed to `planner`, anything that needs specialized hands gets fanned out to subagents. Jev `-Preset triage` is optional, only when the category is genuinely ambiguous.
+**Role:** Default execution agent. Handles direct implementations (1-2 files), bug fixes, and feature steps inline. Manages on-demand MCP lifecycles per `rules/ui-tooling.md`. Orchestrates specialist subagents (`designer`, `tester`, `reviewer`, `documenter`). Never delegates to `planner` (user-switched). Stops immediately after 2 failed attempts via mandatory loop-breaker.
 
 **When to invoke:** any coding task, especially anything that touches more than one file or has multiple valid approaches.
 
@@ -65,23 +65,23 @@ The pack divides the team into **2 primary agents** (`builder`, `planner`), **1 
 
 ## Subagents
 
-### 03. `designer` — The Frontend Specialist
+### 03. `designer` — The Universal Designer
 
-**Role:** UI/UX, React/Next.js, design systems, accessibility, frontend performance, and UI planning. Operates in `mode: all` (interactive primary agent for focused frontend sessions or subagent delegated by `builder`). Produces frontend plans for complex UI flows before implementing. Builds award-grade sites with `awwwards` and scores live sites with `jury`.
+**Role:** Universal UI/UX designer across web, native mobile (iOS/Android), and desktop. Covers component design, screen layout, responsive/adaptive UI, design systems, visual polish, accessibility, performance, and design tokens. Operates in `mode: all` (interactive primary agent for focused design sessions or subagent delegated by `builder`). Produces UI plans for complex flows before implementing. Platform-specific skills (Compose, SwiftUI, React Native, shadcn, etc.) are injected from `archive/skills/` as needed.
 
-**When to invoke:** frontend feature work, new screens, UI planning, design system setup, brand consistency, accessibility review.
+**When to invoke:** UI/UX design, new screens, component design, responsive/adaptive layouts, design system setup, visual polish, and accessibility reviews on any platform.
 
 **Prompt:** [`agents/designer.md`](../agents/designer.md)
 
 **Default model:** `9router/ag/gemini-3.8-flash-high`
 
-**Recommended models:** strong UI/UX judgment + frontend implementation. Good fits: `anthropic/claude-sonnet-4-5`, `google/gemini-2.5-pro`.
+**Recommended models:** strong UI/UX judgment + frontend/UI implementation. Good fits: `anthropic/claude-sonnet-4-5`, `google/gemini-2.5-pro`.
 
-**Model guidance:** Choose a model that is strong at UI/UX judgment, frontend implementation, and visual polish. Multimodal is a plus because the agent reviews screenshots and mockups.
+**Model guidance:** Choose a model that is strong at UI/UX judgment, visual polish, and design systems. Multimodal is a plus because the agent reviews screenshots and mockups.
 
-**Permissions:** allowlist in frontmatter — `read`, `edit`, `shell`, `glob`, `grep`, `todowrite`, `subagent` (`reviewer` only), `chrome-devtools_*`, `agentmemory_*`, `shadcn_*`, `reactbits_*`, `magicuidesign*`, `magicuidesign-mcp_*`, `context7_*`, `webfetch`, `websearch`, `lsp`, `skill`.
+**Permissions:** allowlist in frontmatter — `read`, `edit`, `shell`, `glob`, `grep`, `todowrite`, `subagent` (`reviewer` only), `context7_*`, `agentmemory_*`, `webfetch`, `websearch`, `lsp`, `skill`. On-demand UI MCPs are toggled by parent `builder` per `rules/ui-tooling.md`.
 
-**Required MCP:** none required by default (skills + CLI first). MCPs (`shadcn`, `reactbits`, `magicuidesign-mcp`, `chrome-devtools`) are enabled on-demand via user toggle and `/reload`.
+**Required MCP:** none required by default. On-demand MCPs (`chrome-devtools` for web, `shadcn`, `reactbits`, `magicuidesign-mcp`) are enabled on-demand via parent toggle and `/reload`.
 
 **Dispatched by:** you directly (via Tab / agent picker) or by `builder` when the task involves UI/UX work.
 

@@ -53,7 +53,7 @@ Pre-implementation only. Planning, architecture, brainstorming, requirements ana
 **Analysis**: evaluate alternatives (cost/benefit/traps). Evidence via `graphify query/path/explain`. Research: quick grabs + deep multi-source via native webfetch/websearch, decomposed into sub-questions. Prefer simplifying refactors.
 
 **Jev delegation check (optional):** when ownership or split is genuinely unclear,
-run `-Preset delegation -State "<goal + files + risks>"`. Obvious work: assign
+run `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset delegation -State "<goal + files + risks>"`. Obvious work: assign
 inline and move on. Failure -> proceed manually, never block.
 
 
@@ -83,7 +83,6 @@ Batch A = steps in one message. List dependencies and inline rationale below.
 **Integration**: parallel branches do NOT self-merge. After all verified green, user runs `/integrate` (builder session, main checkout): merges in Integration Notes order, resolves conflicts, runs full suite, removes plan files. Single sequential plan may merge inline per `builder.md`.
 
 **Jev verify (high-risk only):** for irreversible or high-impact choices
-(auth, payments, migrations, data model, public API), run `-Preset verify -State
-"<chosen approach + rejected alternatives + trade-offs + evidence>"` and record
+(auth, payments, migrations, data model, public API), run `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset verify -State "<chosen approach + rejected alternatives + trade-offs + evidence>"` and record
 the tier plus `proceed`/`spec_fit`/`needs_human` in the plan Context. Routine,
 reversible decisions: skip and proceed. Failure -> proceed manually, never block.

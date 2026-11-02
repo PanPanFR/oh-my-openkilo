@@ -52,10 +52,7 @@ handles doc-heavy work: overhaul, audit, multi-section feature docs, large API
 or reference pages, `/docs` restructuring, architecture docs, and migration or
 consistency passes across many files.
 
-**Jev (optional)**: when doc scope or ownership is genuinely unclear (new doc
-set, conflicting sources, large restructure), run `-Preset route` or
-`-Preset delegation` via `rules/jev-routing.md`. Routine docs: skip, no note.
-Fail-open: proceed manually, never block.
+**Scope & Ambiguity**: as a subagent (`shell: deny`), documenter never runs CLI routing scripts. When doc scope, target audience, or requirements are genuinely unclear or conflicting, stop and report the exact gaps back to the parent (`builder`) or ask the user before writing. Routine docs: proceed directly.
 
 **Memory**: for a doc-heavy rewrite, `memory_smart_search` for prior decisions
 and known gaps. Save settled doc conventions or decisions with `memory_save`.

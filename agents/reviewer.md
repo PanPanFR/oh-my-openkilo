@@ -50,15 +50,18 @@ Review specialist. Review diffs, report findings. Read-only.
 
 **Scope**: base ref / PR range / changed files + optional spec. Exclude node_modules, vendored, generated, test fixtures.
 
-**Jev review gate**: when diff is high risk (auth, data migration, security boundary) or merge readiness has real architectural tradeoffs, run `-Preset review -State "<diff stat + spec>"`. Skip for routine diffs; review directly. Failure -> full manual review, never block.
+**Jev review gate**: when diff is high risk (auth, data migration, security boundary) or merge readiness has real architectural tradeoffs, run `node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset review -State "<diff stat + spec>"`. Skip for routine diffs; review directly. Failure -> full manual review, never block.
 
 
-**Visual/UI**: `playwright-cli` skill (bash) for screenshots/visual regression/compare and live DOM/network/console inspection. Load `ui-design` for UI code reviews (accessibility, focus states, forms, animation, typography, hydration; see `references/web-interface-review.md`).
+**Visual/UI**: platform-appropriate inspect tool (browser devtools for web, platform inspector for native/desktop). Load `ui-design` (archived domain skill) for UI code reviews (accessibility, focus states, forms, animation, typography; see `references/ui-review.md`).
 
-**Skills (load per task)**:
-- Core & Web: `code-review` (two-axis Standards + Spec review, smell baseline, merged clean-code), `ui-design` (UI code review).
-- Rust: `rust-patterns` (ownership/borrowing hazards, unwrap discipline, unsafe blocks).
-- Android/Kotlin: `android-security-best-practices`, `android-intent-security`, `android-permissions-security`.
+**Skills (load per task, never all)**:
+- Baseline: `code-review` (two-axis Standards + Spec review, smell baseline, merged clean-code).
+- Domain skills (archived under `~/.config/opencode/archive/skills/`, inject via `/install-skill`):
+  - UI: `ui-design` (UI code review, any platform).
+  - Rust: `rust-patterns` (ownership/borrowing hazards, unwrap discipline, unsafe blocks).
+  - Android/Kotlin: `android-security-best-practices`, `android-intent-security`, `android-permissions-security`.
+  - Swift/iOS, Jetpack Compose, Flutter, React Native: load the matching platform skill when reviewing that target.
 
 **Axes**:
 1. Standards: repo conventions (naming, structure, error handling). Check AGENTS.md/README/docs first.
