@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android Navigation Deep Links"
+  short_description: "Handle navigation graphs, back stack behavior, app links, intents, and destination ownership for Android apps"
+  default_prompt: "Use $android-navigation-deeplinks when the request is about handle navigation graphs, back stack behavior, app links, intents, and destination ownership for Android apps."

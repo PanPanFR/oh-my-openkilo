@@ -1,0 +1,99 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "description": "Catalog of on-demand MCP servers pruned from global opencode.json",
+  "servers": {
+    "chrome-devtools": {
+      "category": "web",
+      "description": "Chrome DevTools MCP server for browser inspection, console logs, and automation",
+      "config": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "chrome-devtools-mcp@latest"
+        ]
+      }
+    },
+    "magicuidesign-mcp": {
+      "category": "web",
+      "description": "Magic UI Design component search and code generation",
+      "config": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "@magicuidesign/mcp@latest"
+        ]
+      }
+    },
+    "reactbits": {
+      "category": "web",
+      "description": "React Bits animated UI component snippets",
+      "config": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "reactbits-dev-mcp-server"
+        ]
+      }
+    },
+    "shadcn": {
+      "category": "web",
+      "description": "shadcn/ui component CLI and registry integration",
+      "config": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "shadcn@latest",
+          "mcp"
+        ]
+      }
+    },
+    "rea": {
+      "category": "security",
+      "description": "Reverse Engineering Anything (Ghidra, Rizin, Frida, GDB) for binaries and runtimes",
+      "config": {
+        "type": "local",
+        "command": [
+          "cmd.exe",
+          "/d",
+          "/c",
+          "npx",
+          "-y",
+          "rea-agents@6.7.0",
+          "mcp"
+        ],
+        "environment": {
+          "GHIDRA_INSTALL_DIR": "C:\\Tools\\ghidra_12.1.4_PUBLIC",
+          "JAVA_HOME": "C:\\Program Files\\Microsoft\\jdk-21.0.13.21-hotspot"
+        }
+      }
+    },
+    "figcraft": {
+      "category": "design",
+      "description": "FigCraft headless interface design engine",
+      "config": {
+        "type": "local",
+        "command": [
+          "C:\\Tools\\figcraft\\figcraft-cli.exe",
+          "mcp"
+        ]
+      }
+    },
+    "figcraft-app": {
+      "category": "design",
+      "description": "FigCraft desktop app attach engine (port 7979)",
+      "config": {
+        "type": "local",
+        "command": [
+          "C:\\Tools\\figcraft\\figcraft-cli.exe",
+          "mcp",
+          "--attach",
+          "7979"
+        ]
+      }
+    }
+  }
+}

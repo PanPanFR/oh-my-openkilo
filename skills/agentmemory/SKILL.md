@@ -12,7 +12,7 @@ user-invocable: false
 # agentmemory internals
 
 The power lives in the MCP server (`opencode.json mcp.servers.agentmemory`), the
-REST server (`http://127.0.0.1:3111`), and `plugins/agentmemory-capture.ts`.
+REST server (`http://127.0.0.1:3111`), and `../../plugins/agentmemory-capture.ts`.
 This skill is the index for understanding and fixing them.
 
 | Question | Load |

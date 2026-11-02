@@ -50,12 +50,15 @@ Review specialist. Review diffs, report findings. Read-only.
 
 **Scope**: base ref / PR range / changed files + optional spec. Exclude node_modules, vendored, generated, test fixtures.
 
-**Jev review gate (optional):** when merge readiness is genuinely unclear or the diff is high risk, run `-Preset review -State "<diff stat + spec>"`. Skip for routine diffs; review manually. Failure -> full manual review, never block.
+**Jev review gate**: when diff is high risk (auth, data migration, security boundary) or merge readiness has real architectural tradeoffs, run `-Preset review -State "<diff stat + spec>"`. Skip for routine diffs; review directly. Failure -> full manual review, never block.
 
 
 **Visual/UI**: `playwright-cli` skill (bash) for screenshots/visual regression/compare and live DOM/network/console inspection. Load `ui-design` for UI code reviews (accessibility, focus states, forms, animation, typography, hydration; see `references/web-interface-review.md`).
 
-**Skills (load per task)**: `code-review` (two-axis Standards + Spec review, smell baseline, merged clean-code), `ui-design` (UI code review).
+**Skills (load per task)**:
+- Core & Web: `code-review` (two-axis Standards + Spec review, smell baseline, merged clean-code), `ui-design` (UI code review).
+- Rust: `rust-patterns` (ownership/borrowing hazards, unwrap discipline, unsafe blocks).
+- Android/Kotlin: `android-security-best-practices`, `android-intent-security`, `android-permissions-security`.
 
 **Axes**:
 1. Standards: repo conventions (naming, structure, error handling). Check AGENTS.md/README/docs first.

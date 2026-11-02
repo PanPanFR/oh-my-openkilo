@@ -7,12 +7,12 @@ description: "Decide when and how to delegate work to subagents (planner, builde
 
 You have specialized subagents. Delegate when it improves quality or speed.
 
-## Available Subagents
+## Agents and Subagents
 
-| Subagent | Use for |
+| Agent | Use for |
 |----------|---------|
 | `planner` | Pre-implementation design, brainstorming, architecture planning, implementation plans. Primary mode; user switches to planner directly for upfront design. Never Task-spawned |
-| `builder` | Primary agent. Implementation, refactors, multi-step execution of well-defined tasks |
+| `builder` | Primary agent, never Task-spawned. Implementation, refactors, multi-step execution of well-defined tasks |
 | `designer` | UI/frontend builds - components, design system, accessibility |
 | `documenter` | Technical writing - create and improve documentation in `docs/` |
 | `tester` | Test suites - write, run, iterate failures in isolation, report compact results |

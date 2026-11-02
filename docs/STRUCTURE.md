@@ -18,7 +18,7 @@ oh-my-openkilo/
 │   ├── reviewer.md
 │   └── documenter.md
 │
-├── skills/                            # 48 skill packs plus _shared/
+├── skills/                            # 22 global baseline skill packs plus _shared/
 │   └── <skill-name>/
 │       ├── SKILL.md                   # always present
 │       ├── README.md                  # optional
@@ -29,8 +29,11 @@ oh-my-openkilo/
 │   ├── jev-routing.md                 # optional decision gate and loop-breaker
 │   └── ui-tooling.md                  # CLI vs MCP router
 │
-├── commands/                          # 1 slash command
-│   └── integrate.md                   # integrate parallel plan branches
+├── commands/                          # 13 slash commands
+│   ├── install-skill.md               # inject domain skills from archive vault
+│   ├── install-mcp.md                 # inject on-demand MCP servers from archive catalog
+│   ├── integrate.md                   # integrate parallel plan branches
+│   └── caveman*.md                    # caveman family (mode, commit, compress, review, stats, help) + megacave, ultracave
 │
 ├── plugins/                           # 3 files plus the caveman directory
 │   ├── agentmemory-capture.ts         # capture session observations
@@ -43,6 +46,12 @@ oh-my-openkilo/
 │   ├── rtk.ts                         # git-only output rewrite
 │   └── subagent-guard.ts              # failing subagent circuit breaker
 │
+├── archive/                           # domain skills vault (93 skills) + MCP catalog + inject engine
+│   ├── skills/                        # android, cloudflare, web, rust, security
+│   ├── manifest.json                  # category metadata, triggers, MCP recommendations
+│   ├── mcp-catalog.json               # on-demand MCP server definitions
+│   └── scripts/inject.mjs             # stack detection + injection (+ Jev --jev ranking)
+│
 ├── examples/
 │   └── opencode.example.json          # portable config template, credentials redacted
 │
@@ -50,7 +59,7 @@ oh-my-openkilo/
     ├── INSTALL.md                     # install guide
     ├── STRUCTURE.md                   # this file
     ├── AGENTS.md                      # 6 agents in detail
-    ├── SKILLS.md                      # 48 skills table
+    ├── SKILLS.md                      # 22 skills table
     ├── RULES.md                       # 2 rules in detail
     ├── COMMANDS.md                    # command reference
     ├── CONFIGURATION.md               # opencode.json breakdown
@@ -69,6 +78,7 @@ The repo is the **upstream source of truth** for the pack, but runtime behavior 
 ├── commands/                         <- mirror <- oh-my-openkilo/commands/
 ├── plugins/                          <- mirror <- oh-my-openkilo/plugins/
 ├── AGENTS.md                         <- mirror <- oh-my-openkilo/AGENTS.md
+├── archive/                          <- mirror <- oh-my-openkilo/archive/
 ├── opencode.json                     NEVER mirrored -- contains secrets
 └── oh-my-openkilo/                   the repo
 ```
@@ -108,4 +118,4 @@ Once an agent, skill, rule, or command is published, the corresponding live file
 3. Mirror it into the repo.
 4. Commit, tag, and release.
 
-This applies to **all 6 agents, 48 skills, 2 rules, and 1 command**. For a personal fork, copy the file under a new name (for example `agents/builder.local.md`); a manual sync will not touch local files.
+This applies to **all 6 agents, 22 skills, 2 rules, and 13 commands** (plus the 93-skill archive vault). For a personal fork, copy the file under a new name (for example `agents/builder.local.md`); a manual sync will not touch local files.

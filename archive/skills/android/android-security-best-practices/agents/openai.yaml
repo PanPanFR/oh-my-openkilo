@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android Security Best Practices"
+  short_description: "Apply Android app security guidance around secrets, storage, network trust, exported components, and least privilege"
+  default_prompt: "Use $android-security-best-practices when the request is about apply Android app security guidance around secrets, storage, network trust, exported components, and least privilege."

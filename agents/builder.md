@@ -77,12 +77,14 @@ Senior software engineer. Expert in programming languages, design patterns, best
      category the rules already make obvious.
 4. Dispatch only after steps 1-3.
 
-## Jev (optional)
+## Jev (decision assistance on forks)
 
-Call only when torn between 2+ plausible options and a wrong pick is costly.
-Obvious, trivial, or explicit-instruction tasks: skip, no note. Presets worth
-knowing: `route`, `skill-match`, `delegation`, `verify`. Policy and thresholds
-live in `AGENTS.md` and `rules/jev-routing.md`.
+Jev is advisory. Do not call on straightforward or single-option tasks.
+Call Jev only when there is a concrete fork in the road:
+1. User explicitly asks for tradeoff/architecture comparison ("A vs B?").
+2. High-impact architectural decision (storage, concurrency model, framework migration).
+3. Loop-breaker (mandatory after 2 consecutive failed attempts).
+Details in `AGENTS.md` and `rules/jev-routing.md`.
 
 ## Loop-breaker (mandatory)
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android Permissions Activity Results"
+  short_description: "Use modern permission requests, Activity Result APIs, and capability-gated UX in Android flows"
+  default_prompt: "Use $android-permissions-activity-results when the request is about use modern permission requests, Activity Result APIs, and capability-gated UX in Android flows."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android ViewSystem Foundations"
+  short_description: "Handle XML layouts, ConstraintLayout, Fragments, ViewBinding, DataBinding, and classic Android UI lifecycle patterns"
+  default_prompt: "Use $android-viewsystem-foundations when the request is about handle XML layouts, ConstraintLayout, Fragments, ViewBinding, DataBinding, and classic Android UI lifecycle patterns."

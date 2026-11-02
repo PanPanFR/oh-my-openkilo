@@ -59,46 +59,30 @@ turn. Off: "stop ponytail" / "normal mode".
   by design: fixed cost with no on-demand benefit.
 - Missing graph in a nontrivial task: ask before extracting, it costs time.
 
-## Skills
+## Skills & MCP Architecture
 
-- Load the matching skill before implementing. Most specific wins; independent
-  concerns load together. Unsure: load the closest one.
-- Multi-step work (>2 steps) or an answer that risks burying the action: load
-  `i-have-adhd` for numbered, action-first output.
-- UI build: `ui-design`; design-system search: `ui-ux-pro-max`; existing UI
-  polish/audit: `impeccable`; component install: `shadcn`. Substantial UI work:
-  delegate to `designer`.
-- Award-grade site build: `awwwards`; score or review a live site: `jury`.
-  Both trigger from the request itself, no explicit mention needed.
-- Multi-agent coordination: `orchestration`. Next.js 16 cache and prefetch:
-  `next-cache-components`, `next-partial-prefetching`.
-- Library or API docs: Context7 first (`resolve-library-id` then `query-docs`),
-  websearch/webfetch as fallback.
-- Tool choice for UI components: `rules/ui-tooling.md`.
+- **Global Baseline (23 skills)**: Universal meta/workflow (`plans`, `code-review`, `codebase-design`, `delegation`, `git-commit`, `orchestration`, `graphify`), memory (`agentmemory*`), and output formatting (`caveman*`, `i-have-adhd`). Always available.
+- **Project Domain Skills (Archived)**: Domain skills (Android, Cloudflare, Web, Rust, Security) reside in `~/.config/opencode/archive/skills/`. Run `/install-skill` to scan the active project stack and inject relevant skills into `./.opencode/skills/`.
+- **Project MCPs (Archived)**: On-demand MCPs (`rea`, `figcraft`, `shadcn`, `reactbits`, `magicuidesign-mcp`, `chrome-devtools`) reside in `archive/mcp-catalog.json`. Run `/install-mcp` to inject stack-specific MCPs into `./opencode.json`.
+- Load the matching skill before implementing. Most specific wins; independent concerns load together. Unsure: load the closest one.
+- Multi-step work (>2 steps) or an answer that risks burying the action: load `i-have-adhd` for numbered, action-first output.
 
-## Jev (optional decision check)
+## Jev (decision assistance on forks)
 
-Call Jev only when torn between 2+ plausible options AND a wrong pick is costly.
-Obvious, single-option, explicit-instruction, or trivial tasks: skip, no note.
+Jev is an advisory decision model (System One), not a gatekeeper. Do not call on
+straightforward or single-option tasks.
 
-Useful presets: `triage` (task category genuinely ambiguous), `route` (plan vs
-code, owner unclear), `skill-match` (2+ real skill candidates), `delegation`
-(inline vs subagent), `verify` (irreversible or high-risk approach),
-`review`/`test`/`ui` gates when genuinely uncertain.
+Call Jev when there is a genuine fork in the road:
+1. **User asks for tradeoff/architecture decision**: e.g., "mending A atau B?", "pilih library mana?", or comparing design patterns.
+2. **High-blast architectural choice**: choosing storage engines, migration vs rewrite, or concurrency models where a wrong pick causes heavy rework.
+3. **Loop-breaker (mandatory safety net)**: after 2 consecutive failed attempts at the same problem, stop editing and run:
+   ```bash
+   node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset loop-breaker -State "<error + attempts + recent diff>"
+   ```
+   If `is_stuck >= 0.7`, execute `action` (`rollback-git`, `fresh-approach`, or `ask-human`). Never a third blind edit.
 
-Invocation: load the `jev-decision` skill, or run
-`node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset <name> -State "<state>"`.
-Presets are flags, not standalone commands.
-
-**Loop-breaker (mandatory):** after 2 consecutive failed attempts at the same
-problem (failing test, build error, syntax loop), stop editing. Run
-`node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs -Preset
-loop-breaker -State "<error + attempts + recent diff>"`. If `is_stuck >= 0.7`,
-execute `action`: `rollback-git`, `fresh-approach`, or `ask-human`. Never a
-third blind edit.
-
-Fail-open: script error, timeout, auth failure: use LLM judgment, one-line note,
-never block. Details in `rules/jev-routing.md`.
+Routine work, single clear implementations, and explicit user directions skip Jev directly.
+Fail-open: script error, timeout, auth failure: proceed with LLM judgment, never block. Details in `rules/jev-routing.md`.
 
 ## Workflow
 

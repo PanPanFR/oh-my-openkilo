@@ -1,41 +1,26 @@
-# Rule: jev-routing - optional decision check
+# Rule: jev-routing - decision assistance on forks
 
-Jev (System One `jev-1.13`) is a decision-only model. It never generates text or
-code. The chat LLM proposes; Jev disposes. Default is **do not call**.
+Jev (System One `jev-1.13`) is an advisory decision model. It never generates
+text or code. The chat LLM or user proposes options; Jev disposes with typed
+probabilities.
 
-## Principle
+## When to call (Natural Triggers)
 
-Call Jev only when both are true:
+Call Jev when there is a concrete fork in the road:
 
-1. You are torn between 2+ plausible options.
-2. A wrong pick is costly (rework, session direction, large token spend,
-   irreversible change).
+1. **User asks for comparison / tradeoff**: e.g., user asks "A vs B?", "library mana yang cocok?", or asks to choose between architectural patterns (`-Preset route` or `-Preset skill-match`).
+2. **Structural / Architectural fork**:
+   - Choosing core database, state management, or runtime framework.
+   - High-impact or irreversible approach: migrations, auth protocols, public API surface (`-Preset verify`).
+3. **Loop-breaker (Mandatory Safety Net)**:
+   - After 2 consecutive failed attempts at the same problem (same failing test, same build error, repeated syntax loop), stop editing and call loop-breaker.
 
-Free pre-check: "am I actually torn?" Not torn: do not call. Obvious,
-single-option, explicit-instruction, or trivial tasks: skip with no note and no
-mention.
+## When to skip
 
-## When a call earns its cost
+- Routine implementation, bugfixes with clear causes, direct instructions from user, single-option refactors.
+- No ceremony, no note, and no mention when skipping.
 
-- `-Preset route`: plan-first vs code-now, or owner unclear, on a non-trivial
-  task. Once at task start.
-- `-Preset triage`: task category genuinely ambiguous after the deterministic
-  simple/bulk/complex/specialist rules. Not a default gate.
-- `-Preset skill-match -CandidatesJson '<shortlist>'`: 2+ genuinely plausible
-  skills. No candidates or one obvious winner: load or skip directly.
-- `-Preset delegation`: inline vs subagent genuinely unclear. Spawn only on
-  `needs_subagent >= 0.7`; uncertain means inline.
-- `-Preset verify`: irreversible or high-impact approach (auth, payments,
-  migrations, data model, public API).
-- `-Preset review`, `test`, `ui`: only when scope is genuinely unclear.
-
-Measured cost on this machine: roughly 1.5-2 seconds plus tokens per call. That
-is the whole reason this stays optional.
-
-## Loop-breaker (the one mandatory call)
-
-After 2 consecutive failed attempts at the same problem (same failing test,
-same build error, repeated syntax loop), stop editing and run:
+## Loop-breaker execution
 
 ```bash
 node ~/.config/opencode/skills/jev-decision/scripts/jev-decide.mjs \
@@ -47,8 +32,6 @@ If `is_stuck >= 0.7`, execute `action`: `rollback-git`, `fresh-approach`, or
 
 ## Hard rules
 
-- Fail-open: error, timeout, 401, 403, 429: use LLM judgment, one-line note, max
-  one retry. A routing call never blocks a session.
-- Never use Jev as the session `model`. Verdicts are advisory; the user wins.
-- Keys and endpoints come from env or `opencode.json` only.
+- Fail-open: error, timeout, 401, 403, 429: proceed with LLM judgment, one-line note, max one retry. A routing call never blocks a session.
+- Advisory only: Jev's output is an advisory decision score; user direction always overrides Jev.
 - Full protocol and thresholds: `skills/jev-decision/SKILL.md`.

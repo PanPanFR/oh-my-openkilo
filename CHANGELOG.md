@@ -1,3 +1,23 @@
+# v0.19.0 (2026-11-02)
+
+## Added
+- **Archive domain-skill vault**: `archive/skills/` with 93 skills in 5 categories (Android 61, Cloudflare 9, Web 18, Rust 4, Security 1), plus `archive/manifest.json` (category metadata, stack triggers, MCP recommendations) and `archive/mcp-catalog.json` (6 on-demand MCPs).
+- **Injection engine**: `archive/scripts/inject.mjs` — stack detection, skill injection (`skills` action), MCP injection (`mcp` action), `--detect`/`--apply`/`--query`/`--jev` flags. Jev System One `--jev` ranks skill candidates by relevance.
+- **`/install-skill` command**: auto-detects project stack and injects all relevant domain skills into `./.opencode/skills/` without a per-skill prompt. Supports `<category|keyword>`, `--dry-run`, `--jev`. Alias `/skill-install`.
+- **`/install-mcp` command**: scans stack, lists candidate MCPs, asks for confirmation, then writes matching `mcp.servers` into `./opencode.json`. Supports `<category|name>`. Alias `/mcp-install`.
+- **13 commands total**: `/install-skill`, `/install-mcp`, `/integrate`, caveman family (`/caveman`, `/caveman-commit`, `/caveman-compress`, `/caveman-review`, `/caveman-stats`, `/caveman-help`), `/megacave`, `/ultracave`, plus aliases.
+
+## Changed
+- **Live sync**: agents, rules, commands, plugins, skills, archive, and AGENTS.md mirrored from the live config (`~/.config/opencode`).
+- **Global skills slimmed to 22**: baseline workflow/memory/caveman skills only. Domain skills moved to `archive/` vault and injected per project via `/install-skill` instead of shipping always-on.
+- **commands/**: added `install-skill.md`, `install-mcp.md`, caveman family, megacave, ultracave; aliases `skill-install.md`, `mcp-install.md`.
+- **README / SKILLS / STRUCTURE / COMMANDS / CONTRIBUTING**: counts updated (6 agents, 22 global skills, 2 rules, 13 commands, 8 plugins); domain skills documented as archive vault, not pack skills.
+- **Pack size**: ~29 MB (was ~23 MB) due to the archive vault.
+
+## Removed
+- Always-on domain skills (Android, Cloudflare, Web, Rust, Security) from pack `skills/`; now in `archive/`.
+- Stale pack-doc references to 48 skills / 1 command / 4 plugins.
+
 # v0.18.0 (2026-10-22)
 
 ## Added

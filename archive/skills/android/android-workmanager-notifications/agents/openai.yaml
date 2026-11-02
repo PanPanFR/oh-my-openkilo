@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android WorkManager Notifications"
+  short_description: "Schedule reliable background work, reminders, and notification delivery with WorkManager and Android execution limits"
+  default_prompt: "Use $android-workmanager-notifications when the request is about schedule reliable background work, reminders, and notification delivery with WorkManager and Android execution limits."

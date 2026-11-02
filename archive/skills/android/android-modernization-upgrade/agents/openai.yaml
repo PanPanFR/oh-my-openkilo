@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android Modernization Upgrade"
+  short_description: "Bring very old Android projects to a current supported baseline with staged upgrades, deprecated API replacement, 16 KB alignment checks, and explicit handoff to specialized skills"
+  default_prompt: "Use $android-modernization-upgrade when the request is about bring very old Android projects to a current supported baseline with staged upgrades, deprecated API replacement, 16 KB alignment checks, and explicit handoff to specialized skills."

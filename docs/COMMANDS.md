@@ -2,11 +2,23 @@
 
 Slash commands. Type the name (with leading `/`) at the start of an OpenCode prompt to invoke.
 
-| Command      | Description |
-|--------------|-------------|
-| `/integrate` | Integrate verified parallel plan branches into main (merge, conflicts, cleanup) |
+| Command | Description |
+|---|---|
+| `/install-skill` | Scan project stack and auto-inject all relevant domain skills from `archive/skills/` into `./.opencode/skills/`. Supports `<category|keyword>`, `--dry-run`, `--jev`. |
+| `/install-mcp` | Scan project stack, present candidate MCP servers from `archive/mcp-catalog.json`, confirm, then inject into `./opencode.json` (`mcp.servers`). |
+| `/integrate` | Integrate verified parallel plan branches into main (merge, conflicts, cleanup). |
+| `/caveman` | Toggle caveman mode (terse output) on/off. |
+| `/caveman-commit` | Write a Conventional Commits message compressed to intent only. |
+| `/caveman-compress` | Compress a memory file or todo list into caveman format. |
+| `/caveman-review` | Compressed code review: one line per finding with location, problem, fix. |
+| `/caveman-stats` | Show recorded token usage and mode attribution for the session. |
+| `/megacave` | Maximum compression caveman output. |
+| `/ultracave` | Ultra-terse caveman output. |
+| `/skill-install` | Alias for `/install-skill`. |
+| `/mcp-install` | Alias for `/install-mcp`. |
+| `/caveman-help` | Quick-reference card for the caveman skills and commands. |
 
-> v0.18.0 keeps the minimal live set: one command. Memory recall and save are plain sentences handled by the `agentmemory-ops` skill. Caveman behavior (`/caveman`, compressed review, commit, stats, compress) comes from the `caveman*` skills and the caveman plugin, not from command files. Other former commands (`/configcheck`, `/i-have-adhd`, `/impeccable`, `/update-pack`, `/recall`, `/remember`) are gone; their skills remain and load from descriptions.
+> Memory recall and save are plain sentences handled by the `agentmemory-ops` skill, not by command files. Former commands (`/configcheck`, `/i-have-adhd`, `/impeccable`, `/update-pack`, `/recall`, `/remember`) are gone; their behavior loads from skill descriptions.
 
 ## Updating the pack (manual, replaces `/update-pack`)
 
@@ -21,7 +33,7 @@ Then mirror the pack into the live config (per-file, with backup):
 ```powershell
 $live = "$env:USERPROFILE\.config\opencode"
 $pack = "$live\oh-my-openkilo"
-foreach ($d in @("agents", "skills", "rules", "commands", "plugins")) {
+foreach ($d in @("agents", "skills", "rules", "commands", "plugins", "archive")) {
   Remove-Item -Recurse -Force (Join-Path $live "$d.bak") -ErrorAction SilentlyContinue
 }
 ```

@@ -1,0 +1,236 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "version": "1.0.0",
+  "categories": {
+    "android": {
+      "name": "Android & Kotlin",
+      "description": "Android, Kotlin, Jetpack Compose, Gradle, and Android TV development skills",
+      "triggers": {
+        "files": [
+          "build.gradle",
+          "build.gradle.kts",
+          "settings.gradle",
+          "settings.gradle.kts",
+          "AndroidManifest.xml",
+          "gradlew",
+          "gradlew.bat"
+        ],
+        "extensions": [
+          ".kt",
+          ".kts"
+        ]
+      },
+      "skills": [
+        "adaptive",
+        "agp-9-upgrade",
+        "android-build-release",
+        "android-cli",
+        "android-compose",
+        "android-for-cars-parked-apps",
+        "android-intent-security",
+        "android-localization",
+        "android-modernization-upgrade",
+        "android-navigation-deeplinks",
+        "android-permissions-activity-results",
+        "android-permissions-security",
+        "android-profiler",
+        "android-security-best-practices",
+        "android-testing",
+        "android-viewsystem-foundations",
+        "android-workmanager-notifications",
+        "anr-audit-and-fix",
+        "appfunctions",
+        "camerax",
+        "compose-accessibility",
+        "compose-animations",
+        "compose-images",
+        "compose-navigation",
+        "compose-performance",
+        "compose-state-management",
+        "display-glasses-with-jetpack-compose-glimmer",
+        "edge-to-edge",
+        "engage-sdk-integration",
+        "glance-appwidget-updates-and-memory",
+        "glance-canonical-layouts",
+        "gradle-kotlin-dsl",
+        "ink-app-builder",
+        "ink-custom-brush-builder",
+        "kotlin-android-architecture",
+        "kotlin-android-ci",
+        "kotlin-build-performance",
+        "kotlin-coroutines",
+        "kotlin-data-layer",
+        "kotlin-flow",
+        "kotlin-testing",
+        "leanback-to-compose-tv-migration",
+        "litert-lm",
+        "litert-runtime",
+        "livedata-to-flow",
+        "media3-cast-integration",
+        "migrate-xml-views-to-jetpack-compose",
+        "ml-kit-genai-prompt-api",
+        "mlkit-agent-api",
+        "navigation-3",
+        "navigation-event",
+        "play-billing-library-version-upgrade",
+        "play-policy-insights",
+        "projected-hardware",
+        "r8-analyzer",
+        "restore-credentials",
+        "retrofit-kotlin",
+        "testing-setup",
+        "verified-email",
+        "wear-compose-m3",
+        "wear-widgets"
+      ],
+      "recommendedMcps": []
+    },
+    "cloudflare": {
+      "name": "Cloudflare Workers & Edge",
+      "description": "Cloudflare Workers, Pages, Durable Objects, KV, D1, and Cloudflare One",
+      "triggers": {
+        "files": [
+          "wrangler.toml",
+          "wrangler.json",
+          "wrangler.jsonc"
+        ],
+        "dependencies": [
+          "wrangler",
+          "@cloudflare/workers-types",
+          "@cloudflare/sandbox"
+        ]
+      },
+      "skills": [
+        "agents-sdk",
+        "cloudflare",
+        "cloudflare-cli",
+        "cloudflare-one",
+        "cloudflare-sandbox",
+        "durable-objects",
+        "gateway-workers",
+        "turnstile-spin",
+        "workers-best-practices"
+      ],
+      "recommendedMcps": []
+    },
+    "web": {
+      "name": "Web & Frontend",
+      "description": "Next.js, Vite, React, UI design, styling, and web performance",
+      "triggers": {
+        "files": [
+          "package.json",
+          "next.config.js",
+          "next.config.mjs",
+          "next.config.ts",
+          "vite.config.js",
+          "vite.config.ts",
+          "vite.config.mjs",
+          "astro.config.mjs",
+          "svelte.config.js"
+        ],
+        "dependencies": [
+          "react",
+          "next",
+          "vite",
+          "svelte",
+          "vue",
+          "astro",
+          "tailwindcss"
+        ]
+      },
+      "skills": [
+        "awwwards",
+        "impeccable",
+        "jury",
+        "next-browser-initial-load-optimizer",
+        "next-cache-components",
+        "next-dev-loop",
+        "next-partial-prefetching",
+        "playwright-cli",
+        "pwa-development",
+        "shadcn",
+        "ui-design",
+        "ui-taste",
+        "ui-ux-pro-max",
+        "vercel-react",
+        "vite",
+        "vite-react-best-practices",
+        "vitest",
+        "web-perf"
+      ],
+      "recommendedMcps": [
+        "chrome-devtools",
+        "shadcn",
+        "reactbits",
+        "magicuidesign-mcp"
+      ]
+    },
+    "rust": {
+      "name": "Rust Systems",
+      "description": "Idiomatic Rust patterns, testing, performance, and best practices",
+      "triggers": {
+        "files": [
+          "Cargo.toml",
+          "Cargo.lock"
+        ],
+        "extensions": [
+          ".rs"
+        ]
+      },
+      "skills": [
+        "rust-best-practices",
+        "rust-patterns",
+        "rust-performance",
+        "rust-testing"
+      ],
+      "recommendedMcps": []
+    },
+    "security": {
+      "name": "Security & Reverse Engineering",
+      "description": "Reverse engineering, decompilation, binary analysis, and runtime inspection",
+      "triggers": {
+        "files": [],
+        "extensions": [
+          ".exe",
+          ".dll",
+          ".so",
+          ".dylib",
+          ".bin",
+          ".apk",
+          ".ipa"
+        ]
+      },
+      "skills": [
+        "reverse-engineer-anything"
+      ],
+      "recommendedMcps": [
+        "rea"
+      ]
+    }
+  },
+  "globalSkills": [
+    "_shared",
+    "agentmemory",
+    "agentmemory-history",
+    "agentmemory-ops",
+    "caveman",
+    "caveman-commit",
+    "caveman-compress",
+    "caveman-review",
+    "caveman-stats",
+    "megacave",
+    "ultracave",
+    "code-review",
+    "codebase-design",
+    "delegation",
+    "documentation",
+    "git-commit",
+    "graphify",
+    "grilling",
+    "i-have-adhd",
+    "jev-decision",
+    "orchestration",
+    "plans",
+    "resolving-merge-conflicts"
+  ]
+}
